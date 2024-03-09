@@ -1,4 +1,9 @@
 .btn-secondary:hover {
+	@extend .shadow-none;
 	color: var(--bs-secondary-bg-subtle);
 	background: var(--bs-secondary-text-emphasis);
+}
+
+.bg-body-2 {
+	background-color: $body-2-bg;
 }

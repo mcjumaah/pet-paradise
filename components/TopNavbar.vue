@@ -1,5 +1,5 @@
 <template>
-	<div class="bg-body">
+	<div class="bg-body-2">
 		<div class="d-flex container py-3 justify-content-between">
 			<div class="d-flex gap-1">
 				<svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="none" viewBox="0 0 50 50">

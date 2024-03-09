@@ -14,6 +14,20 @@
 				</button>
 			</div>
 		</section>
+
+		<section class="deals-by-pet container py-5">
+			<h2 class="text-center poppins-bold">Deals By Pet</h2>
+			<div class="d-flex gap-4 justify-content-around mt-5">
+				<ByPetCard bgImage="/images/by-dog.png">
+					<template #title>DOG</template>
+					<template #description> Everything you need for your Dog</template>
+				</ByPetCard>
+				<ByPetCard bgImage="/images/by-cat.png">
+					<template #title>CAT</template>
+					<template #description> Everything you need for your Cat</template>
+				</ByPetCard>
+			</div>
+		</section>
 	</div>
 </template>
 
@@ -42,6 +56,12 @@
 	h1 {
 		font-size: 2.8125rem;
 		max-width: 702px;
+	}
+}
+
+.deals-by-pet {
+	h2 {
+		font-size: 40px;
 	}
 }
 </style>
