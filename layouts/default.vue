@@ -1,5 +1,8 @@
 <template>
-	<div></div>
+	<div>
+		<TopNavbar />
+		<slot />
+	</div>
 </template>
 
 <script setup lang="ts"></script>
