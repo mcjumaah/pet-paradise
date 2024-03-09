@@ -1,6 +1,6 @@
 <template>
-	<div>
-		<div class="d-flex bg-body container py-3 justify-content-between">
+	<div class="bg-body">
+		<div class="d-flex container py-3 justify-content-between">
 			<div class="d-flex gap-1">
 				<svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="none" viewBox="0 0 50 50">
 					<g fill="#E78895" clip-path="url(#a)">

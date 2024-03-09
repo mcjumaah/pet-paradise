@@ -1,10 +1,14 @@
 <template>
 	<div>
-		<TopNavbar />
+		<TopNavbar class="top-navbar shadow-sm position-absolute top-0 w-100 z-3" />
 		<slot />
 	</div>
 </template>
 
 <script setup lang="ts"></script>
 
-<style scoped></style>
+<style lang="scss" scoped>
+.top-navbar {
+	height: 92px;
+}
+</style>
