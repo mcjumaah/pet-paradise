@@ -2,6 +2,7 @@
 	<div>
 		<TopNavbar class="top-navbar shadow-sm position-absolute top-0 w-100 z-3" />
 		<slot />
+		<Footer />
 	</div>
 </template>
 
