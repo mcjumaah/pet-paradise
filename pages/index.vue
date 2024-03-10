@@ -17,7 +17,7 @@
 
 		<section class="deals-by-pet container py-5">
 			<h2 class="text-center poppins-bold">Deals By Pet</h2>
-			<div class="d-flex gap-4 justify-content-around mt-5">
+			<div class="d-flex gap-5 justify-content-center mt-5">
 				<ByPetCard bgImage="/images/by-dog.png">
 					<template #title>DOG</template>
 					<template #description> Everything you need for your Dog</template>
@@ -28,10 +28,44 @@
 				</ByPetCard>
 			</div>
 		</section>
+
+		<section class="featured-brands d-flex flex-column gap-5 bg-body-3 py-5">
+			<h2 class="text-center poppins-bold">Featured Brands</h2>
+			<div class="d-flex row-gap-2 column-gap-5 flex-wrap justify-content-center">
+				<div v-for="(product, index) in dummyFeaturedProducts" class="feat-brands-card">
+					<template v-if="index < 4">
+						<div class="card p-4 shadow transition-all">
+							<img :src="product.imagePreview" class="h-100 object-fit-contain" alt="product" />
+						</div>
+						<p class="mt-3 fs-5 poppins-medium text-center transition-all">{{ product.name }}</p>
+					</template>
+				</div>
+			</div>
+			<button type="button" class="btn btn-primary-alt d-flex mx-auto fs-5 poppin-semibold px-5 py-2">Show More</button>
+		</section>
 	</div>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+const dummyFeaturedProducts = [
+	{
+		name: "Pedigree",
+		imagePreview: "/images/featured-products/pedigree.png",
+	},
+	{
+		name: "Smart Heart",
+		imagePreview: "/images/featured-products/smart-heart.png",
+	},
+	{
+		name: "Joyhound",
+		imagePreview: "/images/featured-products/joyhound.png",
+	},
+	{
+		name: "Whiskas",
+		imagePreview: "/images/featured-products/whiskas.png",
+	},
+];
+</script>
 
 <style lang="scss" scoped>
 .hero {
@@ -59,9 +93,31 @@
 	}
 }
 
-.deals-by-pet {
+.deals-by-pet,
+.featured-brands {
 	h2 {
 		font-size: 40px;
+	}
+}
+
+.featured-brands {
+	.feat-brands-card {
+		.card {
+			height: 19.938rem;
+			width: 17.188rem;
+		}
+		&:hover {
+			.card {
+				background: var(--bs-secondary-bg-subtle);
+				transform: scale(1.05);
+			}
+			p {
+				color: var(--bs-primary-text-emphasis);
+				text-decoration-line: underline;
+				text-underline-offset: 2px;
+				text-decoration-color: var(--bs-primary-text-emphasis);
+			}
+		}
 	}
 }
 </style>

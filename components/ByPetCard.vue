@@ -12,7 +12,7 @@
 			<div class="overlay-gradient position-absolute z-0 h-100 w-100 transition-all"></div>
 			<div class="overlay-plain position-absolute z-0 h-100 w-100 transition-all"></div>
 		</div>
-		<p class="fs-5 poppins-medium mt-2">
+		<p class="fs-5 poppins-medium mt-2 transition-all">
 			<slot name="description" class="link-underline-primary">Description Lorem ipsum dolor sit amet consectetur</slot>
 		</p>
 	</div>
