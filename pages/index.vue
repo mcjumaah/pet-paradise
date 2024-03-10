@@ -43,6 +43,30 @@
 			</div>
 			<button type="button" class="btn btn-primary-alt d-flex mx-auto fs-5 poppin-semibold px-5 py-2">Show More</button>
 		</section>
+
+		<section class="pet-service d-flex justify-content-center py-5 container">
+			<div class="card bg-primary text-white border-0">
+				<div class="card-body position-relative py-5 d-flex px-5">
+					<div class="position-relative z-1 d-flex flex-column w-50 row-gap-2 mt-4">
+						<h3 class="fs-1 poppins-bold">Pet Portraits Service</h3>
+						<p class="poppins-medium">
+							Personalized portraits capturing the unique characteristics and charm of each pet. Handcrafted artwork created
+							by skilled artists, providing a timeless keepsake for pet owners. Options for various mediums including canvas,
+							wood, and digital formats.
+						</p>
+						<button
+							type="button"
+							class="btn btn-secondary rounded-pill w-fit h-fit poppins-semibold py-2 px-3 shadow transition-all"
+						>
+							Order Now
+						</button>
+					</div>
+
+					<img src="/images/pet-portraits.png" class="position-absolute bottom-0 end-0 h-100" alt="Pet Portraits" />
+				</div>
+				<div class="card-footer bg-secondary"></div>
+			</div>
+		</section>
 	</div>
 </template>
 
@@ -116,6 +140,21 @@ const dummyFeaturedProducts = [
 				text-decoration-line: underline;
 				text-underline-offset: 2px;
 				text-decoration-color: var(--bs-primary-text-emphasis);
+			}
+		}
+	}
+}
+
+.pet-service {
+	.card {
+		max-width: 77.25rem;
+
+		.card-body {
+			min-height: 26.063rem;
+			overflow: clip;
+
+			div {
+				width: 41%;
 			}
 		}
 	}
