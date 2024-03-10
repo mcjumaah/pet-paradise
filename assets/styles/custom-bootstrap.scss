@@ -19,3 +19,11 @@
 		color: var(--bs-primary-bg-subtle);
 	}
 }
+
+.btn-secondary {
+	color: var(--bs-secondary-text-emphasis);
+
+	&:hover {
+		color: var(--bs-secondary-bg-subtle);
+	}
+}
