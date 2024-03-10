@@ -10,7 +10,7 @@
 					type="button"
 					class="btn btn-secondary rounded-pill fs-4 poppins-medium py-3 px-4 w-fit mt-2 shadow transition-all"
 				>
-					Show Now
+					Shop Now
 				</button>
 			</div>
 		</section>
@@ -71,6 +71,11 @@
 </template>
 
 <script setup lang="ts">
+useSeoMeta({
+	title: "Pet Paradise",
+	ogTitle: "Pet Paradise",
+});
+
 const dummyFeaturedProducts = [
 	{
 		name: "Pedigree",
