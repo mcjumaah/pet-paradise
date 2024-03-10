@@ -16,3 +16,9 @@
 .cursor-pointer {
 	cursor: pointer !important;
 }
+
+.hover\:underline {
+	&:hover {
+		text-decoration-line: underline;
+	}
+}
