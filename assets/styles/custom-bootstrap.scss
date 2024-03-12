@@ -27,3 +27,33 @@
 		color: var(--bs-secondary-bg-subtle);
 	}
 }
+
+a.link-secondary-sm {
+	font-size: 12px;
+	color: #5f9b95;
+
+	&:hover {
+		opacity: 0.5;
+	}
+}
+
+.sides-horizontal-lines {
+	@extend .poppins-semibold;
+	display: flex;
+	align-items: center;
+	column-gap: 0.75rem;
+	font-size: 12px;
+	opacity: 0.5;
+	margin-inline: 0.5rem;
+
+	&::before,
+	&::after {
+		content: "";
+		display: flex;
+		width: 100%;
+		height: fit-content;
+		border-top-style: solid;
+		border-top-width: 1px;
+		border-color: black;
+	}
+}
