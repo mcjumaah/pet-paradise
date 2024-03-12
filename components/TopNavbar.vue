@@ -32,14 +32,20 @@
 							</defs>
 						</svg>
 					</button>
-					<button class="btn w-fit h-fit rounded-3 transition-all">
-						<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="none" viewBox="0 0 28 28">
-							<path
-								fill="#000"
-								d="M14 0a7 7 0 1 1 0 14 7 7 0 0 1 0-14Zm0 3.5a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7Zm0 12.25c4.672 0 14 2.328 14 7V28H0v-5.25c0-4.672 9.328-7 14-7Zm0 3.325c-5.197 0-10.675 2.555-10.675 3.675v1.925h21.35V22.75c0-1.12-5.477-3.675-10.675-3.675Z"
-							/>
-						</svg>
-					</button>
+					<div class="dropdown">
+						<button class="btn w-fit h-fit rounded-3 transition-all" type="button" data-bs-toggle="dropdown">
+							<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="none" viewBox="0 0 28 28">
+								<path
+									fill="#000"
+									d="M14 0a7 7 0 1 1 0 14 7 7 0 0 1 0-14Zm0 3.5a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7Zm0 12.25c4.672 0 14 2.328 14 7V28H0v-5.25c0-4.672 9.328-7 14-7Zm0 3.325c-5.197 0-10.675 2.555-10.675 3.675v1.925h21.35V22.75c0-1.12-5.477-3.675-10.675-3.675Z"
+								/>
+							</svg>
+						</button>
+						<ul class="dropdown-menu dropdown-menu-end">
+							<li><NuxtLink to="/login" class="dropdown-item">Log In</NuxtLink></li>
+							<li><NuxtLink to="/signup" class="dropdown-item">Sign Up</NuxtLink></li>
+						</ul>
+					</div>
 				</menu>
 			</nav>
 		</div>
