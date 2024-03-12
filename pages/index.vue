@@ -71,11 +71,6 @@
 </template>
 
 <script setup lang="ts">
-useSeoMeta({
-	title: "Pet Paradise",
-	ogTitle: "Pet Paradise",
-});
-
 const dummyFeaturedProducts = [
 	{
 		name: "Pedigree",
