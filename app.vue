@@ -9,7 +9,7 @@ const route = useRoute();
 const currentPath = route.path;
 const computedTitle = computed(() => {
 	let firstHalf = currentPath.replace("/", "").charAt(0).toUpperCase() + currentPath.slice(2);
-	return `${firstHalf} – Pet Paradise`;
+	return `${firstHalf ? firstHalf : "Home"} – Pet Paradise`;
 });
 
 useSeoMeta({
