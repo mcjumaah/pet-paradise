@@ -7,7 +7,7 @@
 				<PageNav />
 				<menu class="nav-icons d-flex gap-2 h-100 my-0 align-items-center">
 					<div class="search dropdown">
-						<button class="btn w-fit h-fit rounded-3 transition-all" data-bs-toggle="dropdown">
+						<button class="btn w-fit h-fit rounded-3 transition-all" type="button" data-bs-toggle="dropdown">
 							<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="none" viewBox="0 0 28 28">
 								<g clip-path="url(#a)">
 									<path
@@ -24,7 +24,7 @@
 							<input type="search" class="form-control" placeholder="Find a product..." />
 						</div>
 					</div>
-					<button class="btn w-fit h-fit rounded-3 transition-all">
+					<button class="btn w-fit h-fit rounded-3 transition-all" type="button">
 						<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="none" viewBox="0 0 28 28">
 							<g clip-path="url(#a)">
 								<path

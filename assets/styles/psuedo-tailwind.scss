@@ -1,24 +1,46 @@
 // Psuedo Tailwind Utility Classes (Tailwind supremacy!!)
 
-.h-fit {
-	height: fit-content !important;
-}
+/* Sizing */
+// Width
 .w-fit {
 	width: fit-content !important;
 }
+// Height
+.h-fit {
+	height: fit-content !important;
+}
 
+/* Typography */
+// Line Clamp
+.line-clamp-2 {
+	overflow: hidden;
+	display: -webkit-box;
+	-webkit-box-orient: vertical;
+	-webkit-line-clamp: 2;
+}
+// Text Decoration
+.hover\:underline {
+	&:hover {
+		text-decoration-line: underline;
+	}
+}
+
+/* Transitions & Animation */
+// Transition Property
 .transition-all {
 	transition-property: all !important;
 	transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1) !important;
 	transition-duration: 150ms !important;
 }
 
-.cursor-pointer {
-	cursor: pointer !important;
+/* Transforms */
+// Rotate
+.rotate-180 {
+	transform: rotate(180deg);
 }
 
-.hover\:underline {
-	&:hover {
-		text-decoration-line: underline;
-	}
+/* Interactivity */
+// Cursor
+.cursor-pointer {
+	cursor: pointer !important;
 }

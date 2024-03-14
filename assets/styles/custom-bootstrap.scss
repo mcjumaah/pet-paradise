@@ -57,3 +57,37 @@ a.link-secondary-sm {
 		border-color: black;
 	}
 }
+
+.shop {
+	.shop-main-content {
+		.pagination-bottom {
+			@extend .container;
+
+			.pagination {
+				@extend .justify-content-center, .column-gap-3;
+
+				.page-item {
+					@extend .shadow, .rounded, .bg-body-2, .transition-all;
+					overflow: clip;
+
+					&:hover {
+						@extend .bg-primary-subtle;
+					}
+					&.active {
+						@extend .bg-primary;
+					}
+					&.disabled {
+						@extend .opacity-25;
+					}
+
+					.page-link {
+						@extend .d-flex, .justify-content-center, .align-items-center, .bg-transparent, .fs-5, .poppins-semibold;
+						height: 35px;
+						width: 35px;
+						border: none;
+					}
+				}
+			}
+		}
+	}
+}
