@@ -1,6 +1,6 @@
 <template>
 	<div class="bg-body-2">
-		<div class="d-flex container h-100 py-3 justify-content-between">
+		<div class="d-flex container h-100 py-3 justify-content-between column-gap-4">
 			<Logo />
 
 			<nav class="d-flex gap-2">

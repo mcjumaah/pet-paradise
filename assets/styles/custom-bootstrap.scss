@@ -1,14 +1,18 @@
-.btn-secondary:hover {
-	@extend .shadow-none;
-	color: var(--bs-secondary-bg-subtle);
-	background: var(--bs-secondary-text-emphasis);
-}
-
 .bg-body-2 {
 	background-color: $body-2-bg;
 }
 .bg-body-3 {
 	background-color: $body-3-bg;
+}
+
+.btn-secondary {
+	@extend .transition-all, .text-white;
+
+	&:hover {
+		@extend .shadow-none;
+		color: var(--bs-secondary-bg-subtle);
+		background: var(--bs-secondary-text-emphasis);
+	}
 }
 
 .btn-primary-alt {
@@ -17,14 +21,6 @@
 	color: var(--bs-primary);
 	&:hover {
 		color: var(--bs-primary-bg-subtle);
-	}
-}
-
-.btn-secondary {
-	color: var(--bs-secondary-text-emphasis);
-
-	&:hover {
-		color: var(--bs-secondary-bg-subtle);
 	}
 }
 
@@ -58,35 +54,31 @@ a.link-secondary-sm {
 	}
 }
 
-.shop {
-	.shop-main-content {
-		.pagination-bottom {
-			@extend .container;
+.shop > .pagination-bottom {
+	@extend .container;
 
-			.pagination {
-				@extend .justify-content-center, .column-gap-3;
+	.pagination {
+		@extend .justify-content-center, .column-gap-3;
 
-				.page-item {
-					@extend .shadow, .rounded, .bg-body-2, .transition-all;
-					overflow: clip;
+		.page-item {
+			@extend .shadow, .rounded, .bg-body-2, .transition-all;
+			overflow: clip;
 
-					&:hover {
-						@extend .bg-primary-subtle;
-					}
-					&.active {
-						@extend .bg-primary;
-					}
-					&.disabled {
-						@extend .opacity-25;
-					}
+			&:hover {
+				@extend .bg-primary-subtle;
+			}
+			&.active {
+				@extend .bg-primary;
+			}
+			&.disabled {
+				@extend .opacity-25;
+			}
 
-					.page-link {
-						@extend .d-flex, .justify-content-center, .align-items-center, .bg-transparent, .fs-5, .poppins-semibold;
-						height: 35px;
-						width: 35px;
-						border: none;
-					}
-				}
+			.page-link {
+				@extend .d-flex, .justify-content-center, .align-items-center, .bg-transparent, .fs-5, .poppins-semibold;
+				height: 35px;
+				width: 35px;
+				border: none;
 			}
 		}
 	}
