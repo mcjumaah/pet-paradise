@@ -1,92 +1,82 @@
 <template>
-	<div class="shop">
-		<section class="page-header position-relative py-5">
-			<div class="position-relative d-flex flex-column align-items-center z-1 text-white">
-				<h2>Shop</h2>
-				<p><NuxtLink to="/">Home</NuxtLink> > <span class="poppins-bold">Shop</span></p>
-			</div>
-			<img src="/images/pet-supplies.png" class="position-absolute top-0 w-100 h-100 object-fit-cover opacity-50 z-0" />
-		</section>
+	<section class="shop d-flex flex-column row-gap-2">
+		<div class="sort-bar bg-body-3">
+			<div class="container d-flex py-2 px-4 justify-content-between column-gap-5">
+				<div class="filters d-flex align-items-center column-gap-3">
+					<span class="text-nowrap">By Category:</span>
+					<select class="pet form-select" id="pet-custom-form">
+						<option selected disabled>Pet</option>
+						<option value="all">All</option>
+						<option value="cat">Cat</option>
+						<option value="dog">Dog</option>
+					</select>
 
-		<section class="shop-main-content d-flex flex-column row-gap-2">
-			<div class="sort-bar bg-body-3">
-				<div class="container d-flex py-2 px-4 justify-content-between column-gap-5">
-					<div class="filters d-flex align-items-center column-gap-3">
-						<span class="text-nowrap">By Category:</span>
-						<select class="pet form-select" id="pet-custom-form">
-							<option selected disabled>Pet</option>
-							<option value="all">All</option>
-							<option value="cat">Cat</option>
-							<option value="dog">Dog</option>
-						</select>
+					<select class="product-type form-select" id="product-type-custom-form">
+						<option selected disabled>Item</option>
+						<option value="all">All</option>
+						<option v-for="pType in dummyProductTypes" value="cat">{{ pType }}</option>
+					</select>
+				</div>
 
-						<select class="product-type form-select" id="product-type-custom-form">
-							<option selected disabled>Item</option>
-							<option value="all">All</option>
-							<option v-for="pType in dummyProductTypes" value="cat">{{ pType }}</option>
-						</select>
+				<div class="top-pagination d-flex align-items-center column-gap-3">
+					<div class="page-number text-nowrap">
+						<span class="current-page text-primary-emphasis">{{ pagination.currentPage }}</span> /
+						<span clasa="total-pages">{{ pagination.totalPages }}</span>
 					</div>
-
-					<div class="top-pagination d-flex align-items-center column-gap-3">
-						<div class="page-number text-nowrap">
-							<span class="current-page text-primary-emphasis">{{ pagination.currentPage }}</span> /
-							<span clasa="total-pages">{{ pagination.totalPages }}</span>
-						</div>
-						<div class="next-prev-btn d-flex column-gap-2">
-							<button
-								class="btn btn-primary d-flex align-items-center"
-								type="button"
-								:disabled="pagination.currentPage == 1"
-								@click="pagination.currentPage--"
-							>
-								<img src="/svg/chevron-left.svg" alt="Left Arrow" />
-							</button>
-							<button
-								class="btn btn-primary d-flex align-items-center"
-								type="button"
-								:disabled="pagination.currentPage == pagination.totalPages"
-								@click="pagination.currentPage++"
-							>
-								<img src="/svg/chevron-left.svg" class="rotate-180" alt="Right Arrow" />
-							</button>
-						</div>
+					<div class="next-prev-btn d-flex column-gap-2">
+						<button
+							class="btn btn-primary d-flex align-items-center"
+							type="button"
+							:disabled="pagination.currentPage == 1"
+							@click="pagination.currentPage--"
+						>
+							<img src="/svg/chevron-left.svg" alt="Left Arrow" />
+						</button>
+						<button
+							class="btn btn-primary d-flex align-items-center"
+							type="button"
+							:disabled="pagination.currentPage == pagination.totalPages"
+							@click="pagination.currentPage++"
+						>
+							<img src="/svg/chevron-left.svg" class="rotate-180" alt="Right Arrow" />
+						</button>
 					</div>
 				</div>
 			</div>
+		</div>
 
-			<div class="products container grid gap-4 py-4">
-				<div v-for="(product, index) in dummyProducts" :key="`${product.id} - ${index}`" class="card text-start shadow">
-					<img class="card-img-top" :src="product.previewImg" />
-					<div class="card-body bg-body-2">
-						<p class="card-title line-clamp-2">
-							{{ product.name }}
-						</p>
-						<p class="price card-text text-primary-emphasis">{{ product.price }}</p>
-					</div>
+		<div class="products container grid gap-4 py-4">
+			<div v-for="(product, index) in dummyProducts" :key="`${product.id} - ${index}`" class="card text-start shadow">
+				<img class="card-img-top" :src="product.previewImg" />
+				<div class="card-body bg-body-2">
+					<p class="card-title line-clamp-2">
+						{{ product.name }}
+					</p>
+					<p class="price card-text text-primary-emphasis">{{ product.price }}</p>
 				</div>
 			</div>
+		</div>
 
-			<nav class="pagination-bottom py-3" aria-label="Shop Products Botom Pagination">
-				<ul class="pagination">
-					<li class="page-item" :class="pagination.currentPage == 1 ? 'disabled' : ''">
-						<a class="page-link" href="#" @click="pagination.currentPage--">
-							<img src="/svg/chevron-left-primary.svg" alt="Left Arrow" />
-						</a>
+		<nav class="pagination-bottom py-3" aria-label="Shop Products Botom Pagination">
+			<ul class="pagination">
+				<li class="page-item" :class="pagination.currentPage == 1 ? 'disabled' : ''">
+					<a class="page-link" href="#" @click="pagination.currentPage--">
+						<img src="/svg/chevron-left-primary.svg" alt="Left Arrow" />
+					</a>
+				</li>
+				<template v-for="index in pagination.totalPages">
+					<li v-if="getPageIsToDisplay(index)" class="page-item" :class="index == pagination.currentPage ? 'active' : ''">
+						<a class="page-link" href="#" @click="pagination.currentPage = index">{{ index }}</a>
 					</li>
-					<template v-for="index in pagination.totalPages">
-						<li v-if="getPageIsToDisplay(index)" class="page-item" :class="index == pagination.currentPage ? 'active' : ''">
-							<a class="page-link" href="#" @click="pagination.currentPage = index">{{ index }}</a>
-						</li>
-					</template>
-					<li class="page-item" :class="pagination.currentPage == pagination.totalPages ? 'disabled' : ''">
-						<a class="page-link" href="#" @click="pagination.currentPage++">
-							<img src="/svg/chevron-left-primary.svg" class="rotate-180" alt="Right Arrow" />
-						</a>
-					</li>
-				</ul>
-			</nav>
-		</section>
-	</div>
+				</template>
+				<li class="page-item" :class="pagination.currentPage == pagination.totalPages ? 'disabled' : ''">
+					<a class="page-link" href="#" @click="pagination.currentPage++">
+						<img src="/svg/chevron-left-primary.svg" class="rotate-180" alt="Right Arrow" />
+					</a>
+				</li>
+			</ul>
+		</nav>
+	</section>
 </template>
 
 <script setup lang="ts">
@@ -202,61 +192,42 @@ function getPageIsToDisplay(index: number) {
 
 <style scoped lang="scss">
 .shop {
-	padding-top: 92px;
-
-	.page-header {
-		overflow: clip;
-		background: rgb(136, 21, 37);
-		background: linear-gradient(120deg, rgba(136, 21, 37, 1) 0%, rgba(176, 103, 31, 1) 100%);
-
-		:deep(a) {
-			color: white;
-			text-decoration: none;
+	.sort-bar {
+		@media (min-width: 1200px) {
+			padding-inline: 10vw;
 		}
+		.filters {
+			font-size: 14px;
 
-		p {
-			font-size: 18px;
+			select {
+				font-size: 14px;
+				min-width: 7.5rem;
+				width: fit-content;
+			}
 		}
 	}
 
-	.shop-main-content {
-		.sort-bar {
-			@media (min-width: 1200px) {
-				padding-inline: 10vw;
+	.products {
+		width: fit-content;
+		&.grid {
+			--bs-columns: 3;
+			@media (min-width: 992px) {
+				--bs-columns: 4;
 			}
-			.filters {
-				font-size: 14px;
-
-				select {
-					font-size: 14px;
-					min-width: 7.5rem;
-					width: fit-content;
-				}
+			@media (min-width: 1200px) {
+				--bs-columns: 5;
 			}
 		}
 
-		.products {
-			width: fit-content;
-			&.grid {
-				--bs-columns: 3;
-				@media (min-width: 992px) {
-					--bs-columns: 4;
-				}
-				@media (min-width: 1200px) {
-					--bs-columns: 5;
-				}
+		.card {
+			--product-img-size: 188px;
+			width: var(--product-img-size);
+
+			.card-img-top {
+				height: var(--product-img-size);
 			}
-
-			.card {
-				--product-img-size: 188px;
-				width: var(--product-img-size);
-
-				.card-img-top {
-					height: var(--product-img-size);
-				}
-				.card-title {
-					font-size: 12px;
-				}
+			.card-title {
+				font-size: 12px;
 			}
 		}
 	}
