@@ -1,6 +1,6 @@
 <template>
 	<NuxtLayout name="default">
-		<div class="login d-flex bg-primary">
+		<div class="login-signup d-flex bg-primary">
 			<section class="logo-section d-flex position-relative justify-content-center align-items-center w-100">
 				<div class="position-relative z-1 d-flex flex-column row-gap-5 justify-content-center align-items-center w-75">
 					<Logo :isXl="true" />
@@ -48,7 +48,7 @@ const pathTitle = computed(() => {
 </script>
 
 <style scoped lang="scss">
-.login {
+.login-signup {
 	padding-top: 92px;
 
 	.logo-section {
