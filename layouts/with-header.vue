@@ -22,6 +22,7 @@ const bgImages = [
 	{ path: "/shop", src: "/images/header-bg/shop.png" },
 	{ path: "/about", src: "/images/header-bg/about.png" },
 	{ path: "/contact", src: "/images/header-bg/contact.png" },
+	{ path: "/account", src: "/images/header-bg/account.png" },
 ];
 
 const pathTitle = computed(() => {
