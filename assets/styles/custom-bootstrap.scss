@@ -5,6 +5,15 @@
 	background-color: $body-3-bg;
 }
 
+.btn-primary {
+	@extend .transition-all, .text-white;
+
+	&:hover {
+		@extend .shadow-none;
+		color: var(--bs-primary-bg-subtle);
+		background: var(--bs-primary-text-emphasis);
+	}
+}
 .btn-secondary {
 	@extend .transition-all, .text-white;
 
@@ -18,9 +27,9 @@
 .btn-primary-alt {
 	@extend .btn-primary, .transition-all;
 	background-color: var(--bs-primary-bg-subtle);
-	color: var(--bs-primary);
+	color: var(--bs-primary) !important;
 	&:hover {
-		color: var(--bs-primary-bg-subtle);
+		color: var(--bs-primary-bg-subtle) !important;
 	}
 }
 
