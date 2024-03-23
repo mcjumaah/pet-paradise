@@ -1,5 +1,5 @@
 <template>
-	<div class="who-we-serve-card card shadow rounded">
+	<div class="who-we-serve-card card shadow rounded transition-all">
 		<div class="grid flex-column h-100">
 			<div class="card-img g-col-6">
 				<img :src="props.imgSrc" class="object-fit-cover rounded-start w-100 h-100" alt="CARD IMAGE" />
@@ -40,6 +40,10 @@ const props = withDefaults(defineProps<Props>(), {
 	}
 	@media (min-width: 1200px) {
 		max-width: 31.5rem;
+	}
+
+	&:hover {
+		--bs-box-shadow: 0 10px 15px -3px rgb(136 21 37 / 0.1), 0 4px 6px -4px rgb(136 21 37 / 0.1);
 	}
 
 	.grid {
