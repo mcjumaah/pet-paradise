@@ -9,7 +9,7 @@
 						<NuxtLink to="/">Home</NuxtLink> > <span class="poppins-bold">{{ pathTitle }}</span>
 					</p>
 				</div>
-				<img :src="currentBgImg" class="position-absolute top-0 w-100 h-100 object-fit-cover opacity-25 z-0" />
+				<img :src="currentBgImg" class="position-absolute top-0 w-100 h-100 object-fit-cover opacity-25 z-0 bg-white" />
 			</section>
 			<slot />
 		</div>
@@ -21,6 +21,7 @@ const route = useRoute();
 const bgImages = [
 	{ path: "/shop", src: "/images/header-bg/shop.png" },
 	{ path: "/about", src: "/images/header-bg/about.png" },
+	{ path: "/contact", src: "/images/header-bg/contact.png" },
 ];
 
 const pathTitle = computed(() => {
@@ -45,6 +46,10 @@ const currentBgImg = computed(() => {
 		:deep(a) {
 			color: white;
 			text-decoration: none;
+
+			&:hover {
+				text-decoration: underline;
+			}
 		}
 
 		p {
