@@ -2,7 +2,7 @@
 	<div class="who-we-serve-card card shadow rounded transition-all">
 		<div class="grid flex-column h-100">
 			<div class="card-img g-col-6">
-				<img :src="props.imgSrc" class="object-fit-cover rounded-start w-100 h-100" alt="CARD IMAGE" />
+				<img :src="props.imgSrc" class="object-fit-cover rounded-start w-100 h-100" :alt="props.title" />
 			</div>
 
 			<div
