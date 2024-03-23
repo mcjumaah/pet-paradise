@@ -6,12 +6,12 @@
 				<p class="fs-5 w-50">
 					Paws and shop! Find everything your furry friend needs with ease. Treats, toys, and more, just a click away!
 				</p>
-				<button
-					type="button"
+				<NuxtLink
+					to="/shop"
 					class="btn btn-secondary rounded-pill fs-4 poppins-medium py-3 px-4 w-fit mt-2 shadow transition-all"
 				>
 					Shop Now
-				</button>
+				</NuxtLink>
 			</div>
 		</section>
 
