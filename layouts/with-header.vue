@@ -3,10 +3,10 @@
 		<div class="with-header-root">
 			<section class="page-header position-relative py-5">
 				<div class="position-relative d-flex flex-column align-items-center z-1 text-white">
-					<h2>{{ pathTitle }}</h2>
-					<Logo v-if="pathTitle == 'About'" class="pt-3 pb-4" :isXl="true" />
+					<h2>{{ basePathTitle }}</h2>
+					<Logo v-if="basePathTitle == 'About'" class="pt-3 pb-4" :isXl="true" />
 					<p>
-						<NuxtLink to="/">Home</NuxtLink> > <span class="poppins-bold">{{ pathTitle }}</span>
+						<NuxtLink to="/">Home</NuxtLink> > <span class="poppins-bold">{{ basePathTitle }}</span>
 					</p>
 				</div>
 				<img :src="currentBgImg" class="position-absolute top-0 w-100 h-100 object-fit-cover opacity-25 z-0 bg-white" />
@@ -19,18 +19,21 @@
 <script setup lang="ts">
 const route = useRoute();
 const bgImages = [
-	{ path: "/shop", src: "/images/header-bg/shop.png" },
-	{ path: "/about", src: "/images/header-bg/about.png" },
-	{ path: "/contact", src: "/images/header-bg/contact.png" },
-	{ path: "/account", src: "/images/header-bg/account.png" },
+	{ basePathTitle: "Shop", src: "/images/header-bg/shop.png" },
+	{ basePathTitle: "About", src: "/images/header-bg/about.png" },
+	{ basePathTitle: "Contact", src: "/images/header-bg/contact.png" },
+	{ basePathTitle: "Account", src: "/images/header-bg/account.png" },
 ];
 
-const pathTitle = computed(() => {
-	let currentPath = route.path;
-	return currentPath.replace("/", "").charAt(0).toUpperCase() + currentPath.slice(2);
+const pathArr = computed<string[]>(() => {
+	return route.path.split("/").filter(Boolean);
+});
+const basePathTitle = computed(() => {
+	let basePath = pathArr.value[0];
+	return basePath.charAt(0).toUpperCase() + basePath.slice(1);
 });
 const currentBgImg = computed(() => {
-	let computedObject = bgImages.find((obj) => obj.path == route.path);
+	let computedObject = bgImages.find((obj) => obj.basePathTitle == basePathTitle.value);
 	return computedObject?.src ? computedObject.src : "/images/header-bg/shop.png";
 });
 </script>
