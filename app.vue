@@ -8,10 +8,16 @@
 import type { LayoutKey } from "#build/types/layouts";
 
 const route = useRoute();
+
+const pathArr = computed<string[]>(() => {
+	return route.path.split("/").filter(Boolean);
+});
+const basePathTitle = computed(() => {
+	let basePath = pathArr.value[0] ? pathArr.value[0] : "Home";
+	return basePath.charAt(0).toUpperCase() + basePath.slice(1);
+});
 const computedTitle = computed(() => {
-	let currentPath = route.path;
-	let firstHalf = currentPath.replace("/", "").charAt(0).toUpperCase() + currentPath.slice(2);
-	return `${firstHalf ? firstHalf : "Home"} – Pet Paradise`;
+	return `${basePathTitle.value} – Pet Paradise`;
 });
 useSeoMeta({
 	title: computedTitle,
@@ -22,8 +28,10 @@ const computedLayout = ref<LayoutKey>("default");
 const layoutName = computed<false | LayoutKey>(() => {
 	let withNoHeaders = ["/", "/signup", "/login"];
 
-	if (route.path == "/signup" || route.path == "/login") {
+	if (route.path === "/signup" || route.path === "/login") {
 		computedLayout.value = "login-signup";
+	} else if (basePathTitle.value === "Account") {
+		computedLayout.value = "account";
 	} else if (!withNoHeaders.includes(route.path)) {
 		computedLayout.value = "with-header";
 	} else {
