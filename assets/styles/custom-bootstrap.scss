@@ -46,6 +46,11 @@ a {
 	}
 }
 
+button.navbar-toggler:hover {
+	@extend .transition-all;
+	background-color: var(--bs-primary-bg-subtle);
+}
+
 .search {
 	position: relative;
 

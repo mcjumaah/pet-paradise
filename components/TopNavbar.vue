@@ -18,7 +18,7 @@
 				</div>
 
 				<menu class="nav-icons d-flex gap-2 h-100 my-0 align-items-center">
-					<div class="search-btn dropdown">
+					<div title="Search" class="search-btn dropdown">
 						<button class="btn w-fit h-fit rounded-3 transition-all" type="button" data-bs-toggle="dropdown">
 							<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="none" viewBox="0 0 28 28">
 								<g clip-path="url(#a)">
@@ -38,7 +38,7 @@
 							</form>
 						</div>
 					</div>
-					<button class="btn w-fit h-fit rounded-3 transition-all" type="button">
+					<NuxtLink to="/shop/cart" title="Cart" class="to-cart rounded-3 transition-all">
 						<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="none" viewBox="0 0 28 28">
 							<g clip-path="url(#a)">
 								<path
@@ -50,8 +50,8 @@
 								<clipPath id="a"><path fill="#fff" d="M0 0h28v28H0z" /></clipPath>
 							</defs>
 						</svg>
-					</button>
-					<div class="account dropdown">
+					</NuxtLink>
+					<div title="Account" class="account dropdown">
 						<button class="btn w-fit h-fit rounded-3 transition-all" type="button" data-bs-toggle="dropdown">
 							<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="none" viewBox="0 0 28 28">
 								<path
@@ -86,15 +86,22 @@
 
 <style lang="scss" scoped>
 .nav-icons {
-	button:hover {
-		background-color: var(--bs-primary-bg-subtle);
-		box-shadow: inset 0 2px 4px 0 rgb(0 0 0 / 0.05);
+	> * {
+		&.to-cart {
+			padding: 0.375rem 0.75rem 0.375rem 0.75rem;
+		}
 
-		svg {
-			opacity: 0.5;
-			transition-property: all;
-			transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-			transition-duration: 150ms;
+		&:not(:has(> button)):hover,
+		> button:hover {
+			background-color: var(--bs-primary-bg-subtle);
+			box-shadow: inset 0 2px 4px 0 rgb(0 0 0 / 0.05);
+
+			:deep(svg) {
+				opacity: 0.5;
+				transition-property: all;
+				transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+				transition-duration: 150ms;
+			}
 		}
 	}
 
