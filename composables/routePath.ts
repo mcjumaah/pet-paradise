@@ -8,11 +8,11 @@ export const useRoutePathArr = () => {
 	return pathArr;
 };
 
-export const useBasePathTitle = () => {
-	const basePathTitle = computed(() => {
-		let basePath = useRoutePathArr().value[0] || "Home";
-		return basePath.charAt(0).toUpperCase() + basePath.slice(1);
+export const useRoutePathTitle = (pathIndex = 0) => {
+	const pathTitle = computed(() => {
+		let title = useRoutePathArr().value[pathIndex] || "Home";
+		return title.charAt(0).toUpperCase() + title.slice(1);
 	});
 
-	return basePathTitle;
+	return pathTitle;
 };

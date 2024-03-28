@@ -24,7 +24,7 @@ const bgImages = [
 	{ basePathTitle: "Account", src: "/images/header-bg/account.png" },
 ];
 
-const basePathTitle = useBasePathTitle();
+const basePathTitle = useRoutePathTitle();
 const currentBgImg = computed(() => {
 	let computedObject = bgImages.find((obj) => obj.basePathTitle == basePathTitle.value);
 	return computedObject?.src ? computedObject.src : "/images/header-bg/shop.png";
