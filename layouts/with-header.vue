@@ -29,7 +29,7 @@ const pathArr = computed<string[]>(() => {
 	return route.path.split("/").filter(Boolean);
 });
 const basePathTitle = computed(() => {
-	let basePath = pathArr.value[0];
+	let basePath = pathArr.value[0] || "";
 	return basePath.charAt(0).toUpperCase() + basePath.slice(1);
 });
 const currentBgImg = computed(() => {
