@@ -33,12 +33,34 @@
 	}
 }
 
-a.link-secondary-sm {
-	font-size: 12px;
-	color: #5f9b95;
+a {
+	@extend .transition-all;
 
-	&:hover {
-		opacity: 0.5;
+	&.link-secondary-sm {
+		font-size: 12px;
+		color: #5f9b95;
+
+		&:hover {
+			opacity: 0.5;
+		}
+	}
+}
+
+.search {
+	position: relative;
+
+	> input {
+		padding-left: 2.5rem;
+	}
+
+	&::after {
+		position: absolute;
+		inset: 50% auto auto 0.5rem;
+		transform: translateY(-50%);
+		height: 24px;
+		width: 24px;
+		opacity: 0.75;
+		content: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23212529bf' d='m19.6 21l-6.3-6.3q-.75.6-1.725.95T9.5 16q-2.725 0-4.612-1.888T3 9.5q0-2.725 1.888-4.612T9.5 3q2.725 0 4.613 1.888T16 9.5q0 1.1-.35 2.075T14.7 13.3l6.3 6.3zM9.5 14q1.875 0 3.188-1.312T14 9.5q0-1.875-1.312-3.187T9.5 5Q7.625 5 6.313 6.313T5 9.5q0 1.875 1.313 3.188T9.5 14'/%3E%3C/svg%3E");
 	}
 }
 
@@ -63,6 +85,8 @@ a.link-secondary-sm {
 	}
 }
 
+/* Component Specific Styling */
+// Shop Page
 .shop > .pagination-bottom {
 	@extend .container;
 

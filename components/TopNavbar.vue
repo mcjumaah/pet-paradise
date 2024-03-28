@@ -1,12 +1,24 @@
 <template>
 	<div class="bg-body-2">
-		<div class="d-flex container h-100 py-3 justify-content-between column-gap-4">
-			<Logo />
+		<div class="navbar navbar-expand-lg d-flex container h-100 py-3 px-2 justify-content-between column-gap-4">
+			<Logo class="navbar-brand" />
 
-			<nav class="d-flex gap-2">
-				<PageNav />
+			<nav class="d-flex align-items-center gap-2">
+				<div id="top-navbar-page-nav" class="offcanvas offcanvas-end container py-4 transition-all row-gap-4">
+					<button
+						type="button"
+						class="btn-close ms-auto me-3 d-lg-none"
+						aria-label="Close"
+						data-bs-dismiss="offcanvas"
+					></button>
+					<form class="search d-lg-none">
+						<input type="search" class="form-control" placeholder="Find a product..." />
+					</form>
+					<PageNav :isOnTopbar="true" data-bs-dismiss="offcanvas" />
+				</div>
+
 				<menu class="nav-icons d-flex gap-2 h-100 my-0 align-items-center">
-					<div class="search dropdown">
+					<div class="search-btn dropdown">
 						<button class="btn w-fit h-fit rounded-3 transition-all" type="button" data-bs-toggle="dropdown">
 							<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="none" viewBox="0 0 28 28">
 								<g clip-path="url(#a)">
@@ -21,7 +33,9 @@
 							</svg>
 						</button>
 						<div class="dropdown-menu dropdown-menu-end p-2">
-							<input type="search" class="form-control" placeholder="Find a product..." />
+							<form class="search">
+								<input type="search" class="form-control" placeholder="Find a product..." />
+							</form>
 						</div>
 					</div>
 					<button class="btn w-fit h-fit rounded-3 transition-all" type="button">
@@ -52,6 +66,17 @@
 						</ul>
 					</div>
 				</menu>
+
+				<button
+					class="navbar-toggler ms-3"
+					type="button"
+					data-bs-toggle="offcanvas"
+					data-bs-target="#top-navbar-page-nav"
+					aria-controls="top-navbar-page-nav"
+					aria-label="Toggle navigation"
+				>
+					<span class="navbar-toggler-icon"></span>
+				</button>
 			</nav>
 		</div>
 	</div>
@@ -73,7 +98,7 @@
 		}
 	}
 
-	.search.dropdown {
+	.search-btn.dropdown {
 		.dropdown-menu {
 			--bs-dropdown-min-width: 25rem;
 		}
