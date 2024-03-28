@@ -8,14 +8,7 @@
 import type { LayoutKey } from "#build/types/layouts";
 
 const route = useRoute();
-
-const pathArr = computed<string[]>(() => {
-	return route.path.split("/").filter(Boolean);
-});
-const basePathTitle = computed(() => {
-	let basePath = pathArr.value[0] ? pathArr.value[0] : "Home";
-	return basePath.charAt(0).toUpperCase() + basePath.slice(1);
-});
+const basePathTitle = useBasePathTitle();
 const computedTitle = computed(() => {
 	return `${basePathTitle.value} – Pet Paradise`;
 });

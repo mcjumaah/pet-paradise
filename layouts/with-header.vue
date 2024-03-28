@@ -17,7 +17,6 @@
 </template>
 
 <script setup lang="ts">
-const route = useRoute();
 const bgImages = [
 	{ basePathTitle: "Shop", src: "/images/header-bg/shop.png" },
 	{ basePathTitle: "About", src: "/images/header-bg/about.png" },
@@ -25,13 +24,7 @@ const bgImages = [
 	{ basePathTitle: "Account", src: "/images/header-bg/account.png" },
 ];
 
-const pathArr = computed<string[]>(() => {
-	return route.path.split("/").filter(Boolean);
-});
-const basePathTitle = computed(() => {
-	let basePath = pathArr.value[0] || "";
-	return basePath.charAt(0).toUpperCase() + basePath.slice(1);
-});
+const basePathTitle = useBasePathTitle();
 const currentBgImg = computed(() => {
 	let computedObject = bgImages.find((obj) => obj.basePathTitle == basePathTitle.value);
 	return computedObject?.src ? computedObject.src : "/images/header-bg/shop.png";
