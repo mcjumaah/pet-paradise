@@ -8,9 +8,15 @@
 import type { LayoutKey } from "#build/types/layouts";
 
 const route = useRoute();
-const basePathTitle = useRoutePathTitle();
+const pathTitle = computed(() => {
+	return useRoutePathTitle().value;
+});
+const basePathTitle = computed(() => {
+	let title = useRoutePathTitle(0);
+	return title.value;
+});
 const computedTitle = computed(() => {
-	return `${basePathTitle.value} – Pet Paradise`;
+	return `${pathTitle.value} – Pet Paradise`;
 });
 useSeoMeta({
 	title: computedTitle,

@@ -8,7 +8,7 @@ export const useRoutePathArr = () => {
 	return pathArr;
 };
 
-export const useRoutePathTitle = (pathIndex = 0) => {
+export const useRoutePathTitle = (pathIndex = useRoutePathArr().value.length - 1) => {
 	const pathTitle = computed(() => {
 		let title = useRoutePathArr().value[pathIndex] || "Home";
 		return title.charAt(0).toUpperCase() + title.slice(1);

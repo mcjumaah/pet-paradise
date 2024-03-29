@@ -3,18 +3,18 @@
 		<div class="with-header-root">
 			<section class="page-header position-relative py-5">
 				<div class="position-relative d-flex flex-column align-items-center z-1 text-white">
-					<h2>{{ basePathTitle }}</h2>
-					<Logo v-if="basePathTitle == 'About'" class="pt-3 pb-4" :isXl="true" />
+					<h2>{{ basePathTitle === "Account" ? basePathTitle : pathTitle }}</h2>
+					<Logo v-if="pathTitle == 'About'" class="pt-3 pb-4" :isXl="true" />
 					<p class="d-flex column-gap-2">
 						<NuxtLink to="/">Home</NuxtLink> >
 						<template v-for="(path, index) in pathArr">
-							<span v-if="getIsNotLastPathArrSegment(index)" class="d-flex column-gap-2">
+							<span v-if="getIsNotLastPathArrSegment(index) && basePathTitle !== 'Account'" class="d-flex column-gap-2">
 								<NuxtLink :to="getPathPerSegment(index)">{{ useRoutePathTitle(index).value }}</NuxtLink> >
 							</span>
-							<span v-else class="poppins-bold">
-								{{ useRoutePathTitle(index).value }}
-							</span>
 						</template>
+						<span class="poppins-bold">
+							{{ pathTitle }}
+						</span>
 					</p>
 				</div>
 				<img :src="currentBgImg" class="position-absolute top-0 w-100 h-100 object-fit-cover opacity-25 z-0 bg-white" />
@@ -25,18 +25,24 @@
 </template>
 
 <script setup lang="ts">
+const pathArr = useRoutePathArr();
 const bgImages = [
-	{ basePathTitle: "Shop", src: "/images/header-bg/shop.png" },
-	{ basePathTitle: "About", src: "/images/header-bg/about.png" },
-	{ basePathTitle: "Contact", src: "/images/header-bg/contact.png" },
-	{ basePathTitle: "Account", src: "/images/header-bg/account.png" },
+	{ pathTitle: "Shop", src: "/images/header-bg/shop.png" },
+	{ pathTitle: "About", src: "/images/header-bg/about.png" },
+	{ pathTitle: "Contact", src: "/images/header-bg/contact.png" },
+	{ pathTitle: "Account", src: "/images/header-bg/account.png" },
 ];
 
-const pathArr = useRoutePathArr();
-const basePathTitle = useRoutePathTitle();
-
+const pathTitle = computed(() => {
+	let title = useRoutePathTitle();
+	return title.value;
+});
+const basePathTitle = computed(() => {
+	let title = useRoutePathTitle(0);
+	return title.value;
+});
 const currentBgImg = computed(() => {
-	let computedObject = bgImages.find((obj) => obj.basePathTitle == basePathTitle.value);
+	let computedObject = bgImages.find((obj) => obj.pathTitle == pathTitle.value);
 	return computedObject?.src ? computedObject.src : "/images/header-bg/shop.png";
 });
 
