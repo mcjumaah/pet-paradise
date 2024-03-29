@@ -3,7 +3,7 @@
 		<div class="with-header-root">
 			<section class="page-header position-relative py-5">
 				<div class="position-relative d-flex flex-column align-items-center z-1 text-white">
-					<h2>{{ basePathTitle === "Account" ? basePathTitle : pathTitle }}</h2>
+					<h2>{{ finalComputedPathTitle }}</h2>
 					<Logo v-if="pathTitle == 'About'" class="pt-3 pb-4" :isXl="true" />
 					<p class="d-flex column-gap-2">
 						<NuxtLink to="/">Home</NuxtLink> >
@@ -41,8 +41,11 @@ const pathTitle = computed(() => {
 const basePathTitle = computed(() => {
 	return $routePathHelper().title(0).value;
 });
+const finalComputedPathTitle = computed(() => {
+	return basePathTitle.value === "Account" ? basePathTitle.value : pathTitle.value;
+});
 const currentBgImg = computed(() => {
-	let computedObject = bgImages.find((obj) => obj.pathTitle == pathTitle.value);
+	let computedObject = bgImages.find((obj) => obj.pathTitle == finalComputedPathTitle.value);
 	return computedObject?.src ? computedObject.src : "/images/header-bg/shop.png";
 });
 
