@@ -8,12 +8,13 @@
 import type { LayoutKey } from "#build/types/layouts";
 
 const route = useRoute();
+const { $routePathHelper } = useNuxtApp();
+
 const pathTitle = computed(() => {
-	return useRoutePathTitle().value;
+	return $routePathHelper().title().value;
 });
 const basePathTitle = computed(() => {
-	let title = useRoutePathTitle(0);
-	return title.value;
+	return $routePathHelper().title(0).value;
 });
 const computedTitle = computed(() => {
 	return `${pathTitle.value} – Pet Paradise`;
