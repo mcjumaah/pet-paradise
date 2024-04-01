@@ -32,7 +32,7 @@
 						</div>
 						<div class="d-flex align-items-center column-gap-4">
 							<img :src="item.previewImg" class="product-image rounded" :alt="`Product #${item.id} Image`" />
-							<p>{{ item.name }}</p>
+							<p class="card-text">{{ item.name }}</p>
 						</div>
 					</div>
 
@@ -40,7 +40,15 @@
 						<div class="g-col-3 d-flex justify-content-center">{{ item.price }}</div>
 						<div class="g-col-3 d-flex justify-content-center">
 							<div class="cart-item-quantity input-group justify-content-center border rounded">
-								<button class="btn start-0" type="button" id="reduce-quantity" @click="item.quantity--">-</button>
+								<button
+									title="Reduce Quantity"
+									class="btn start-0"
+									type="button"
+									id="reduce-quantity"
+									@click="item.quantity--"
+								>
+									-
+								</button>
 								<input
 									type="number"
 									class="form-control border-0 px-1 text-center position-relative z-1"
@@ -49,7 +57,9 @@
 									aria-describedby="button-addon1"
 									v-model="item.quantity"
 								/>
-								<button class="btn end-0" type="button" id="add-quantity" @click="item.quantity++">+</button>
+								<button title="Add Quantity" class="btn end-0" type="button" id="add-quantity" @click="item.quantity++">
+									+
+								</button>
 							</div>
 						</div>
 						<div class="g-col-3 d-flex justify-content-center text-primary">₱{{ getItemTotalPrice(item) }}</div>
@@ -65,7 +75,16 @@
 			<p class="mb-0">
 				Total ({{ selectedItemsId.length }} item/s): <span class="text-primary fs-4">₱{{ selectedItemsTotalPrice }}</span>
 			</p>
-			<button class="btn btn-primary" type="button">Check Out</button>
+			<div id="checkout-button-wrapper" data-bs-toggle="tooltip" data-bs-title="Select Item's to Checkout" tabindex="0">
+				<NuxtLink
+					to="/shop/cart/checkout"
+					class="btn btn-primary"
+					:class="selectedItemsId.length < 1 ? 'disabled' : ''"
+					@click="setCheckoutItems()"
+				>
+					Check Out
+				</NuxtLink>
+			</div>
 		</div>
 	</div>
 </template>
@@ -79,6 +98,11 @@ export interface CartItem {
 	quantity: number;
 }
 
+const { $Tooltip: Tooltip } = useNuxtApp();
+const checkoutItems = useCheckoutItems();
+const getItemTotalPrice = useItemTotalPrice;
+
+const checkoutTooltip = ref();
 const dummyCartItems = ref<CartItem[]>([
 	{
 		id: 1,
@@ -110,6 +134,7 @@ const dummyCartItems = ref<CartItem[]>([
 	},
 ]);
 const selectedItemsId = ref<number[]>([]);
+
 const selectedItemsTotalPrice = computed(() => {
 	let total = 0;
 	dummyCartItems.value.forEach((item) => {
@@ -119,6 +144,7 @@ const selectedItemsTotalPrice = computed(() => {
 	});
 	return total;
 });
+
 const isSelectedAll = computed({
 	get: () => selectedItemsId.value.length === dummyCartItems.value?.length,
 	set: (value) => {
@@ -130,9 +156,23 @@ const isSelectedAll = computed({
 	},
 });
 
-function getItemTotalPrice(item: CartItem) {
-	return parseInt(item.price.slice(1)) * item.quantity;
+watch(selectedItemsId, (newItemsId) => {
+	if (newItemsId.length > 0 && checkoutTooltip.value) {
+		checkoutTooltip.value.disable();
+	}
+});
+
+function setCheckoutItems() {
+	dummyCartItems.value.forEach((item) => {
+		if (selectedItemsId.value.includes(item.id)) {
+			checkoutItems.value.push(item);
+		}
+	});
 }
+
+onMounted(() => {
+	checkoutTooltip.value = new Tooltip(document.getElementById("checkout-button-wrapper") as HTMLElement);
+});
 </script>
 
 <style scoped lang="scss">
