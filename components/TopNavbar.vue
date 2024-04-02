@@ -18,7 +18,15 @@
 				</div>
 
 				<menu class="nav-icons d-flex gap-2 h-100 my-0 align-items-center">
-					<div title="Search" class="search-btn dropdown">
+					<div
+						id="top-navbar-search-dropdown"
+						class="search-btn dropdown"
+						title="Search"
+						data-bs-toggle="tooltip"
+						data-bs-title="Search"
+						data-bs-trigger="hover"
+						data-bs-placement="bottom"
+					>
 						<button class="btn w-fit h-fit rounded-3 transition-all" type="button" data-bs-toggle="dropdown">
 							<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="none" viewBox="0 0 28 28">
 								<g clip-path="url(#a)">
@@ -38,7 +46,16 @@
 							</form>
 						</div>
 					</div>
-					<NuxtLink to="/shop/cart" title="Cart" class="to-cart rounded-3 transition-all">
+					<NuxtLink
+						to="/shop/cart"
+						id="top-navbar-cart-link"
+						class="to-cart rounded-3 transition-all"
+						title="Cart"
+						data-bs-toggle="tooltip"
+						data-bs-title="Cart"
+						data-bs-trigger="hover"
+						data-bs-placement="bottom"
+					>
 						<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="none" viewBox="0 0 28 28">
 							<g clip-path="url(#a)">
 								<path
@@ -51,7 +68,15 @@
 							</defs>
 						</svg>
 					</NuxtLink>
-					<div title="Account" class="account dropdown">
+					<div
+						id="top-navbar-account-dropdown"
+						class="account dropdown"
+						title="Account"
+						data-bs-toggle="tooltip"
+						data-bs-title="Account"
+						data-bs-trigger="hover"
+						data-bs-placement="bottom"
+					>
 						<button class="btn w-fit h-fit rounded-3 transition-all" type="button" data-bs-toggle="dropdown">
 							<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="none" viewBox="0 0 28 28">
 								<path
@@ -82,7 +107,23 @@
 	</div>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+export interface CartTooltips {
+	search: any;
+	cart: any;
+	account: any;
+}
+
+const { $Tooltip: Tooltip } = useNuxtApp();
+
+const tooltips = ref(<CartTooltips>{});
+
+onMounted(() => {
+	tooltips.value.search = new Tooltip(document.getElementById("top-navbar-search-dropdown") as HTMLElement);
+	tooltips.value.cart = new Tooltip(document.getElementById("top-navbar-cart-link") as HTMLElement);
+	tooltips.value.account = new Tooltip(document.getElementById("top-navbar-account-dropdown") as HTMLElement);
+});
+</script>
 
 <style lang="scss" scoped>
 .nav-icons {
