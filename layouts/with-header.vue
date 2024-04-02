@@ -27,6 +27,7 @@
 <script setup lang="ts">
 const { $routePathHelper: routePath } = useNuxtApp();
 const pathArr = routePath().arr;
+
 const bgImages = [
 	{ pathTitle: "Shop", src: "/images/header-bg/shop.png" },
 	{ pathTitle: "About", src: "/images/header-bg/about.png" },
