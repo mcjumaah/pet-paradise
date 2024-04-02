@@ -9,7 +9,7 @@
 						<NuxtLink to="/">Home</NuxtLink> >
 						<template v-for="(path, index) in pathArr">
 							<span v-if="getIsNotLastPathArrSegment(index) && basePathTitle !== 'Account'" class="d-flex column-gap-2">
-								<NuxtLink :to="getPathPerSegment(index)">{{ $routePathHelper().title(index).value }}</NuxtLink> >
+								<NuxtLink :to="getPathPerSegment(index)">{{ routePath().title(index).value }}</NuxtLink> >
 							</span>
 						</template>
 						<span class="poppins-bold">
@@ -25,8 +25,8 @@
 </template>
 
 <script setup lang="ts">
-const { $routePathHelper } = useNuxtApp();
-const pathArr = $routePathHelper().arr;
+const { $routePathHelper: routePath } = useNuxtApp();
+const pathArr = routePath().arr;
 const bgImages = [
 	{ pathTitle: "Shop", src: "/images/header-bg/shop.png" },
 	{ pathTitle: "About", src: "/images/header-bg/about.png" },
@@ -37,10 +37,10 @@ const bgImages = [
 ];
 
 const pathTitle = computed(() => {
-	return $routePathHelper().title().value;
+	return routePath().title().value;
 });
 const basePathTitle = computed(() => {
-	return $routePathHelper().title(0).value;
+	return routePath().title(0).value;
 });
 const finalComputedPathTitle = computed(() => {
 	return basePathTitle.value === "Account" ? basePathTitle.value : pathTitle.value;
