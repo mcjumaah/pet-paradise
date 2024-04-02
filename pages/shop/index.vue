@@ -4,14 +4,14 @@
 			<div class="container d-flex py-2 px-4 justify-content-between column-gap-5">
 				<div class="filters d-flex align-items-center column-gap-3">
 					<span class="text-nowrap">By Category:</span>
-					<select class="pet form-select" id="pet-custom-form">
+					<select id="pet-custom-form" class="pet form-select cursor-pointer">
 						<option selected disabled>Pet</option>
 						<option value="all">All</option>
 						<option value="cat">Cat</option>
 						<option value="dog">Dog</option>
 					</select>
 
-					<select class="product-type form-select" id="product-type-custom-form">
+					<select id="product-type-custom-form" class="product-type form-select cursor-pointer">
 						<option selected disabled>Item</option>
 						<option value="all">All</option>
 						<option v-for="pType in dummyProductTypes" value="cat">{{ pType }}</option>
@@ -27,6 +27,7 @@
 						<button
 							class="btn btn-primary d-flex align-items-center"
 							type="button"
+							title="Previous"
 							:disabled="pagination.currentPage == 1"
 							@click="pagination.currentPage--"
 						>
@@ -35,6 +36,7 @@
 						<button
 							class="btn btn-primary d-flex align-items-center"
 							type="button"
+							title="Next"
 							:disabled="pagination.currentPage == pagination.totalPages"
 							@click="pagination.currentPage++"
 						>
@@ -46,21 +48,27 @@
 		</div>
 
 		<div class="products container grid gap-4 py-4">
-			<div v-for="(product, index) in dummyProducts" :key="`${product.id} - ${index}`" class="card text-start shadow">
+			<NuxtLink
+				v-for="(product, index) in dummyProducts"
+				:key="`${product.id} - ${index}`"
+				:to="`/shop/${product.id}`"
+				class="card text-start shadow bg-body-2"
+				:title="product.name"
+			>
 				<img class="card-img-top" :src="product.previewImg" />
-				<div class="card-body bg-body-2">
+				<div class="card-body transition-all">
 					<p class="card-title line-clamp-2">
 						{{ product.name }}
 					</p>
 					<p class="price card-text text-primary-emphasis">{{ product.price }}</p>
 				</div>
-			</div>
+			</NuxtLink>
 		</div>
 
 		<nav class="pagination-bottom py-3" aria-label="Shop Products Botom Pagination">
 			<ul class="pagination">
 				<li class="page-item" :class="pagination.currentPage == 1 ? 'disabled' : ''">
-					<a class="page-link" href="#" @click="pagination.currentPage--">
+					<a class="page-link" href="#" title="Previous" @click="pagination.currentPage--">
 						<img src="/svg/chevron-left-primary.svg" alt="Left Arrow" />
 					</a>
 				</li>
@@ -70,7 +78,7 @@
 					</li>
 				</template>
 				<li class="page-item" :class="pagination.currentPage == pagination.totalPages ? 'disabled' : ''">
-					<a class="page-link" href="#" @click="pagination.currentPage++">
+					<a class="page-link" href="#" title="Next" @click="pagination.currentPage++">
 						<img src="/svg/chevron-left-primary.svg" class="rotate-180" alt="Right Arrow" />
 					</a>
 				</li>
@@ -81,98 +89,7 @@
 
 <script setup lang="ts">
 const dummyProductTypes = ["Food & Treats", "Supplies", "Toys", "Clothing & Accessories", "Health & Wellness"];
-const dummyProducts = [
-	{
-		id: 1,
-		name: "Dr Shiba Happy Tummy Healthy Dog Treats Snack - Dog Multivitamins - Dog Food for Digestive Care",
-		price: "₱499",
-		previewImg: "/images/shop-products/01.png",
-	},
-	{
-		id: 2,
-		name: "PEDIGREE DentaStix for Puppy – Dental Treats for Puppy, 56g. Daily Puppy Treats for Healthy Gums",
-		price: "₱71",
-		previewImg: "/images/shop-products/02.png",
-	},
-	{
-		id: 3,
-		name: "Dr. Shiba Happy Tummy Taster Pack - Beef 40g  Dog Treats Snack - Dog Food for Digestive Care",
-		price: "₱99",
-		previewImg: "/images/shop-products/03.png",
-	},
-	{
-		id: 4,
-		name: "Mandaue Foam Dog Bed",
-		price: "₱735",
-		previewImg: "/images/shop-products/04.png",
-	},
-	{
-		id: 5,
-		name: "BATTERY CAGE (3 DOOR/4 DOOR/5 DOOR) - Mr.Chuck",
-		price: "₱990 - ₱1,290",
-		previewImg: "/images/shop-products/05.png",
-	},
-	{
-		id: 6,
-		name: "Rojeco 3.2L Cat Drinking Fountain Filters 304 Stainless Steel Pet Fountains Filter Replacement",
-		price: "₱329 - ₱629",
-		previewImg: "/images/shop-products/06.png",
-	},
-	{
-		id: 7,
-		name: "Petcher Detick and Alprocide 1cc & 2cc with Free Syringe Anti Tick and Flea Spot on Treatment",
-		price: "₱37 - ₱92",
-		previewImg: "/images/shop-products/07.png",
-	},
-	{
-		id: 8,
-		name: "Alonefire 9LED 395nm Aluminum Alloy Mini UV Flashlight Travel Cat Dog Urine Money Detector Torch For AAA Battery",
-		price: "₱75 - ₱79",
-		previewImg: "/images/shop-products/08.png",
-	},
-	{
-		id: 9,
-		name: "Rojeco Cat Water Fountain Replaceable Activated Carbon Filters Filter For Pet Automatic Drinking",
-		price: "₱179 - ₱529",
-		previewImg: "/images/shop-products/09.png",
-	},
-	{
-		id: 10,
-		name: "Alonefire 9LED 395nm Aluminum Alloy Mini UV Flashlight Travel Cat Dog Urine Money Detector Torch For AAA Battery",
-		price: "₱859",
-		previewImg: "/images/shop-products/10.png",
-	},
-	{
-		id: 11,
-		name: "Alonefire 9LED 395nm Aluminum Alloy Mini UV Flashlight Travel Cat Dog Urine Money Detector Torch For AAA Battery",
-		price: "₱859",
-		previewImg: "/images/shop-products/11.png",
-	},
-	{
-		id: 12,
-		name: "Alonefire 9LED 395nm Aluminum Alloy Mini UV Flashlight Travel Cat Dog Urine Money Detector Torch For AAA Battery",
-		price: "₱859",
-		previewImg: "/images/shop-products/12.png",
-	},
-	{
-		id: 13,
-		name: "Alonefire 9LED 395nm Aluminum Alloy Mini UV Flashlight Travel Cat Dog Urine Money Detector Torch For AAA Battery",
-		price: "₱859",
-		previewImg: "/images/shop-products/13.png",
-	},
-	{
-		id: 14,
-		name: "Alonefire 9LED 395nm Aluminum Alloy Mini UV Flashlight Travel Cat Dog Urine Money Detector Torch For AAA Battery",
-		price: "₱859",
-		previewImg: "/images/shop-products/14.png",
-	},
-	{
-		id: 15,
-		name: "Alonefire 9LED 395nm Aluminum Alloy Mini UV Flashlight Travel Cat Dog Urine Money Detector Torch For AAA Battery",
-		price: "₱859",
-		previewImg: "/images/shop-products/15.png",
-	},
-];
+const dummyProducts = useDummyProducts();
 
 const pagination = ref({
 	currentPage: 1,
@@ -228,6 +145,13 @@ function getPageIsToDisplay(index: number) {
 			}
 			.card-title {
 				font-size: 12px;
+			}
+
+			&:hover {
+				--bs-card-border-color: var(--bs-primary);
+				--bs-box-shadow: 0 10px 15px -3px rgb(136 21 37 / 0.1), 0 4px 6px -4px rgb(136 21 37 / 0.1);
+
+				background-color: #ffe4c9;
 			}
 		}
 	}
