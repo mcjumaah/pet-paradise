@@ -63,13 +63,7 @@ definePageMeta({
 
 const checkoutItems = useCheckoutItems();
 
-const totalCheckoutPrice = computed(() => {
-	let total = 0;
-	checkoutItems.value.forEach((item) => {
-		total = total + useItemTotalPrice(item);
-	});
-	return total;
-});
+const totalCheckoutPrice = computed(() => useItemsArrTotalPrice(checkoutItems.value));
 
 onBeforeUnmount(() => {
 	checkoutItems.value = [];

@@ -115,7 +115,7 @@ export interface CartTooltips {
 
 const { $Tooltip: Tooltip } = useNuxtApp();
 const checkoutItems = useCheckoutItems();
-const getItemTotalPrice = useItemTotalPrice;
+const getItemTotalPrice = usePerItemTotalPrice;
 
 const tooltips = ref(<CartTooltips>{});
 const dummyCartItems = ref<CartItem[]>([
@@ -150,16 +150,7 @@ const dummyCartItems = ref<CartItem[]>([
 ]);
 const selectedItemsId = ref<number[]>([]);
 
-const selectedItemsTotalPrice = computed(() => {
-	let total = 0;
-	dummyCartItems.value.forEach((item) => {
-		if (selectedItemsId.value.includes(item.id)) {
-			total = total + getItemTotalPrice(item);
-		}
-	});
-	return total;
-});
-
+const selectedItemsTotalPrice = computed(() => useItemsArrTotalPrice(dummyCartItems.value, selectedItemsId.value));
 const isSelectedAll = computed({
 	get: () => selectedItemsId.value.length === dummyCartItems.value?.length,
 	set: (value) => {
