@@ -11,10 +11,10 @@ const route = useRoute();
 const { $routePathHelper: routePath } = useNuxtApp();
 
 const pathTitle = computed(() => {
-	return routePath().title().value;
+	return routePath().title();
 });
 const basePathTitle = computed(() => {
-	return routePath().title(0).value;
+	return routePath().title(0);
 });
 const computedTitle = computed(() => {
 	return `${pathTitle.value} – Pet Paradise`;

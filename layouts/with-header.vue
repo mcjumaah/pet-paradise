@@ -9,7 +9,7 @@
 						<NuxtLink to="/">Home</NuxtLink> >
 						<template v-for="(path, index) in pathArr">
 							<span v-if="getIsNotLastPathArrSegment(index) && basePathTitle !== 'Account'" class="d-flex column-gap-2">
-								<NuxtLink :to="getPathPerSegment(index)">{{ routePath().title(index).value }}</NuxtLink> >
+								<NuxtLink :to="getPathPerSegment(index)">{{ routePath().title(index) }}</NuxtLink> >
 							</span>
 						</template>
 						<span class="poppins-bold">
@@ -38,10 +38,10 @@ const bgImages = [
 ];
 
 const pathTitle = computed(() => {
-	return routePath().title().value;
+	return routePath().title();
 });
 const basePathTitle = computed(() => {
-	return routePath().title(0).value;
+	return routePath().title(0);
 });
 const finalComputedPathTitle = computed(() => {
 	return basePathTitle.value === "Account" ? basePathTitle.value : pathTitle.value;

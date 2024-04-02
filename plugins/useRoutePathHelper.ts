@@ -13,13 +13,9 @@ export default defineNuxtPlugin(() => {
 				};
 
 				const getTitle = (pathIndex: number = getArr().value.length - 1) => {
-					const pathTitle = computed(() => {
-						let title = getArr().value[pathIndex] || "Home";
+					let title = getArr().value[pathIndex] || "Home";
 
-						return title.charAt(0).toUpperCase() + title.slice(1);
-					});
-
-					return pathTitle;
+					return title.charAt(0).toUpperCase() + title.slice(1);
 				};
 
 				return { arr: getArr(), title: (pathIndex?: number) => getTitle(pathIndex) };
