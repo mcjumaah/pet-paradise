@@ -3,7 +3,16 @@
 		<div class="cart-top-label d-flex justify-content-between px-5 text-muted column-gap-4 align-items-center">
 			<div class="d-flex column-gap-3 w-100">
 				<div class="form-check">
-					<input title="Select All" id="cart-select-all" class="form-check-input" type="checkbox" v-model="isSelectedAll" />
+					<input
+						title="Select All"
+						id="cart-select-all"
+						class="form-check-input"
+						data-bs-toggle="tooltip"
+						data-bs-title="Select All"
+						data-bs-trigger="hover"
+						type="checkbox"
+						v-model="isSelectedAll"
+					/>
 				</div>
 				<span>Product</span>
 			</div>
@@ -30,15 +39,15 @@
 								v-model="selectedItemsId"
 							/>
 						</div>
-						<div class="d-flex align-items-center column-gap-4">
+						<div :title="item.name" class="d-flex align-items-center column-gap-4">
 							<img :src="item.previewImg" class="product-image rounded" :alt="`Product #${item.id} Image`" />
 							<p class="card-text">{{ item.name }}</p>
 						</div>
 					</div>
 
 					<div class="grid text-center w-75 align-items-center">
-						<div class="g-col-3 d-flex justify-content-center">{{ item.price }}</div>
-						<div class="g-col-3 d-flex justify-content-center">
+						<div title="Unit Price" class="g-col-3 d-flex justify-content-center">{{ item.price }}</div>
+						<div title="Quantity" class="g-col-3 d-flex justify-content-center">
 							<div class="cart-item-quantity input-group justify-content-center border rounded">
 								<button
 									title="Reduce Quantity"
@@ -62,7 +71,9 @@
 								</button>
 							</div>
 						</div>
-						<div class="g-col-3 d-flex justify-content-center text-primary">₱{{ getItemTotalPrice(item) }}</div>
+						<div title="Total Price" class="g-col-3 d-flex justify-content-center text-primary">
+							₱{{ getItemTotalPrice(item) }}
+						</div>
 						<div class="g-col-3 d-flex justify-content-center">
 							<button type="button" class="btn link-secondary text-decoration-underline">Delete</button>
 						</div>
@@ -97,12 +108,16 @@ export interface CartItem {
 	previewImg: string;
 	quantity: number;
 }
+export interface CartTooltips {
+	selectAll: any;
+	checkout: any;
+}
 
 const { $Tooltip: Tooltip } = useNuxtApp();
 const checkoutItems = useCheckoutItems();
 const getItemTotalPrice = useItemTotalPrice;
 
-const checkoutTooltip = ref();
+const tooltips = ref(<CartTooltips>{});
 const dummyCartItems = ref<CartItem[]>([
 	{
 		id: 1,
@@ -157,8 +172,10 @@ const isSelectedAll = computed({
 });
 
 watch(selectedItemsId, (newItemsId) => {
-	if (newItemsId.length > 0 && checkoutTooltip.value) {
-		checkoutTooltip.value.disable();
+	if (newItemsId.length > 0 && tooltips.value.checkout) {
+		tooltips.value.checkout.disable();
+	} else {
+		tooltips.value.checkout.enable();
 	}
 });
 
@@ -171,7 +188,8 @@ function setCheckoutItems() {
 }
 
 onMounted(() => {
-	checkoutTooltip.value = new Tooltip(document.getElementById("checkout-button-wrapper") as HTMLElement);
+	tooltips.value.selectAll = new Tooltip(document.getElementById("cart-select-all") as HTMLElement);
+	tooltips.value.checkout = new Tooltip(document.getElementById("checkout-button-wrapper") as HTMLElement);
 });
 </script>
 
