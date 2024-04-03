@@ -14,7 +14,7 @@
 				<div class="checkout-product-list d-flex flex-column row-gap-3">
 					<div v-for="(item, index) in checkoutItems" class="checkout-item d-flex">
 						<div class="d-flex align-items-center column-gap-4 w-75">
-							<img :src="item.previewImg" class="product-image rounded" :alt="`Product #${item.id} Image`" />
+							<img :src="item.images[0]" class="product-image rounded" :alt="`Product #${item.id} Image`" />
 							<p class="card-text">{{ item.name }}</p>
 						</div>
 						<div class="grid w-50 text-center text-muted align-items-center">

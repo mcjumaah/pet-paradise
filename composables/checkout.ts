@@ -1,5 +1,3 @@
-import type { CartItem } from "~/pages/shop/cart/index.vue";
-
 export const useCheckoutItems = () => {
 	return useState<CartItem[]>("checkout-items", () => []);
 };

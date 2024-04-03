@@ -55,7 +55,7 @@
 				class="card text-start shadow bg-body-2"
 				:title="product.name"
 			>
-				<img class="card-img-top" :src="product.previewImg" />
+				<img class="card-img-top" :src="product.images[0]" />
 				<div class="card-body transition-all">
 					<p class="card-title line-clamp-2">
 						{{ product.name }}

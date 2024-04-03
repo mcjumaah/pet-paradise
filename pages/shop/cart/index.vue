@@ -40,7 +40,7 @@
 							/>
 						</div>
 						<div :title="item.name" class="d-flex align-items-center column-gap-4">
-							<img :src="item.previewImg" class="product-image rounded" :alt="`Product #${item.id} Image`" />
+							<img :src="item.images[0]" class="product-image rounded" :alt="`Product #${item.id} Image`" />
 							<p class="card-text">{{ item.name }}</p>
 						</div>
 					</div>
@@ -101,13 +101,6 @@
 </template>
 
 <script setup lang="ts">
-export interface CartItem {
-	id: number;
-	name: string;
-	price: string;
-	previewImg: string;
-	quantity: number;
-}
 export interface CartTooltips {
 	selectAll: any;
 	checkout: any;
@@ -118,36 +111,7 @@ const checkoutItems = useCheckoutItems();
 const getItemTotalPrice = usePerItemTotalPrice;
 
 const tooltips = ref(<CartTooltips>{});
-const dummyCartItems = ref<CartItem[]>([
-	{
-		id: 1,
-		name: "Dr Shiba Happy Tummy Healthy Dog Treats Snack - Dog Multivitamins - Dog Food for Digestive Care",
-		price: "₱499",
-		previewImg: "/images/shop-products/01.png",
-		quantity: 1,
-	},
-	{
-		id: 2,
-		name: "PEDIGREE DentaStix for Puppy – Dental Treats for Puppy, 56g. Daily Puppy Treats for Healthy Gums",
-		price: "₱71",
-		previewImg: "/images/shop-products/02.png",
-		quantity: 3,
-	},
-	{
-		id: 3,
-		name: "Dr. Shiba Happy Tummy Taster Pack - Beef 40g  Dog Treats Snack - Dog Food for Digestive Care",
-		price: "₱99",
-		previewImg: "/images/shop-products/03.png",
-		quantity: 6,
-	},
-	{
-		id: 4,
-		name: "Mandaue Foam Dog Bed",
-		price: "₱735",
-		previewImg: "/images/shop-products/04.png",
-		quantity: 2,
-	},
-]);
+const dummyCartItems = useDummyCartItems();
 const selectedItemsId = ref<number[]>([]);
 
 const selectedItemsTotalPrice = computed(() => useItemsArrTotalPrice(dummyCartItems.value, selectedItemsId.value));
