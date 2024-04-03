@@ -5,17 +5,7 @@
 				<div class="position-relative d-flex flex-column align-items-center z-1 text-white">
 					<h2>{{ finalComputedPathTitle }}</h2>
 					<Logo v-if="pathTitle == 'About'" class="pt-3 pb-4" :isXl="true" />
-					<p class="d-flex column-gap-2">
-						<NuxtLink to="/">Home</NuxtLink> >
-						<template v-for="(path, index) in pathArr">
-							<span v-if="getIsNotLastPathArrSegment(index) && basePathTitle !== 'Account'" class="d-flex column-gap-2">
-								<NuxtLink :to="getPathPerSegment(index)">{{ routePath().title(index) }}</NuxtLink> >
-							</span>
-						</template>
-						<span class="poppins-bold">
-							{{ pathTitle }}
-						</span>
-					</p>
+					<PagePathDisplay :finalPathTitle="finalComputedPathTitle" />
 				</div>
 				<img :src="currentBgImg" class="position-absolute top-0 w-100 h-100 object-fit-cover opacity-25 z-0 bg-white" />
 			</section>
@@ -26,7 +16,6 @@
 
 <script setup lang="ts">
 const { $routePathHelper: routePath } = useNuxtApp();
-const pathArr = routePath().arr;
 
 const bgImages = [
 	{ pathTitle: "Shop", src: "/images/header-bg/shop.png" },
@@ -50,17 +39,6 @@ const currentBgImg = computed(() => {
 	let computedObject = bgImages.find((obj) => obj.pathTitle == finalComputedPathTitle.value);
 	return computedObject?.src ? computedObject.src : "/images/header-bg/shop.png";
 });
-
-function getIsNotLastPathArrSegment(index: number) {
-	return pathArr.value.length > 0 && pathArr.value.length !== index + 1;
-}
-function getPathPerSegment(currentIndex: number) {
-	let path = "";
-	for (let i = 0; i <= currentIndex; i++) {
-		path = `${path}/${pathArr.value[i]}`;
-	}
-	return path;
-}
 </script>
 
 <style scoped lang="scss">
@@ -71,19 +49,6 @@ function getPathPerSegment(currentIndex: number) {
 		overflow: clip;
 		background: rgb(136, 21, 37);
 		background: linear-gradient(120deg, rgba(136, 21, 37, 1) 0%, rgba(176, 103, 31, 1) 100%);
-
-		:deep(a) {
-			color: white;
-			text-decoration: none;
-
-			&:hover {
-				text-decoration: underline;
-			}
-		}
-
-		p {
-			font-size: 18px;
-		}
 	}
 }
 </style>
