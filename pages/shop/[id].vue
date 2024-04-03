@@ -1,5 +1,11 @@
 <template>
-	<div class="product-page">Product Page</div>
+	<div class="product-page">
+		<section class="product-page-path bg-body-3 py-4">
+			<PagePathDisplay class="container" :finalPathTitle="product?.name" isOnPoductPage />
+		</section>
+
+		<section class="bg-body-2 pt-4"></section>
+	</div>
 </template>
 
 <script setup lang="ts">
@@ -12,11 +18,11 @@ const product = useDummyProducts().value.find((product) => {
 });
 
 const pageTitle = computed(() => {
-	let maxLength = 10;
+	let maxLength = 20;
 	let title: string;
 
 	if (product?.name) {
-		title = product?.name.length > maxLength ? product?.name.slice(0, length - 3) + "..." : product?.name;
+		title = product?.name.length > maxLength ? product?.name.slice(0, maxLength - 3) + "..." : product?.name;
 	} else {
 		title = "Product";
 	}
@@ -30,4 +36,8 @@ useSeoMeta({
 });
 </script>
 
-<style scoped></style>
+<style scoped>
+.product-page {
+	padding-top: 92px;
+}
+</style>
