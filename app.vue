@@ -7,8 +7,8 @@
 <script setup lang="ts">
 import type { LayoutKey } from "#build/types/layouts";
 
-const route = useRoute();
 const { $routePathHelper: routePath } = useNuxtApp();
+const pathArr = routePath().arr;
 
 const pathTitle = computed(() => {
 	return routePath().title();
@@ -26,13 +26,15 @@ useSeoMeta({
 
 const computedLayout = ref<LayoutKey>("default");
 const layoutName = computed<false | LayoutKey>(() => {
-	let withNoHeaders = ["/", "/signup", "/login"];
+	let withNoHeaders = ["Home", "Signup", "Login"];
+	let isPerProductPage = basePathTitle.value === "Shop" && pathArr.value.length === 2 && pathTitle.value !== "Cart";
+	let isSignupLoginPage = pathTitle.value === "Signup" || pathTitle.value === "Login";
 
-	if (route.path === "/signup" || route.path === "/login") {
+	if (isSignupLoginPage) {
 		computedLayout.value = "login-signup";
 	} else if (basePathTitle.value === "Account") {
 		computedLayout.value = "account";
-	} else if (!withNoHeaders.includes(route.path)) {
+	} else if (!isPerProductPage && !withNoHeaders.includes(pathTitle.value)) {
 		computedLayout.value = "with-header";
 	} else {
 		computedLayout.value = "default";
