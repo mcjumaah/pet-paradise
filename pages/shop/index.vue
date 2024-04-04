@@ -31,7 +31,7 @@
 							:disabled="pagination.currentPage == 1"
 							@click="pagination.currentPage--"
 						>
-							<img src="/svg/chevron-left.svg" alt="Left Arrow" />
+							<img src="/svg/chevron-left-white.svg" alt="Left Arrow" />
 						</button>
 						<button
 							class="btn btn-primary d-flex align-items-center"
@@ -40,7 +40,7 @@
 							:disabled="pagination.currentPage == pagination.totalPages"
 							@click="pagination.currentPage++"
 						>
-							<img src="/svg/chevron-left.svg" class="rotate-180" alt="Right Arrow" />
+							<img src="/svg/chevron-left-white.svg" class="rotate-180" alt="Right Arrow" />
 						</button>
 					</div>
 				</div>
