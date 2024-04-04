@@ -19,7 +19,7 @@
 				</button>
 			</template>
 		</div>
-		<div class="product-images--selected d-flex border border-primary">
+		<div class="product-images--selected d-flex border border-primary-subtle">
 			<img :src="previewImage" />
 		</div>
 	</div>
