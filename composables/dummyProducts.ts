@@ -15,7 +15,7 @@ export const useDummyProducts = () => {
 				"/images/shop-products/01/08.jpg",
 			],
 			soldNum: 30125,
-			selections: [{ name: "Flavour", variant: ["Beef", "Duck", "Salmon", "Suprise Me!"] }],
+			selections: [{ name: "Flavour", variants: ["Beef", "Duck", "Salmon", "Suprise Me!"] }],
 		},
 		{
 			id: 2,
@@ -23,7 +23,7 @@ export const useDummyProducts = () => {
 			price: "₱71",
 			images: ["/images/shop-products/02/01.png"],
 			soldNum: 30125,
-			selections: [{ name: "Flavour", variant: ["Beef", "Duck", "Salmon", "Suprise Me!"] }],
+			selections: [{ name: "Flavour", variants: ["Beef", "Duck", "Salmon", "Suprise Me!"] }],
 		},
 		{
 			id: 3,
@@ -31,7 +31,7 @@ export const useDummyProducts = () => {
 			price: "₱99",
 			images: ["/images/shop-products/03/01.png"],
 			soldNum: 30125,
-			selections: [{ name: "Flavour", variant: ["Beef", "Duck", "Salmon", "Suprise Me!"] }],
+			selections: [{ name: "Flavour", variants: ["Beef", "Duck", "Salmon", "Suprise Me!"] }],
 		},
 		{
 			id: 4,
@@ -39,7 +39,7 @@ export const useDummyProducts = () => {
 			price: "₱735",
 			images: ["/images/shop-products/04/01.png"],
 			soldNum: 30125,
-			selections: [{ name: "Flavour", variant: ["Beef", "Duck", "Salmon", "Suprise Me!"] }],
+			selections: [{ name: "Flavour", variants: ["Beef", "Duck", "Salmon", "Suprise Me!"] }],
 		},
 		{
 			id: 5,
@@ -47,7 +47,7 @@ export const useDummyProducts = () => {
 			price: "₱990 - ₱1,290",
 			images: ["/images/shop-products/05/01.png"],
 			soldNum: 30125,
-			selections: [{ name: "Flavour", variant: ["Beef", "Duck", "Salmon", "Suprise Me!"] }],
+			selections: [{ name: "Flavour", variants: ["Beef", "Duck", "Salmon", "Suprise Me!"] }],
 		},
 		{
 			id: 6,
@@ -55,7 +55,7 @@ export const useDummyProducts = () => {
 			price: "₱329 - ₱629",
 			images: ["/images/shop-products/06/01.png"],
 			soldNum: 30125,
-			selections: [{ name: "Flavour", variant: ["Beef", "Duck", "Salmon", "Suprise Me!"] }],
+			selections: [{ name: "Flavour", variants: ["Beef", "Duck", "Salmon", "Suprise Me!"] }],
 		},
 		{
 			id: 7,
@@ -63,7 +63,7 @@ export const useDummyProducts = () => {
 			price: "₱37 - ₱92",
 			images: ["/images/shop-products/07/01.png"],
 			soldNum: 30125,
-			selections: [{ name: "Flavour", variant: ["Beef", "Duck", "Salmon", "Suprise Me!"] }],
+			selections: [{ name: "Flavour", variants: ["Beef", "Duck", "Salmon", "Suprise Me!"] }],
 		},
 		{
 			id: 8,
@@ -71,7 +71,7 @@ export const useDummyProducts = () => {
 			price: "₱75 - ₱79",
 			images: ["/images/shop-products/08/01.png"],
 			soldNum: 30125,
-			selections: [{ name: "Flavour", variant: ["Beef", "Duck", "Salmon", "Suprise Me!"] }],
+			selections: [{ name: "Flavour", variants: ["Beef", "Duck", "Salmon", "Suprise Me!"] }],
 		},
 		{
 			id: 9,
@@ -79,7 +79,7 @@ export const useDummyProducts = () => {
 			price: "₱179 - ₱529",
 			images: ["/images/shop-products/09/01.png"],
 			soldNum: 30125,
-			selections: [{ name: "Flavour", variant: ["Beef", "Duck", "Salmon", "Suprise Me!"] }],
+			selections: [{ name: "Flavour", variants: ["Beef", "Duck", "Salmon", "Suprise Me!"] }],
 		},
 		{
 			id: 10,
@@ -87,7 +87,7 @@ export const useDummyProducts = () => {
 			price: "₱859",
 			images: ["/images/shop-products/10/01.png"],
 			soldNum: 30125,
-			selections: [{ name: "Flavour", variant: ["Beef", "Duck", "Salmon", "Suprise Me!"] }],
+			selections: [{ name: "Flavour", variants: ["Beef", "Duck", "Salmon", "Suprise Me!"] }],
 		},
 		{
 			id: 11,
@@ -95,7 +95,7 @@ export const useDummyProducts = () => {
 			price: "₱859",
 			images: ["/images/shop-products/11/01.png"],
 			soldNum: 30125,
-			selections: [{ name: "Flavour", variant: ["Beef", "Duck", "Salmon", "Suprise Me!"] }],
+			selections: [{ name: "Flavour", variants: ["Beef", "Duck", "Salmon", "Suprise Me!"] }],
 		},
 		{
 			id: 12,
@@ -103,7 +103,7 @@ export const useDummyProducts = () => {
 			price: "₱859",
 			images: ["/images/shop-products/12/01.png"],
 			soldNum: 30125,
-			selections: [{ name: "Flavour", variant: ["Beef", "Duck", "Salmon", "Suprise Me!"] }],
+			selections: [{ name: "Flavour", variants: ["Beef", "Duck", "Salmon", "Suprise Me!"] }],
 		},
 		{
 			id: 13,
@@ -111,7 +111,7 @@ export const useDummyProducts = () => {
 			price: "₱859",
 			images: ["/images/shop-products/13/01.png"],
 			soldNum: 30125,
-			selections: [{ name: "Flavour", variant: ["Beef", "Duck", "Salmon", "Suprise Me!"] }],
+			selections: [{ name: "Flavour", variants: ["Beef", "Duck", "Salmon", "Suprise Me!"] }],
 		},
 		{
 			id: 14,
@@ -119,7 +119,7 @@ export const useDummyProducts = () => {
 			price: "₱859",
 			images: ["/images/shop-products/14/01.png"],
 			soldNum: 30125,
-			selections: [{ name: "Flavour", variant: ["Beef", "Duck", "Salmon", "Suprise Me!"] }],
+			selections: [{ name: "Flavour", variants: ["Beef", "Duck", "Salmon", "Suprise Me!"] }],
 		},
 		{
 			id: 15,
@@ -127,7 +127,7 @@ export const useDummyProducts = () => {
 			price: "₱859",
 			images: ["/images/shop-products/15/01.png"],
 			soldNum: 30125,
-			selections: [{ name: "Flavour", variant: ["Beef", "Duck", "Salmon", "Suprise Me!"] }],
+			selections: [{ name: "Flavour", variants: ["Beef", "Duck", "Salmon", "Suprise Me!"] }],
 		},
 	]);
 };
@@ -140,7 +140,7 @@ export interface CartItem {
 	soldNum: number;
 	selections: {
 		name: string;
-		variant: string[];
+		variants: string[];
 	}[];
 	quantity: number;
 }
