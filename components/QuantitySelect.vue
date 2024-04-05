@@ -26,7 +26,7 @@
 </template>
 
 <script setup lang="ts">
-const quantity = defineModel<number>();
+const quantity = defineModel({ type: Number, default: 1 });
 </script>
 
 <style scoped lang="scss">
