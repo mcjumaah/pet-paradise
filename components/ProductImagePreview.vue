@@ -19,7 +19,7 @@
 				</button>
 			</template>
 		</div>
-		<div class="product-images--selected d-flex border border-primary-subtle">
+		<div class="product-images--selected d-flex border border-primary-subtle align-self-center">
 			<img :src="previewImage" />
 		</div>
 	</div>
