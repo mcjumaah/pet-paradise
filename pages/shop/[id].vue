@@ -16,8 +16,15 @@
 							<div class="bg-body-2 text-primary px-3 py-2 poppins-semibold fs-2">{{ product?.price }}</div>
 						</div>
 
-						<div class="pt-4">
+						<div class="selects pt-4 px-4 text-muted d-flex flex-column row-gap-4">
 							<VariantsSelects :selections="product?.selections" v-model="selectedSelections" />
+							<div class="d-flex column-gap-4">
+								<label class="pt-2" for="product-quantity-select-wrapper">Quantity</label>
+								<div id="product-quantity-select-wrapper" class="d-flex w-100 column-gap-3 row-gap-2 flex-wrap">
+									<QuantitySelect class="product-quantity-select" v-model="quantity" />
+									<span class="text-nowrap align-self-center">203415 pieces available</span>
+								</div>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -38,6 +45,7 @@ const product = useDummyProducts().value.find((product) => {
 });
 
 const selectedSelections = ref<SelectedVariant[]>([]);
+const quantity = ref<number>(1);
 
 const pageTitle = computed(() => {
 	let maxLength = 20;
@@ -71,5 +79,23 @@ useSeoMeta({
 <style scoped>
 .product-page {
 	padding-top: 92px;
+
+	.product-action > .selects {
+		:deep(label) {
+			width: 35%;
+			min-width: fit-content;
+
+			@media (min-width: 1200px) {
+				width: 25%;
+			}
+			@media (min-width: 1400px) {
+				width: 17.5%;
+			}
+		}
+
+		.product-quantity-select {
+			max-width: 7rem;
+		}
+	}
 }
 </style>
