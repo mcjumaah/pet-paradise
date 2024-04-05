@@ -1,5 +1,5 @@
 <template>
-	<div class="item-quantity input-group justify-content-center border rounded">
+	<div class="item-quantity input-group justify-content-center border rounded shadow-inner">
 		<button
 			v-if="quantity"
 			id="reduce-quantity"
@@ -48,7 +48,6 @@ const quantity = defineModel<number>();
 	button {
 		top: 50%;
 		transform: translateY(-50%);
-		background-color: white;
 		height: 100%;
 		color: var(--bs-secondary-text-emphasis);
 		border: none;
@@ -63,6 +62,10 @@ const quantity = defineModel<number>();
 			color: var(--bs-primary);
 			background-color: var(--bs-primary-bg-subtle);
 		}
+	}
+
+	& > * {
+		background: transparent;
 	}
 }
 </style>
