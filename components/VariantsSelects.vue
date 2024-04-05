@@ -1,11 +1,7 @@
 <template>
 	<div class="variants-selects d-flex flex-column row-gap-3">
-		<div
-			v-for="(selection, index) in props.selections"
-			:key="`${index} - ${selection.name}`"
-			class="d-flex text-muted column-gap-4"
-		>
-			<label for="variants-wrapper" class="selection-name pt-2 h-fit">{{ selection.name }}</label>
+		<div v-for="(selection, index) in props.selections" :key="`${index} - ${selection.name}`" class="d-flex column-gap-4">
+			<label class="selection-name pt-2 h-fit" for="variants-wrapper">{{ selection.name }}</label>
 			<div id="variants-wrapper" class="variants-wrapper d-flex gap-2 text-black flex-wrap w-100">
 				<button
 					v-for="(variant, index) in selection.variants"
@@ -59,11 +55,6 @@ function isActive(name: string, variant: string) {
 
 <style scoped lang="scss">
 .variants-selects {
-	.selection-name {
-		width: 15%;
-		min-width: fit-content;
-	}
-
 	.variants-wrapper {
 		.variants.active {
 			color: white;
