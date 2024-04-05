@@ -48,28 +48,7 @@
 					<div class="grid text-center w-75 align-items-center">
 						<div title="Unit Price" class="g-col-3 d-flex justify-content-center">{{ item.price }}</div>
 						<div title="Quantity" class="g-col-3 d-flex justify-content-center">
-							<div class="cart-item-quantity input-group justify-content-center border rounded">
-								<button
-									title="Reduce Quantity"
-									class="btn start-0"
-									type="button"
-									id="reduce-quantity"
-									@click="item.quantity--"
-								>
-									-
-								</button>
-								<input
-									type="number"
-									class="form-control border-0 px-1 text-center position-relative z-1"
-									placeholder=""
-									aria-label="Example text with button addon"
-									aria-describedby="button-addon1"
-									v-model="item.quantity"
-								/>
-								<button title="Add Quantity" class="btn end-0" type="button" id="add-quantity" @click="item.quantity++">
-									+
-								</button>
-							</div>
+							<QuantitySelect v-model="item.quantity" />
 						</div>
 						<div title="Total Price" class="g-col-3 d-flex justify-content-center text-primary">
 							₱{{ getItemTotalPrice(item) }}
@@ -154,42 +133,6 @@ onMounted(() => {
 		.product-image {
 			height: 6.25rem;
 			width: 6.25rem;
-		}
-
-		.cart-item-quantity {
-			min-width: 5rem;
-			overflow: clip;
-
-			input {
-				appearance: none;
-				-moz-appearance: textfield;
-
-				&::-webkit-outer-spin-button,
-				&::-webkit-inner-spin-button {
-					-webkit-appearance: none;
-					margin: 0;
-				}
-			}
-
-			button {
-				top: 50%;
-				transform: translateY(-50%);
-				background-color: white;
-				height: 100%;
-				color: var(--bs-secondary-text-emphasis);
-				border: none;
-				border-radius: 0;
-				padding-block: 0;
-				padding-inline: 0.4rem;
-				transition-property: all !important;
-				transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1) !important;
-				transition-duration: 150ms !important;
-
-				&:hover {
-					color: var(--bs-primary);
-					background-color: var(--bs-primary-bg-subtle);
-				}
-			}
 		}
 	}
 }
