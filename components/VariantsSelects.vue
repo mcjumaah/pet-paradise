@@ -1,5 +1,5 @@
 <template>
-	<div class="variants-selects d-flex flex-column row-gap-3">
+	<div class="variants-selects d-flex flex-column row-gap-4">
 		<div v-for="(selection, index) in props.selections" :key="`${index} - ${selection.name}`" class="d-flex column-gap-4">
 			<label class="selection-name pt-2 h-fit" for="variants-wrapper">{{ selection.name }}</label>
 			<div id="variants-wrapper" class="variants-wrapper d-flex gap-2 text-black flex-wrap w-100">
