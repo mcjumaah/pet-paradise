@@ -65,7 +65,7 @@ const checkoutItems = useCheckoutItems();
 
 const totalCheckoutPrice = computed(() => useItemsArrTotalPrice(checkoutItems.value));
 
-onBeforeUnmount(() => {
+onBeforeRouteLeave(() => {
 	checkoutItems.value = [];
 });
 </script>
