@@ -19,10 +19,6 @@
 </template>
 
 <script setup lang="ts">
-export interface SelectedVariety {
-	name: string;
-	variety: string;
-}
 export interface Props {
 	selections:
 		| {

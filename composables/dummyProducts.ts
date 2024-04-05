@@ -132,15 +132,16 @@ export const useDummyProducts = () => {
 	]);
 };
 
+export interface SelectedVariety {
+	name: string;
+	variety: string;
+}
 export interface CartItem {
 	id: number;
 	name: string;
 	price: string;
 	images: string[];
-	selectedVariety: {
-		name: string;
-		variety: string;
-	}[];
+	selectedVariety: SelectedVariety[];
 	quantity: number;
 }
 export const useDummyCartItems = () => {
