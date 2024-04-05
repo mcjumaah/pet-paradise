@@ -1,5 +1,16 @@
+export interface Product {
+	id: number;
+	name: string;
+	price: string;
+	images: string[];
+	soldNum: number;
+	selections: {
+		name: string;
+		varieties: string[];
+	}[];
+}
 export const useDummyProducts = () => {
-	return useState("dummy-products", () => [
+	let dummyProducts: Product[] = [
 		{
 			id: 1,
 			name: "Dr Shiba Happy Tummy Healthy Dog Treats Snack - Dog Multivitamins - Dog Food for Digestive Care",
@@ -129,7 +140,8 @@ export const useDummyProducts = () => {
 			soldNum: 30125,
 			selections: [{ name: "Flavour", varieties: ["Beef", "Duck", "Salmon", "Suprise Me!"] }],
 		},
-	]);
+	];
+	return useState("dummy-products", () => dummyProducts);
 };
 
 export interface SelectedVariety {
