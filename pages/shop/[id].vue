@@ -40,7 +40,14 @@
 								</svg>
 								Add To Cart
 							</button>
-							<button class="buy-now btn btn-primary w-100 p-2 transition-all" type="button">Buy Now</button>
+							<NuxtLink
+								to="/shop/cart/checkout"
+								class="buy-now btn btn-primary w-100 p-2 transition-all"
+								type="button"
+								@click="setToBuyNow()"
+							>
+								Buy Now
+							</NuxtLink>
 						</div>
 					</div>
 				</div>
@@ -60,6 +67,7 @@ const product = useDummyProducts().value.find((product) => {
 	}
 });
 const cartItems = useDummyCartItems();
+const checkoutItems = useCheckoutItems();
 
 const selectedSelections = ref<SelectedVariety[]>([]);
 const quantity = ref<number>(1);
@@ -86,18 +94,34 @@ const formattedSoldNum = computed(() => {
 		return num?.toString() || num;
 	}
 });
+const neededProductDetailsToMove = computed(() => {
+	let { id: _, selections: __, soldNum: ___, ...otherDetails } = product as Product;
+	return otherDetails;
+});
 
 function addToCart() {
-	let { id: _, selections: __, soldNum: ___, ...otherDetails } = product as Product;
 	let latestProductInCart = cartItems.value[cartItems.value.length - 1];
+
 	let productToAdd = {
 		id: latestProductInCart.id + 1,
-		...otherDetails,
+		...neededProductDetailsToMove.value,
 		selectedVariety: selectedSelections.value,
 		quantity: quantity.value,
 	};
 
 	cartItems.value.push(productToAdd);
+}
+async function setToBuyNow() {
+	let latestProductInCart = cartItems.value[cartItems.value.length - 1];
+
+	let productToAdd = {
+		id: latestProductInCart.id + 1,
+		...neededProductDetailsToMove.value,
+		selectedVariety: selectedSelections.value,
+		quantity: quantity.value,
+	};
+
+	checkoutItems.value.push(productToAdd);
 }
 
 useSeoMeta({
@@ -131,7 +155,7 @@ useSeoMeta({
 		}
 
 		.final-action {
-			button {
+			.btn {
 				min-height: 2.75rem;
 				max-width: 10.5rem;
 			}
