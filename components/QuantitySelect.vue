@@ -1,5 +1,5 @@
 <template>
-	<div class="item-quantity input-group justify-content-center border rounded shadow-inner">
+	<div class="item-quantity input-group justify-content-center border rounded shadow-inner bg-white">
 		<button
 			v-if="quantity"
 			id="reduce-quantity"
