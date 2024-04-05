@@ -1,23 +1,23 @@
 <template>
 	<div class="product-page">
-		<section class="product-page--path bg-body-3 py-4">
+		<nav class="product-page--path bg-body-3 py-4">
 			<PagePathDisplay class="container" :finalPathTitle="product?.name" isOnPoductPage />
-		</section>
+		</nav>
 
-		<section class="bg-body-2 pt-4">
-			<div class="product-preview-action py-5 bg-white">
+		<main class="d-flex flex-column row-gap-4 bg-body-2 pt-4">
+			<section class="product-preview-action py-5 bg-white">
 				<div class="container d-flex column-gap-5 justify-content-center">
 					<ProductImagePreview :images="(product?.images as string[])" />
 
-					<div class="product-action d-flex flex-column">
+					<div class="product-action d-flex flex-column row-gap-4">
 						<div>
 							<h5 class="poppins-medium">{{ product?.name }}</h5>
 							<p>{{ formattedSoldNum }} <span class="text-muted">Sold</span></p>
 							<div class="bg-body-2 text-primary px-3 py-2 poppins-semibold fs-2">{{ product?.price }}</div>
 						</div>
 
-						<div class="selects pt-4 px-4 text-muted d-flex flex-column row-gap-4">
-							<VariantsSelects :selections="product?.selections" v-model="selectedSelections" />
+						<div class="selects px-4 text-muted d-flex flex-column row-gap-4">
+							<VarietiesSelects :selections="product?.selections" v-model="selectedSelections" />
 							<div class="d-flex column-gap-4">
 								<label class="pt-2" for="product-quantity-select-wrapper">Quantity</label>
 								<div id="product-quantity-select-wrapper" class="d-flex w-100 column-gap-3 row-gap-2 flex-wrap">
@@ -26,16 +26,32 @@
 								</div>
 							</div>
 						</div>
+
+						<div class="final-action d-flex column-gap-3 pt-3 px-4">
+							<button
+								class="add-to-cart btn btn-outline-primary d-flex w-100 p-2 align-items-center justify-content-center text-start column-gap-2 poppins-medium transition-all"
+								type="button"
+								@click="addToCart()"
+							>
+								<svg class="flex-shrink-0" xmlns="http://www.w3.org/2000/svg" width="25" height="24" viewBox="0 0 25 24">
+									<path
+										d="M11.5 9h2V6h3V4h-3V1h-2v3h-3v2h3m-4 12c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2Zm10 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2Zm-9.8-3.2v-.1l.9-1.7H16c.7 0 1.4-.4 1.7-1l3.9-7-1.7-1-3.9 7H9L4.8 2H1.5v2h2l3.6 7.6L5.7 14c-.1.3-.2.6-.2 1 0 1.1.9 2 2 2h12v-2H7.9c-.1 0-.2-.1-.2-.2Z"
+									/>
+								</svg>
+								Add To Cart
+							</button>
+							<button class="buy-now btn btn-primary w-100 p-2 transition-all" type="button">Buy Now</button>
+						</div>
 					</div>
 				</div>
-			</div>
-		</section>
+			</section>
+
+			<section class="product-information py-5 bg-white"></section>
+		</main>
 	</div>
 </template>
 
 <script setup lang="ts">
-import type { SelectedVariant } from "~/components/VariantsSelects.vue";
-
 const route = useRoute();
 
 const product = useDummyProducts().value.find((product) => {
@@ -43,8 +59,9 @@ const product = useDummyProducts().value.find((product) => {
 		return product;
 	}
 });
+const cartItems = useDummyCartItems();
 
-const selectedSelections = ref<SelectedVariant[]>([]);
+const selectedSelections = ref<SelectedVariety[]>([]);
 const quantity = ref<number>(1);
 
 const pageTitle = computed(() => {
@@ -70,6 +87,19 @@ const formattedSoldNum = computed(() => {
 	}
 });
 
+function addToCart() {
+	let { id: _, selections: __, soldNum: ___, ...otherDetails } = product as Product;
+	let latestProductInCart = cartItems.value[cartItems.value.length - 1];
+	let productToAdd = {
+		id: latestProductInCart.id + 1,
+		...otherDetails,
+		selectedVariety: selectedSelections.value,
+		quantity: quantity.value,
+	};
+
+	cartItems.value.push(productToAdd);
+}
+
 useSeoMeta({
 	title: pageTitle,
 	ogTitle: pageTitle,
@@ -80,21 +110,42 @@ useSeoMeta({
 .product-page {
 	padding-top: 92px;
 
-	.product-action > .selects {
-		:deep(label) {
-			width: 35%;
-			min-width: fit-content;
+	.product-action {
+		.selects {
+			:deep(label) {
+				width: 35%;
+				min-width: fit-content;
 
-			@media (min-width: 1200px) {
-				width: 25%;
+				@media (min-width: 1200px) {
+					width: 25%;
+				}
+				@media (min-width: 1400px) {
+					width: 17.5%;
+				}
 			}
-			@media (min-width: 1400px) {
-				width: 17.5%;
+
+			.product-quantity-select {
+				height: 2.563rem;
+				max-width: 7rem;
 			}
 		}
 
-		.product-quantity-select {
-			max-width: 7rem;
+		.final-action {
+			button {
+				min-height: 2.75rem;
+				max-width: 10.5rem;
+			}
+
+			.add-to-cart {
+				fill: var(--bs-primary);
+				background-color: var(--bs-primary-bg-subtle);
+
+				&:hover {
+					fill: white;
+					color: white;
+					background-color: var(--bs-primary-text-emphasis);
+				}
+			}
 		}
 	}
 }
