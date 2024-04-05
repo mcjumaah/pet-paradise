@@ -5,8 +5,8 @@
 			:key="`${index} - ${selection.name}`"
 			class="d-flex text-muted column-gap-4 px-4"
 		>
-			<span class="selection-name pt-2 h-fit">{{ selection.name }}</span>
-			<div class="variants-wrapper d-flex gap-2 text-black flex-wrap w-100">
+			<label for="variants-wrapper" class="selection-name pt-2 h-fit">{{ selection.name }}</label>
+			<div id="variants-wrapper" class="variants-wrapper d-flex gap-2 text-black flex-wrap w-100">
 				<button
 					v-for="(variant, index) in selection.variants"
 					:key="`${index} - ${variant}`"
