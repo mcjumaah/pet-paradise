@@ -9,7 +9,17 @@
 				<div class="container d-flex column-gap-5 justify-content-center">
 					<ProductImagePreview :images="(product?.images as string[])" />
 
-					<div class="product-action w-50"></div>
+					<div class="product-action d-flex flex-column">
+						<div>
+							<h5 class="poppins-medium">{{ product?.name }}</h5>
+							<p>{{ formattedSoldNum }} <span class="text-muted">Sold</span></p>
+							<div class="bg-body-2 text-primary px-3 py-2 poppins-semibold fs-2">{{ product?.price }}</div>
+						</div>
+
+						<div class="pt-4">
+							<VariantsSelects :selections="product?.selections" v-model="selectedSelections" />
+						</div>
+					</div>
 				</div>
 			</div>
 		</section>
@@ -17,6 +27,8 @@
 </template>
 
 <script setup lang="ts">
+import type { SelectedVariant } from "~/components/VariantsSelects.vue";
+
 const route = useRoute();
 
 const product = useDummyProducts().value.find((product) => {
@@ -24,6 +36,8 @@ const product = useDummyProducts().value.find((product) => {
 		return product;
 	}
 });
+
+const selectedSelections = ref<SelectedVariant[]>([]);
 
 const pageTitle = computed(() => {
 	let maxLength = 20;
@@ -36,6 +50,16 @@ const pageTitle = computed(() => {
 	}
 
 	return `${title} – Pet Paradise`;
+});
+
+const formattedSoldNum = computed(() => {
+	let num = product?.soldNum;
+
+	if (num && num >= 1000) {
+		return Math.floor(num / 1000) + "K+";
+	} else {
+		return num?.toString() || num;
+	}
 });
 
 useSeoMeta({
