@@ -6,6 +6,7 @@
 			class="btn start-0"
 			title="Reduce Quantity"
 			type="button"
+			:disabled="quantity <= 1"
 			@click="quantity--"
 		>
 			-
