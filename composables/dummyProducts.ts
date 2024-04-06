@@ -8,6 +8,7 @@ export interface Product {
 		name: string;
 		varieties: string[];
 	}[];
+	description: string;
 }
 export const useDummyProducts = () => {
 	let dummyProducts: Product[] = [
@@ -27,6 +28,8 @@ export const useDummyProducts = () => {
 			],
 			soldNum: 30125,
 			selections: [{ name: "Flavour", varieties: ["Beef", "Duck", "Salmon", "Suprise Me!"] }],
+			description:
+				"😋 HAPPY TUMMY\r\nㅤ\r\n🐾 Indulge your beloved furry friend with Happy Tummy by Dr. Shiba, specially crafted to be their ultimate source of delight and nutrition. These treats for dogs are more than just a tasty reward; they are a pathway to worry-free days for your loyal companion. \r\nㅤ\r\n🐾 Our protein-rich blend, featuring high-quality beef, chicken, and salmon, not only tantalizes your pup's taste buds but also provides essential nutrients. Dr. Shiba's Happy Tummy includes pre-and probiotics, which promote the growth of beneficial gut bacteria and aid in digestion.\r\nㅤ\r\nㅤ\r\n🌟 Benefits \r\nㅤ\r\n🐾 Improved Digestion: Dr. Shiba's Happy Tummy soothes dogs' tummy troubles, reduces bloating, and ensures smoother digestion. Say goodbye to discomfort and hello to a happier, more comfortable pup.\r\nㅤ\r\n🐾 Regulated Intestines: Happy Tummy actively supports your dog's digestive wellness with our blend of pre-and probiotics. These treats for dogs promote smoother digestion and boost intestinal functions. It's the natural solution to tummy woes, ensuring your furry friend feels light, comfortable, and ready for play.\r\nㅤ\r\n🐾 Better Nutrient Production: By introducing pre-and probiotics to your dog's diet, Happy Tummy by Dr. Shiba helps the growth of beneficial gut bacteria, creating an optimal environment for nutrient absorption. This means that your furry friend can enjoy a delectable dog treat and reap the maximum nutritional benefits from every bite.",
 		},
 		{
 			id: 2,
@@ -35,6 +38,8 @@ export const useDummyProducts = () => {
 			images: ["/images/shop-products/02/01.png"],
 			soldNum: 30125,
 			selections: [{ name: "Flavour", varieties: ["Beef", "Duck", "Salmon", "Suprise Me!"] }],
+			description:
+				"Description Here\r\nLorem ipsum dolor sit amet consectetur, adipisicing elit. Neque quibusdam odio quaerat, aspernatur dolore enim culpa quae soluta tenetur rerum, ratione, alias beatae possimus cupiditate obcaecati? Necessitatibus ut a quam.",
 		},
 		{
 			id: 3,
@@ -43,6 +48,8 @@ export const useDummyProducts = () => {
 			images: ["/images/shop-products/03/01.png"],
 			soldNum: 30125,
 			selections: [{ name: "Flavour", varieties: ["Beef", "Duck", "Salmon", "Suprise Me!"] }],
+			description:
+				"Description Here\r\nLorem ipsum dolor sit amet consectetur, adipisicing elit. Neque quibusdam odio quaerat, aspernatur dolore enim culpa quae soluta tenetur rerum, ratione, alias beatae possimus cupiditate obcaecati? Necessitatibus ut a quam.",
 		},
 		{
 			id: 4,
@@ -51,6 +58,8 @@ export const useDummyProducts = () => {
 			images: ["/images/shop-products/04/01.png"],
 			soldNum: 30125,
 			selections: [{ name: "Flavour", varieties: ["Beef", "Duck", "Salmon", "Suprise Me!"] }],
+			description:
+				"Description Here\r\nLorem ipsum dolor sit amet consectetur, adipisicing elit. Neque quibusdam odio quaerat, aspernatur dolore enim culpa quae soluta tenetur rerum, ratione, alias beatae possimus cupiditate obcaecati? Necessitatibus ut a quam.",
 		},
 		{
 			id: 5,
@@ -59,6 +68,8 @@ export const useDummyProducts = () => {
 			images: ["/images/shop-products/05/01.png"],
 			soldNum: 30125,
 			selections: [{ name: "Flavour", varieties: ["Beef", "Duck", "Salmon", "Suprise Me!"] }],
+			description:
+				"Description Here\r\nLorem ipsum dolor sit amet consectetur, adipisicing elit. Neque quibusdam odio quaerat, aspernatur dolore enim culpa quae soluta tenetur rerum, ratione, alias beatae possimus cupiditate obcaecati? Necessitatibus ut a quam.",
 		},
 		{
 			id: 6,
@@ -67,6 +78,8 @@ export const useDummyProducts = () => {
 			images: ["/images/shop-products/06/01.png"],
 			soldNum: 30125,
 			selections: [{ name: "Flavour", varieties: ["Beef", "Duck", "Salmon", "Suprise Me!"] }],
+			description:
+				"Description Here\r\nLorem ipsum dolor sit amet consectetur, adipisicing elit. Neque quibusdam odio quaerat, aspernatur dolore enim culpa quae soluta tenetur rerum, ratione, alias beatae possimus cupiditate obcaecati? Necessitatibus ut a quam.",
 		},
 		{
 			id: 7,
@@ -75,6 +88,8 @@ export const useDummyProducts = () => {
 			images: ["/images/shop-products/07/01.png"],
 			soldNum: 30125,
 			selections: [{ name: "Flavour", varieties: ["Beef", "Duck", "Salmon", "Suprise Me!"] }],
+			description:
+				"Description Here\r\nLorem ipsum dolor sit amet consectetur, adipisicing elit. Neque quibusdam odio quaerat, aspernatur dolore enim culpa quae soluta tenetur rerum, ratione, alias beatae possimus cupiditate obcaecati? Necessitatibus ut a quam.",
 		},
 		{
 			id: 8,
@@ -83,6 +98,8 @@ export const useDummyProducts = () => {
 			images: ["/images/shop-products/08/01.png"],
 			soldNum: 30125,
 			selections: [{ name: "Flavour", varieties: ["Beef", "Duck", "Salmon", "Suprise Me!"] }],
+			description:
+				"Description Here\r\nLorem ipsum dolor sit amet consectetur, adipisicing elit. Neque quibusdam odio quaerat, aspernatur dolore enim culpa quae soluta tenetur rerum, ratione, alias beatae possimus cupiditate obcaecati? Necessitatibus ut a quam.",
 		},
 		{
 			id: 9,
@@ -91,6 +108,8 @@ export const useDummyProducts = () => {
 			images: ["/images/shop-products/09/01.png"],
 			soldNum: 30125,
 			selections: [{ name: "Flavour", varieties: ["Beef", "Duck", "Salmon", "Suprise Me!"] }],
+			description:
+				"Description Here\r\nLorem ipsum dolor sit amet consectetur, adipisicing elit. Neque quibusdam odio quaerat, aspernatur dolore enim culpa quae soluta tenetur rerum, ratione, alias beatae possimus cupiditate obcaecati? Necessitatibus ut a quam.",
 		},
 		{
 			id: 10,
@@ -99,6 +118,8 @@ export const useDummyProducts = () => {
 			images: ["/images/shop-products/10/01.png"],
 			soldNum: 30125,
 			selections: [{ name: "Flavour", varieties: ["Beef", "Duck", "Salmon", "Suprise Me!"] }],
+			description:
+				"Description Here\r\nLorem ipsum dolor sit amet consectetur, adipisicing elit. Neque quibusdam odio quaerat, aspernatur dolore enim culpa quae soluta tenetur rerum, ratione, alias beatae possimus cupiditate obcaecati? Necessitatibus ut a quam.",
 		},
 		{
 			id: 11,
@@ -107,6 +128,8 @@ export const useDummyProducts = () => {
 			images: ["/images/shop-products/11/01.png"],
 			soldNum: 30125,
 			selections: [{ name: "Flavour", varieties: ["Beef", "Duck", "Salmon", "Suprise Me!"] }],
+			description:
+				"Description Here\r\nLorem ipsum dolor sit amet consectetur, adipisicing elit. Neque quibusdam odio quaerat, aspernatur dolore enim culpa quae soluta tenetur rerum, ratione, alias beatae possimus cupiditate obcaecati? Necessitatibus ut a quam.",
 		},
 		{
 			id: 12,
@@ -115,6 +138,8 @@ export const useDummyProducts = () => {
 			images: ["/images/shop-products/12/01.png"],
 			soldNum: 30125,
 			selections: [{ name: "Flavour", varieties: ["Beef", "Duck", "Salmon", "Suprise Me!"] }],
+			description:
+				"Description Here\r\nLorem ipsum dolor sit amet consectetur, adipisicing elit. Neque quibusdam odio quaerat, aspernatur dolore enim culpa quae soluta tenetur rerum, ratione, alias beatae possimus cupiditate obcaecati? Necessitatibus ut a quam.",
 		},
 		{
 			id: 13,
@@ -123,6 +148,8 @@ export const useDummyProducts = () => {
 			images: ["/images/shop-products/13/01.png"],
 			soldNum: 30125,
 			selections: [{ name: "Flavour", varieties: ["Beef", "Duck", "Salmon", "Suprise Me!"] }],
+			description:
+				"Description Here\r\nLorem ipsum dolor sit amet consectetur, adipisicing elit. Neque quibusdam odio quaerat, aspernatur dolore enim culpa quae soluta tenetur rerum, ratione, alias beatae possimus cupiditate obcaecati? Necessitatibus ut a quam.",
 		},
 		{
 			id: 14,
@@ -131,6 +158,8 @@ export const useDummyProducts = () => {
 			images: ["/images/shop-products/14/01.png"],
 			soldNum: 30125,
 			selections: [{ name: "Flavour", varieties: ["Beef", "Duck", "Salmon", "Suprise Me!"] }],
+			description:
+				"Description Here\r\nLorem ipsum dolor sit amet consectetur, adipisicing elit. Neque quibusdam odio quaerat, aspernatur dolore enim culpa quae soluta tenetur rerum, ratione, alias beatae possimus cupiditate obcaecati? Necessitatibus ut a quam.",
 		},
 		{
 			id: 15,
@@ -139,6 +168,8 @@ export const useDummyProducts = () => {
 			images: ["/images/shop-products/15/01.png"],
 			soldNum: 30125,
 			selections: [{ name: "Flavour", varieties: ["Beef", "Duck", "Salmon", "Suprise Me!"] }],
+			description:
+				"Description Here\r\nLorem ipsum dolor sit amet consectetur, adipisicing elit. Neque quibusdam odio quaerat, aspernatur dolore enim culpa quae soluta tenetur rerum, ratione, alias beatae possimus cupiditate obcaecati? Necessitatibus ut a quam.",
 		},
 	];
 	return useState("dummy-products", () => dummyProducts);
