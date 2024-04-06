@@ -15,17 +15,18 @@ export const useDummyCartItems = () => {
 
 	useDummyProducts().value.forEach((product, index) => {
 		if (index < 4) {
-			let { id: _, selections: __, soldNum: ___, ...otherDetails } = product;
+			let productDetails = (({ name, price, images }) => ({ name, price, images }))(product);
+
 			let detailsForCart = {
 				id: index,
-				...otherDetails,
-				quantity: useRandomInt(1, 5),
+				...productDetails,
 				selectedVariety: [
 					{
 						name: "Dummy Varieties Name",
 						variety: "Dummy Variety",
 					},
 				],
+				quantity: useRandomInt(1, 5),
 			};
 			dummyCartItems.push(detailsForCart);
 		}
