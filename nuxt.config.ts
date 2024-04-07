@@ -8,5 +8,4 @@ export default defineNuxtConfig({
 		},
 	},
 	css: ["~/assets/styles/main.scss"],
-	plugins: ["~/plugins/useBoootstrap.client.js", "~/plugins/useVueDatePicker.ts"],
 });
