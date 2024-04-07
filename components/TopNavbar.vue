@@ -18,27 +18,29 @@
 				</div>
 
 				<menu class="nav-icons d-flex gap-2 h-100 my-0 align-items-center">
-					<div
-						id="top-navbar-search-dropdown"
-						class="search-btn dropdown"
-						title="Search"
-						data-bs-toggle="tooltip"
-						data-bs-title="Search"
-						data-bs-trigger="hover"
-						data-bs-placement="bottom"
-					>
+					<div class="search-btn dropdown">
 						<button class="btn w-fit h-fit rounded-3 transition-all" type="button" data-bs-toggle="dropdown">
-							<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="none" viewBox="0 0 28 28">
-								<g clip-path="url(#a)">
-									<path
-										fill="#000"
-										d="m25.822 28-9.8-9.8a9.483 9.483 0 0 1-5.911 2.022c-2.826 0-5.217-.979-7.174-2.937C.98 15.327 0 12.936 0 10.111c0-2.826.979-5.217 2.937-7.174C4.895.98 7.287 0 10.11 0c2.826 0 5.218.979 7.176 2.937 1.958 1.958 2.936 4.35 2.935 7.174a9.483 9.483 0 0 1-2.022 5.911l9.8 9.8L25.822 28Zm-15.71-10.889c1.944 0 3.597-.68 4.958-2.04 1.362-1.361 2.042-3.014 2.041-4.96 0-1.944-.68-3.597-2.04-4.957-1.361-1.361-3.014-2.042-4.96-2.043-1.944 0-3.597.68-4.957 2.043C3.793 6.515 3.112 8.168 3.11 10.11c0 1.945.68 3.598 2.043 4.96 1.361 1.36 3.014 2.041 4.957 2.04Z"
-									/>
-								</g>
-								<defs>
-									<clipPath id="a"><path fill="#fff" d="M0 0h28v28H0z" /></clipPath>
-								</defs>
-							</svg>
+							<div
+								id="top-navbar-search-dropdown"
+								title="Search"
+								data-bs-toggle="tooltip"
+								data-bs-title="Search"
+								data-bs-trigger="hover"
+								data-bs-placement="bottom"
+								data-bs-offset="0,20"
+							>
+								<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="none" viewBox="0 0 28 28">
+									<g clip-path="url(#a)">
+										<path
+											fill="#000"
+											d="m25.822 28-9.8-9.8a9.483 9.483 0 0 1-5.911 2.022c-2.826 0-5.217-.979-7.174-2.937C.98 15.327 0 12.936 0 10.111c0-2.826.979-5.217 2.937-7.174C4.895.98 7.287 0 10.11 0c2.826 0 5.218.979 7.176 2.937 1.958 1.958 2.936 4.35 2.935 7.174a9.483 9.483 0 0 1-2.022 5.911l9.8 9.8L25.822 28Zm-15.71-10.889c1.944 0 3.597-.68 4.958-2.04 1.362-1.361 2.042-3.014 2.041-4.96 0-1.944-.68-3.597-2.04-4.957-1.361-1.361-3.014-2.042-4.96-2.043-1.944 0-3.597.68-4.957 2.043C3.793 6.515 3.112 8.168 3.11 10.11c0 1.945.68 3.598 2.043 4.96 1.361 1.36 3.014 2.041 4.957 2.04Z"
+										/>
+									</g>
+									<defs>
+										<clipPath id="a"><path fill="#fff" d="M0 0h28v28H0z" /></clipPath>
+									</defs>
+								</svg>
+							</div>
 						</button>
 						<div class="dropdown-menu dropdown-menu-end p-2">
 							<form class="search">
