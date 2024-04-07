@@ -21,7 +21,7 @@
 					<div class="search-btn dropdown">
 						<button class="btn w-fit h-fit rounded-3 transition-all" type="button" data-bs-toggle="dropdown">
 							<div
-								id="top-navbar-search-dropdown"
+								id="top-navbar-search-btn"
 								title="Search"
 								data-bs-toggle="tooltip"
 								data-bs-title="Search"
@@ -121,7 +121,7 @@ const { $Tooltip: Tooltip } = useNuxtApp();
 const tooltips = ref(<CartTooltips>{});
 
 onMounted(() => {
-	tooltips.value.search = new Tooltip(document.getElementById("top-navbar-search-dropdown") as HTMLElement);
+	tooltips.value.search = new Tooltip(document.getElementById("top-navbar-search-btn") as HTMLElement);
 	tooltips.value.cart = new Tooltip(document.getElementById("top-navbar-cart-link") as HTMLElement);
 	tooltips.value.account = new Tooltip(document.getElementById("top-navbar-account-dropdown") as HTMLElement);
 });
