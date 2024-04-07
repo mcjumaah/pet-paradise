@@ -19,10 +19,9 @@
 
 				<menu class="nav-icons d-flex gap-2 h-100 my-0 align-items-center">
 					<div class="search-btn dropdown">
-						<button class="btn w-fit h-fit rounded-3 transition-all" type="button" data-bs-toggle="dropdown">
+						<button class="btn w-fit h-fit rounded-3 transition-all" title="Search" type="button" data-bs-toggle="dropdown">
 							<div
 								id="top-navbar-search-btn"
-								title="Search"
 								data-bs-toggle="tooltip"
 								data-bs-title="Search"
 								data-bs-trigger="hover"
@@ -57,6 +56,7 @@
 						data-bs-title="Cart"
 						data-bs-trigger="hover"
 						data-bs-placement="bottom"
+						data-bs-offset="0,13.5"
 					>
 						<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="none" viewBox="0 0 28 28">
 							<g clip-path="url(#a)">
@@ -70,22 +70,23 @@
 							</defs>
 						</svg>
 					</NuxtLink>
-					<div
-						id="top-navbar-account-dropdown"
-						class="account dropdown"
-						title="Account"
-						data-bs-toggle="tooltip"
-						data-bs-title="Account"
-						data-bs-trigger="hover"
-						data-bs-placement="bottom"
-					>
-						<button class="btn w-fit h-fit rounded-3 transition-all" type="button" data-bs-toggle="dropdown">
-							<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="none" viewBox="0 0 28 28">
-								<path
-									fill="#000"
-									d="M14 0a7 7 0 1 1 0 14 7 7 0 0 1 0-14Zm0 3.5a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7Zm0 12.25c4.672 0 14 2.328 14 7V28H0v-5.25c0-4.672 9.328-7 14-7Zm0 3.325c-5.197 0-10.675 2.555-10.675 3.675v1.925h21.35V22.75c0-1.12-5.477-3.675-10.675-3.675Z"
-								/>
-							</svg>
+					<div class="account dropdown">
+						<button class="btn w-fit h-fit rounded-3 transition-all" title="Account" type="button" data-bs-toggle="dropdown">
+							<div
+								id="top-navbar-account-btn"
+								data-bs-toggle="tooltip"
+								data-bs-title="Account"
+								data-bs-trigger="hover"
+								data-bs-placement="bottom"
+								data-bs-offset="0,20"
+							>
+								<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="none" viewBox="0 0 28 28">
+									<path
+										fill="#000"
+										d="M14 0a7 7 0 1 1 0 14 7 7 0 0 1 0-14Zm0 3.5a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7Zm0 12.25c4.672 0 14 2.328 14 7V28H0v-5.25c0-4.672 9.328-7 14-7Zm0 3.325c-5.197 0-10.675 2.555-10.675 3.675v1.925h21.35V22.75c0-1.12-5.477-3.675-10.675-3.675Z"
+									/>
+								</svg>
+							</div>
 						</button>
 						<ul class="dropdown-menu dropdown-menu-end">
 							<li><NuxtLink to="/login" class="dropdown-item">Log In</NuxtLink></li>
@@ -123,7 +124,7 @@ const tooltips = ref(<CartTooltips>{});
 onMounted(() => {
 	tooltips.value.search = new Tooltip(document.getElementById("top-navbar-search-btn") as HTMLElement);
 	tooltips.value.cart = new Tooltip(document.getElementById("top-navbar-cart-link") as HTMLElement);
-	tooltips.value.account = new Tooltip(document.getElementById("top-navbar-account-dropdown") as HTMLElement);
+	tooltips.value.account = new Tooltip(document.getElementById("top-navbar-account-btn") as HTMLElement);
 });
 </script>
 
