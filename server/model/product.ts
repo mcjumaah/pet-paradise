@@ -4,12 +4,9 @@ export type Product = {
 	id: number;
 	sku: string;
 	name: string;
-	price: string;
 	stock: number;
 	images: string[];
 	soldNum: number;
-	itemCategoryId: number;
-	petCategoryId: number;
 	cartId: number;
 };
 
@@ -36,7 +33,7 @@ export const findById = async (id: string) => {
 	}
 };
 
-export const save = async (data: Pick<Product, "sku" | "name" | "price" | "itemCategoryId" | "petCategoryId">) => {
+export const save = async (data: Pick<Product, "sku" | "name">) => {
 	try {
 		const result = (await sql({
 			query: `
@@ -48,7 +45,7 @@ export const save = async (data: Pick<Product, "sku" | "name" | "price" | "itemC
           petCategoryId
         ) VALUES (?, ?, ?, ?, ?)
         RETURNING *`,
-			values: [data.sku, data.name, data.price, data.itemCategoryId, data.petCategoryId],
+			values: [data.sku, data.name],
 		})) as Product[];
 
 		return result.length === 1 ? result[0] : null;
@@ -57,10 +54,7 @@ export const save = async (data: Pick<Product, "sku" | "name" | "price" | "itemC
 	}
 };
 
-export const update = async (
-	id: string,
-	data: Pick<Product, "sku" | "name" | "price" | "itemCategoryId" | "petCategoryId">
-) => {
+export const update = async (id: string, data: Pick<Product, "sku" | "name">) => {
 	try {
 		await sql({
 			query: `
@@ -72,7 +66,7 @@ export const update = async (
         itemCategoryId = ?, 
         petCategoryId = ? 
       WHERE id = ?`,
-			values: [data.sku, data.name, data.price, data.itemCategoryId, data.petCategoryId, id],
+			values: [data.sku, data.name, id],
 		});
 
 		return await findById(id);
