@@ -28,8 +28,8 @@ export const save = async (event: H3Event) => {
 		const body = await readBody(event);
 
 		const result = await productModel.save({
-			name: body.name,
 			sku: body.sku,
+			name: body.name,
 			stock: body.stock || 0,
 			images: body.images || null,
 			soldNum: body.soldNum || 0,
@@ -48,12 +48,12 @@ export const save = async (event: H3Event) => {
 
 export const update = async (event: H3Event) => {
 	try {
-		const body = await readBody(event);
 		const queryParam = getQuery(event);
+		const body = await readBody(event);
 
 		const result = await productModel.update(queryParam.id as string, {
-			name: body.name,
 			sku: body.sku,
+			name: body.name,
 			stock: body.stock,
 			images: body.images,
 			soldNum: body.soldNum,

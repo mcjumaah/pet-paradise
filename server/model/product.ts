@@ -69,7 +69,7 @@ export const update = async (id: string, data: Pick<Product, "sku" | "name" | "s
 				images = ?, 
 				sold_num = ? 
       WHERE id = ?`,
-			values: [data.sku, data.name, id],
+			values: [data.sku, data.name, data.stock, data.images, data.soldNum, id],
 		});
 
 		return await findById(id);
