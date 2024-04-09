@@ -31,15 +31,17 @@ export const findById = async (id: string) => {
 
 export const save = async (data: Pick<ProductSelection, "name" | "productId">) => {
 	try {
-		const result = (await sql({
+		await sql({
 			query: `
-        INSERT INTO selection (
+        INSERT INTO selection ( 
           name, 
-					product_id
-        ) VALUES (?, ?) 
-        RETURNING *
-			`,
+          product_id
+        ) VALUES (?, ?)`,
 			values: [data.name, data.productId],
+		});
+
+		const result = (await sql({
+			query: `SELECT * FROM selection WHERE id = LAST_INSERT_ID()`,
 		})) as ProductSelection[];
 
 		return result.length === 1 ? result[0] : null;
@@ -52,12 +54,11 @@ export const update = async (id: string, data: Pick<ProductSelection, "name" | "
 	try {
 		await sql({
 			query: `
-				UPDATE selection 
-				SET 
-					name = ?, 
-					product_id = ?, 
-				WHERE id = ?
-			`,
+      UPDATE selection 
+      SET 
+        name = ?, 
+        product_id = ? 
+      WHERE id = ?`,
 			values: [data.name, data.productId, id],
 		});
 
