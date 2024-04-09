@@ -44,7 +44,7 @@ export const save = async (data: Pick<Product, "sku" | "name" | "stock" | "image
 					images, 
 					sold_num
         ) VALUES (?, ?, ?, ?, ?)`,
-			values: [data.sku, data.name, data.stock || 0, data.images || null, data.soldNum || 0],
+			values: [data.sku, data.name, data.stock, data.images, data.soldNum],
 		});
 
 		const result = (await sql({

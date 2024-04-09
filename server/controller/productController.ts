@@ -30,6 +30,9 @@ export const save = async (event: H3Event) => {
 		const result = await productModel.save({
 			name: body.name,
 			sku: body.sku,
+			stock: body.stock || 0,
+			images: body.images || null,
+			soldNum: body.soldNum || 0,
 		});
 
 		return {
@@ -51,6 +54,9 @@ export const update = async (event: H3Event) => {
 		const result = await productModel.update(queryParam.id as string, {
 			name: body.name,
 			sku: body.sku,
+			stock: body.stock,
+			images: body.images,
+			soldNum: body.soldNum,
 		});
 
 		return {
