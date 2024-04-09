@@ -59,8 +59,7 @@ export const update = async (id: string, data: Pick<Price, "value" | "productId"
 				UPDATE price 
 				SET 
 					name = ?, 
-					selection_id = ?, 
-					price_id = ? 
+					product_id = ? 
 				WHERE id = ?
 			`,
 			values: [data.value, data.productId, id],
