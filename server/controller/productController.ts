@@ -9,7 +9,7 @@ export const find = async (event: H3Event) => {
 		if (queryParam.id) {
 			result = await productModel.findById(queryParam.id as string);
 		} else {
-			result = await productModel.findAll();
+			result = await productModel.findAll(queryParam.pageNum as number);
 		}
 
 		return {

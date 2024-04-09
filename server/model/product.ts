@@ -10,11 +10,32 @@ export type Product = {
 	cartId: number;
 };
 
-export const findAll = async () => {
+export const findAll = async (pageNum: number = 0) => {
 	try {
-		const result = await sql({ query: `SELECT * FROM product` });
+		const pageSize = 10;
+		const offset = pageNum * pageSize;
 
-		return result as Product[];
+		const result = (await sql({
+			query: `SELECT * FROM product LIMIT ? OFFSET ?`,
+			values: [pageSize.toString(), offset.toString()],
+		})) as Product[];
+
+		const totalCountRows = (await sql({
+			query: `SELECT COUNT(*) AS total FROM product`,
+		})) as any[];
+		const totalCount = totalCountRows[0].total;
+		const totalPages = Math.ceil(totalCount / pageSize);
+
+		return {
+			content: result,
+			pagination: {
+				pageNumber: pageNum,
+				pageSize: pageSize,
+				totalElements: result.length,
+				totalPages: totalPages,
+				isLastPage: pageNum === totalPages - 1,
+			},
+		};
 	} catch (error) {
 		return error;
 	}
