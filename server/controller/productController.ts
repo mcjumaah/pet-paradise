@@ -1,24 +1,16 @@
 import { H3Event } from "h3";
 import * as productModel from "../model/product";
 
-export const findAll = async () => {
+export const find = async (event: H3Event) => {
 	try {
-		const result = await productModel.findAll();
+		const queryParam = getQuery(event);
 
-		return {
-			data: result,
-		};
-	} catch {
-		throw createError({
-			statusCode: 500,
-			statusMessage: "Something went wrong",
-		});
-	}
-};
-
-export const findById = async (event: H3Event) => {
-	try {
-		const result = await productModel.findById(event.context.params?.id as string);
+		let result;
+		if (queryParam.id) {
+			result = await productModel.findById(queryParam.id as string);
+		} else {
+			result = await productModel.findAll();
+		}
 
 		return {
 			data: result,
@@ -34,6 +26,7 @@ export const findById = async (event: H3Event) => {
 export const save = async (event: H3Event) => {
 	try {
 		const body = await readBody(event);
+
 		const result = await productModel.save({
 			name: body.name,
 			sku: body.sku,
@@ -53,7 +46,9 @@ export const save = async (event: H3Event) => {
 export const update = async (event: H3Event) => {
 	try {
 		const body = await readBody(event);
-		const result = await productModel.update(event.context.params?.id as string, {
+		const queryParam = getQuery(event);
+
+		const result = await productModel.update(queryParam.id as string, {
 			name: body.name,
 			sku: body.sku,
 		});
@@ -72,7 +67,9 @@ export const update = async (event: H3Event) => {
 export const deleteById = async (event: H3Event) => {
 	try {
 		const body = await readBody(event);
-		const result = await productModel.deleteById(event.context.params?.id as string);
+		const queryParam = getQuery(event);
+
+		const result = await productModel.deleteById(queryParam.id as string);
 
 		return {
 			data: result,
