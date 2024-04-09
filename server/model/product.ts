@@ -33,15 +33,18 @@ export const findById = async (id: string) => {
 	}
 };
 
-export const save = async (data: Pick<Product, "sku" | "name">) => {
+export const save = async (data: Pick<Product, "sku" | "name" | "stock" | "images" | "soldNum">) => {
 	try {
 		await sql({
 			query: `
         INSERT INTO product (
           sku, 
-          name
-        ) VALUES (?, ?)`,
-			values: [data.sku, data.name],
+          name, 
+					stock, 
+					images, 
+					sold_num
+        ) VALUES (?, ?, ?, ?, ?)`,
+			values: [data.sku, data.name, data.stock || 0, data.images || null, data.soldNum || 0],
 		});
 
 		const result = (await sql({
@@ -54,14 +57,17 @@ export const save = async (data: Pick<Product, "sku" | "name">) => {
 	}
 };
 
-export const update = async (id: string, data: Pick<Product, "sku" | "name">) => {
+export const update = async (id: string, data: Pick<Product, "sku" | "name" | "stock" | "images" | "soldNum">) => {
 	try {
 		await sql({
 			query: `
       UPDATE product 
       SET 
         sku = ?, 
-        name = ? 
+        name = ?, 
+				stock = ?, 
+				images = ?, 
+				sold_num = ? 
       WHERE id = ?`,
 			values: [data.sku, data.name, id],
 		});
