@@ -77,9 +77,18 @@ export const deleteById = async (event: H3Event) => {
 
 		const result = await productModel.deleteById(queryParam.id as string);
 
-		return {
-			data: result,
-		};
+		if (result) {
+			return {
+				data: {
+					code: 204,
+					message: "Successfully deleted",
+				},
+			};
+		} else {
+			return {
+				data: result,
+			};
+		}
 	} catch {
 		throw createError({
 			statusCode: 500,
