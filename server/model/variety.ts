@@ -32,16 +32,19 @@ export const findById = async (id: string) => {
 
 export const save = async (data: Pick<Variety, "name" | "selectionId" | "priceId">) => {
 	try {
-		const result = (await sql({
+		await sql({
 			query: `
-        INSERT INTO variety (
-          name, 
+				INSERT INTO variety (
+					name, 
 					selection_id, 
-          price_id
-        ) VALUES (?, ?, ?) 
-        RETURNING *
+					price_id
+				) VALUES (?, ?)
 			`,
 			values: [data.name, data.selectionId, data.priceId],
+		});
+
+		const result = (await sql({
+			query: `SELECT * FROM variety WHERE id = LAST_INSERT_ID()`,
 		})) as Variety[];
 
 		return result.length === 1 ? result[0] : null;
@@ -58,7 +61,7 @@ export const update = async (id: string, data: Pick<Variety, "name" | "selection
 				SET 
 					name = ?, 
 					selection_id = ?, 
-					price_id = ?
+					price_id = ? 
 				WHERE id = ?
 			`,
 			values: [data.name, data.selectionId, data.priceId, id],
