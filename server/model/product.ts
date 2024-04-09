@@ -35,14 +35,17 @@ export const findById = async (id: string) => {
 
 export const save = async (data: Pick<Product, "sku" | "name">) => {
 	try {
-		const result = (await sql({
+		await sql({
 			query: `
         INSERT INTO product (
           sku, 
           name
-        ) VALUES (?, ?) 
-        RETURNING *`,
+        ) VALUES (?, ?)`,
 			values: [data.sku, data.name],
+		});
+
+		const result = (await sql({
+			query: `SELECT * FROM product WHERE id = LAST_INSERT_ID()`,
 		})) as Product[];
 
 		return result.length === 1 ? result[0] : null;
