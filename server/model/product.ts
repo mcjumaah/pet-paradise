@@ -39,11 +39,8 @@ export const save = async (data: Pick<Product, "sku" | "name">) => {
 			query: `
         INSERT INTO product (
           sku, 
-          name, 
-          price, 
-          itemCategoryId, 
-          petCategoryId
-        ) VALUES (?, ?, ?, ?, ?)
+          name
+        ) VALUES (?, ?) 
         RETURNING *`,
 			values: [data.sku, data.name],
 		})) as Product[];
@@ -61,10 +58,7 @@ export const update = async (id: string, data: Pick<Product, "sku" | "name">) =>
       UPDATE product 
       SET 
         sku = ?, 
-        name = ?, 
-        price = ?, 
-        itemCategoryId = ?, 
-        petCategoryId = ? 
+        name = ? 
       WHERE id = ?`,
 			values: [data.sku, data.name, id],
 		});
