@@ -38,7 +38,7 @@ export const save = async (data: Pick<Variety, "name" | "selectionId" | "priceId
 					name, 
 					selection_id, 
 					price_id
-				) VALUES (?, ?)
+				) VALUES (?, ?, ?)
 			`,
 			values: [data.name, data.selectionId, data.priceId],
 		});
