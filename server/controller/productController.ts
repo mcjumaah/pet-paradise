@@ -1,6 +1,7 @@
 import { H3Event } from "h3";
 import * as productModel from "../model/product";
 import { getProducts } from "../services/productService";
+import { Pagination } from "../db";
 
 export interface ProductProjection {
 	id: number;
@@ -17,14 +18,14 @@ export interface ProductProjection {
 }
 export interface ProductsPaginationProjection {
 	content: ProductProjection[];
-	pagination: Object;
+	pagination: Pagination;
 }
 
 export const find = async (event: H3Event) => {
 	try {
 		const queryParam = getQuery(event);
 
-		const result = await getProducts(queryParam.id as string, queryParam.pageNum as number);
+		const result = await getProducts(queryParam.id as string, queryParam.pageNum as string);
 
 		return {
 			data: result,

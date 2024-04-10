@@ -23,13 +23,13 @@ async function getProductPrice(productId: number) {
 		: null;
 }
 
-export const getProducts = async (id: string, pageNum: number = 0) => {
+export const getProducts = async (id: string, pageNum: string = "0") => {
 	let result: ProductProjection | ProductsPaginationProjection;
 
 	if (id) {
 		result = (await productModel.findById(id)) as ProductProjection;
 	} else {
-		result = (await productModel.findAll(pageNum as number)) as ProductsPaginationProjection;
+		result = (await productModel.findAll(pageNum)) as ProductsPaginationProjection;
 
 		for (const product of result.content) {
 			product.price = await getProductPrice(product.id);

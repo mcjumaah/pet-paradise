@@ -10,10 +10,11 @@ export type Product = {
 	cartId: number;
 };
 
-export const findAll = async (pageNum: number = 0) => {
+export const findAll = async (pageNum: string = "0") => {
 	try {
+		const pageNumInt = parseInt(pageNum);
 		const pageSize = 10;
-		const offset = pageNum * pageSize;
+		const offset = pageNumInt * pageSize;
 
 		const result = (await sql({
 			query: `SELECT * FROM product LIMIT ? OFFSET ?`,
@@ -29,11 +30,11 @@ export const findAll = async (pageNum: number = 0) => {
 		return {
 			content: result,
 			pagination: {
-				pageNumber: pageNum,
+				pageNumber: pageNumInt,
 				pageSize: pageSize,
 				totalElements: result.length,
 				totalPages: totalPages,
-				isLastPage: pageNum === totalPages - 1,
+				isLastPage: pageNumInt === totalPages - 1,
 			},
 		};
 	} catch (error) {
