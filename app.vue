@@ -7,6 +7,11 @@
 <script setup lang="ts">
 import type { LayoutKey } from "#build/types/layouts";
 
+export type Pagination = {
+	currentPage: number;
+	totalPages: number;
+};
+
 const { $routePathHelper: routePath } = useNuxtApp();
 const pathArr = routePath().arr;
 
