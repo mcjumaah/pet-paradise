@@ -49,35 +49,39 @@
 
 		<div class="products container grid gap-4 py-4">
 			<NuxtLink
-				v-for="(product, index) in dummyProducts"
+				v-for="(product, index) in products"
 				:key="`${product.id} - ${index}`"
 				:to="`/shop/${product.id}`"
-				class="card text-start shadow bg-body-2"
+				class="card text-start shadow bg-body-2 text-decoration-none"
 				:title="product.name"
 			>
-				<img class="card-img-top" :src="product.images[0]" />
-				<div class="card-body transition-all">
+				<img
+					class="card-img-top"
+					:src="product.images ? product.images[0] : '/images/shop-products/no-image-placeholder.png'"
+					:alt="`Image for ${product.name}`"
+				/>
+				<div class="card-body d-flex flex-column justify-content-between transition-all">
 					<p class="card-title line-clamp-2">
 						{{ product.name }}
 					</p>
-					<p class="price card-text text-primary-emphasis">{{ product.price }}</p>
+					<p class="price card-text text-primary-emphasis">{{ getProductPrice(product.price) }}</p>
 				</div>
 			</NuxtLink>
 		</div>
 
 		<nav class="pagination-bottom py-3" aria-label="Shop Products Botom Pagination">
 			<ul class="pagination">
-				<li class="page-item" :class="pagination.currentPage == 1 ? 'disabled' : ''">
+				<li class="page-item" :class="pagination.currentPage === 1 ? 'disabled' : ''">
 					<a class="page-link" href="#" title="Previous" @click="pagination.currentPage--">
 						<img src="/svg/chevron-left-primary.svg" alt="Left Arrow" />
 					</a>
 				</li>
 				<template v-for="index in pagination.totalPages">
-					<li v-if="getPageIsToDisplay(index)" class="page-item" :class="index == pagination.currentPage ? 'active' : ''">
+					<li v-if="getPageIsToDisplay(index)" class="page-item" :class="index === pagination.currentPage ? 'active' : ''">
 						<a class="page-link" href="#" @click="pagination.currentPage = index">{{ index }}</a>
 					</li>
 				</template>
-				<li class="page-item" :class="pagination.currentPage == pagination.totalPages ? 'disabled' : ''">
+				<li class="page-item" :class="pagination.currentPage === pagination.totalPages ? 'disabled' : ''">
 					<a class="page-link" href="#" title="Next" @click="pagination.currentPage++">
 						<img src="/svg/chevron-left-primary.svg" class="rotate-180" alt="Right Arrow" />
 					</a>
@@ -88,13 +92,24 @@
 </template>
 
 <script setup lang="ts">
-const dummyProductTypes = ["Food & Treats", "Supplies", "Toys", "Clothing & Accessories", "Health & Wellness"];
-const dummyProducts = useDummyProducts();
+import type { Pagination } from "~/app.vue";
+import type { ProductProjection, ProductsPaginationProjection } from "~/server/controller/productController";
 
-const pagination = ref({
+const dummyProductTypes = ["Food & Treats", "Supplies", "Toys", "Clothing & Accessories", "Health & Wellness"];
+
+const products = ref<ProductProjection[]>([]);
+const pagination = ref(<Pagination>{
 	currentPage: 1,
-	totalPages: 17,
 });
+
+watch(
+	() => pagination.value.currentPage,
+	(newPage, oldPage) => {
+		if (newPage != oldPage) {
+			fetchProducts(newPage - 1);
+		}
+	}
+);
 
 function getPageIsToDisplay(index: number) {
 	if (pagination.value.currentPage < 3) {
@@ -105,6 +120,36 @@ function getPageIsToDisplay(index: number) {
 		return index > pagination.value.currentPage - 3 && index < pagination.value.currentPage + 3;
 	}
 }
+function getProductPrice(price: ProductProjection["price"]) {
+	if (price === null) {
+		return "FREE";
+	} else if (price?.min === price?.max) {
+		return `₱${price?.min}`;
+	} else {
+		return `₱${price?.min} - ₱${price?.max}`;
+	}
+}
+
+async function fetchProducts(pageNum: number = 0) {
+	try {
+		const result: { data: ProductsPaginationProjection } = await $fetch("/api/product", {
+			method: "GET",
+			query: {
+				pageNum,
+			},
+		});
+
+		products.value = result.data.content;
+		pagination.value.currentPage = result.data.pagination.pageNumber + 1;
+		pagination.value.totalPages = result.data.pagination.totalPages;
+	} catch (error) {
+		alert(error);
+	}
+}
+
+onMounted(() => {
+	fetchProducts();
+});
 </script>
 
 <style scoped lang="scss">
