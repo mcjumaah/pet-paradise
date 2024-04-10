@@ -93,11 +93,11 @@
 
 <script setup lang="ts">
 import type { Pagination } from "~/app.vue";
-import type { ProductProjection, ProductsPaginationProjection } from "~/server/controller/productController";
+import type { ProductSummaryProjection, ProductsPaginationProjection } from "~/server/projections/productProjections";
 
 const dummyProductTypes = ["Food & Treats", "Supplies", "Toys", "Clothing & Accessories", "Health & Wellness"];
 
-const products = ref<ProductProjection[]>([]);
+const products = ref<ProductSummaryProjection[]>([]);
 const pagination = ref(<Pagination>{
 	currentPage: 1,
 });
@@ -120,7 +120,7 @@ function getPageIsToDisplay(index: number) {
 		return index > pagination.value.currentPage - 3 && index < pagination.value.currentPage + 3;
 	}
 }
-function getProductPrice(price: ProductProjection["price"]) {
+function getProductPrice(price: ProductSummaryProjection["price"]) {
 	if (price === null) {
 		return "FREE";
 	} else if (price?.min === price?.max) {

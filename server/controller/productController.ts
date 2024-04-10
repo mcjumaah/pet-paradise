@@ -1,25 +1,6 @@
 import { H3Event } from "h3";
 import * as productModel from "../model/product";
 import { getProducts } from "../services/productService";
-import { Pagination } from "../db";
-
-export interface ProductProjection {
-	id: number;
-	sku: string;
-	name: string;
-	price: {
-		min: number;
-		max: number;
-	} | null;
-	stock: number;
-	images: string[];
-	soldNum: number;
-	cartId: number;
-}
-export interface ProductsPaginationProjection {
-	content: ProductProjection[];
-	pagination: Pagination;
-}
 
 export const find = async (event: H3Event) => {
 	try {

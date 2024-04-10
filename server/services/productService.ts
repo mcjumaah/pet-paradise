@@ -1,6 +1,6 @@
 import * as productModel from "../model/product";
 import * as priceModel from "../model/price";
-import { ProductProjection, ProductsPaginationProjection } from "../controller/productController";
+import { ProductSummaryProjection, ProductsPaginationProjection } from "../projections/productProjections";
 
 async function getProductPrice(productId: number) {
 	const priceArr = (await priceModel.findAllByProductId(productId.toString())) as priceModel.Price[];
@@ -24,10 +24,11 @@ async function getProductPrice(productId: number) {
 }
 
 export const getProducts = async (id: string, pageNum: string = "0") => {
-	let result: ProductProjection | ProductsPaginationProjection;
+	let result: ProductSummaryProjection | ProductsPaginationProjection;
 
 	if (id) {
-		result = (await productModel.findById(id)) as ProductProjection;
+		result = (await productModel.findById(id)) as ProductSummaryProjection;
+		result.price = await getProductPrice(parseInt(id));
 	} else {
 		result = (await productModel.findAll(pageNum)) as ProductsPaginationProjection;
 

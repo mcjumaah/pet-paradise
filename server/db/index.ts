@@ -4,6 +4,7 @@ interface Options {
 	query: string;
 	values?: any[];
 }
+
 export type Pagination = {
 	pageNumber: number;
 	pageSize: number;
