@@ -16,6 +16,19 @@ export const findAll = async () => {
 	}
 };
 
+export const findAllByProductId = async (productId: string) => {
+	try {
+		const result = (await sql({
+			query: `SELECT * FROM price WHERE product_id = ?`,
+			values: [productId],
+		})) as Price[];
+
+		return result;
+	} catch (error) {
+		return error;
+	}
+};
+
 export const findById = async (id: string) => {
 	try {
 		const result = (await sql({
