@@ -4,6 +4,13 @@ interface Options {
 	query: string;
 	values?: any[];
 }
+export type Pagination = {
+	pageNumber: number;
+	pageSize: number;
+	totalElements: number;
+	totalPages: number;
+	isLastPage: boolean;
+};
 
 const pool = mysql.createPool({
 	host: "localhost",
