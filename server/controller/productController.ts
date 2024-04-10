@@ -1,16 +1,30 @@
 import { H3Event } from "h3";
 import * as productModel from "../model/product";
+import { getProducts } from "../services/productService";
+
+export interface ProductProjection {
+	id: number;
+	sku: string;
+	name: string;
+	price: {
+		min: number;
+		max: number;
+	} | null;
+	stock: number;
+	images: string[];
+	soldNum: number;
+	cartId: number;
+}
+export interface ProductsPaginationProjection {
+	content: ProductProjection[];
+	pagination: Object;
+}
 
 export const find = async (event: H3Event) => {
 	try {
 		const queryParam = getQuery(event);
 
-		let result;
-		if (queryParam.id) {
-			result = await productModel.findById(queryParam.id as string);
-		} else {
-			result = await productModel.findAll(queryParam.pageNum as number);
-		}
+		const result = await getProducts(queryParam.id as string, queryParam.pageNum as number);
 
 		return {
 			data: result,
