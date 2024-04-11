@@ -1,6 +1,10 @@
 import * as productModel from "../model/product";
 import * as priceModel from "../model/price";
-import { ProductProjection, ProductsPaginationProjection } from "../projections/productProjections";
+import {
+	ProductProjection,
+	ProductSummaryProjection,
+	ProductsPaginationProjection,
+} from "../projections/productProjections";
 import { PriceProjection } from "../projections/priceProjections";
 import { mapObjectToClass } from "../utils/entityFieldsUtil";
 import * as priceService from "./priceService";
@@ -18,12 +22,15 @@ export const getProducts = async (id: string, pageNum: string = "0") => {
 
 			result.price[index] = await mapObjectToClass(price, PriceProjection);
 		}
+
 		result = await mapObjectToClass(result, ProductProjection);
 	} else {
 		result = (await productModel.findAll(pageNum)) as ProductsPaginationProjection;
 
-		for (const product of result.content) {
+		for (const [index, product] of result.content.entries()) {
 			product.price = await priceService.getProductPriceSummary(product.id);
+
+			result.content[index] = await mapObjectToClass(product, ProductSummaryProjection);
 		}
 	}
 
