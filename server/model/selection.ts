@@ -1,5 +1,5 @@
 import { sql } from "../db";
-import { keysToCamelCase } from "../utils/entityFields";
+import { keysToCamelCase } from "../utils/entityFieldsUtil";
 
 export type ProductSelection = {
 	id: number;

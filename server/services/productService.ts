@@ -4,7 +4,7 @@ import * as varietyModel from "../model/variety";
 import * as selectionModel from "../model/selection";
 import { ProductProjection, ProductsPaginationProjection } from "../projections/productProjections";
 import { PriceProjection } from "../projections/priceProjections";
-import { mapObjectToClass } from "../utils/entityFields";
+import { mapObjectToClass } from "../utils/entityFieldsUtil";
 
 async function getProductPrice(productId: number) {
 	const priceArr = (await priceModel.findAllByProductId(productId.toString())) as priceModel.Price[];
