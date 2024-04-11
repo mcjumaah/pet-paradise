@@ -9,7 +9,6 @@ export interface ProductInterface {
 	stock: number;
 	images: string[];
 	soldNum: number;
-	cartId: number;
 }
 export interface ProductSummaryInterface extends Omit<ProductInterface, "price"> {
 	price: {
@@ -30,8 +29,7 @@ export class ProductProjection implements ProductInterface {
 		public price: PriceProjection[],
 		public stock: number,
 		public images: string[],
-		public soldNum: number,
-		public cartId: number
+		public soldNum: number
 	) {
 		this.id = id;
 		this.sku = sku;
@@ -40,7 +38,6 @@ export class ProductProjection implements ProductInterface {
 		this.stock = stock;
 		this.images = images;
 		this.soldNum = soldNum;
-		this.cartId = cartId;
 	}
 }
 export class ProductSummaryProjection implements ProductSummaryInterface {
@@ -54,8 +51,7 @@ export class ProductSummaryProjection implements ProductSummaryInterface {
 		} | null,
 		public stock: number,
 		public images: string[],
-		public soldNum: number,
-		public cartId: number
+		public soldNum: number
 	) {
 		this.id = id;
 		this.sku = sku;
@@ -64,7 +60,6 @@ export class ProductSummaryProjection implements ProductSummaryInterface {
 		this.stock = stock;
 		this.images = images;
 		this.soldNum = soldNum;
-		this.cartId = cartId;
 	}
 }
 export class ProductsPaginationProjection implements ProductsPaginationInterface {
