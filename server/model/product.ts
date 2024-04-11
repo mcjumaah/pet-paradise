@@ -1,4 +1,5 @@
 import { sql } from "../db";
+import { keysToCamelCase } from "../utils/entityFields";
 
 export type Product = {
 	id: number;
@@ -27,7 +28,7 @@ export const findAll = async (pageNum: string = "0") => {
 		const totalCount = totalCountRows[0].total;
 		const totalPages = Math.ceil(totalCount / pageSize);
 
-		return {
+		return keysToCamelCase({
 			content: result,
 			pagination: {
 				pageNumber: pageNumInt,
@@ -36,7 +37,7 @@ export const findAll = async (pageNum: string = "0") => {
 				totalPages: totalPages,
 				isLastPage: pageNumInt === totalPages - 1,
 			},
-		};
+		});
 	} catch (error) {
 		return error;
 	}
@@ -44,10 +45,12 @@ export const findAll = async (pageNum: string = "0") => {
 
 export const findById = async (id: string) => {
 	try {
-		const result = (await sql({
-			query: `SELECT * FROM product WHERE id = ?`,
-			values: [id],
-		})) as Product[];
+		const result = keysToCamelCase(
+			await sql({
+				query: `SELECT * FROM product WHERE id = ?`,
+				values: [id],
+			})
+		) as Product[];
 
 		return result.length === 1 ? result[0] : null;
 	} catch (error) {
@@ -69,9 +72,11 @@ export const save = async (data: Pick<Product, "sku" | "name" | "stock" | "image
 			values: [data.sku, data.name, data.stock, data.images, data.soldNum],
 		});
 
-		const result = (await sql({
-			query: `SELECT * FROM product WHERE id = LAST_INSERT_ID()`,
-		})) as Product[];
+		const result = keysToCamelCase(
+			await sql({
+				query: `SELECT * FROM product WHERE id = LAST_INSERT_ID()`,
+			})
+		) as Product[];
 
 		return result.length === 1 ? result[0] : null;
 	} catch (error) {

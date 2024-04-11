@@ -1,4 +1,5 @@
 import { sql } from "../db";
+import { keysToCamelCase } from "../utils/entityFields";
 
 export type ProductSelection = {
 	id: number;
@@ -10,7 +11,7 @@ export const findAll = async () => {
 	try {
 		const result = await sql({ query: `SELECT * FROM selection` });
 
-		return result as ProductSelection[];
+		return keysToCamelCase(result) as ProductSelection[];
 	} catch (error) {
 		return error;
 	}
@@ -18,10 +19,12 @@ export const findAll = async () => {
 
 export const findById = async (id: string) => {
 	try {
-		const result = (await sql({
-			query: `SELECT * FROM selection WHERE id = ?`,
-			values: [id],
-		})) as ProductSelection[];
+		const result = keysToCamelCase(
+			await sql({
+				query: `SELECT * FROM selection WHERE id = ?`,
+				values: [id],
+			})
+		) as ProductSelection[];
 
 		return result.length === 1 ? result[0] : null;
 	} catch (error) {
@@ -40,9 +43,11 @@ export const save = async (data: Pick<ProductSelection, "name" | "productId">) =
 			values: [data.name, data.productId],
 		});
 
-		const result = (await sql({
-			query: `SELECT * FROM selection WHERE id = LAST_INSERT_ID()`,
-		})) as ProductSelection[];
+		const result = keysToCamelCase(
+			await sql({
+				query: `SELECT * FROM selection WHERE id = LAST_INSERT_ID()`,
+			})
+		) as ProductSelection[];
 
 		return result.length === 1 ? result[0] : null;
 	} catch (error) {

@@ -1,4 +1,5 @@
 import { sql } from "../db";
+import { keysToCamelCase } from "../utils/entityFields";
 
 export type Description = {
 	id: number;
@@ -11,7 +12,7 @@ export const findAll = async () => {
 	try {
 		const result = await sql({ query: `SELECT * FROM description` });
 
-		return result as Description[];
+		return keysToCamelCase(result) as Description[];
 	} catch (error) {
 		return error;
 	}
@@ -19,10 +20,12 @@ export const findAll = async () => {
 
 export const findById = async (id: string) => {
 	try {
-		const result = (await sql({
-			query: `SELECT * FROM description WHERE id = ?`,
-			values: [id],
-		})) as Description[];
+		const result = keysToCamelCase(
+			await sql({
+				query: `SELECT * FROM description WHERE id = ?`,
+				values: [id],
+			})
+		) as Description[];
 
 		return result.length === 1 ? result[0] : null;
 	} catch (error) {
@@ -44,9 +47,11 @@ export const save = async (data: Pick<Description, "text" | "images" | "productI
 			values: [data.text, data.images, data.productId],
 		});
 
-		const result = (await sql({
-			query: `SELECT * FROM description WHERE id = LAST_INSERT_ID()`,
-		})) as Description[];
+		const result = keysToCamelCase(
+			await sql({
+				query: `SELECT * FROM description WHERE id = LAST_INSERT_ID()`,
+			})
+		) as Description[];
 
 		return result.length === 1 ? result[0] : null;
 	} catch (error) {
