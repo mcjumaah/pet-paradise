@@ -1,7 +1,5 @@
 import * as productModel from "../model/product";
 import * as priceModel from "../model/price";
-import * as varietyModel from "../model/variety";
-import * as selectionModel from "../model/selection";
 import { ProductProjection, ProductsPaginationProjection } from "../projections/productProjections";
 import { PriceProjection } from "../projections/priceProjections";
 import { mapObjectToClass } from "../utils/entityFieldsUtil";
