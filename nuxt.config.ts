@@ -7,5 +7,7 @@ export default defineNuxtConfig({
 			enabled: false,
 		},
 	},
+	modules: ["@sidebase/nuxt-auth"],
+	auth: { provider: { type: "authjs" } },
 	css: ["~/assets/styles/main.scss"],
 });
