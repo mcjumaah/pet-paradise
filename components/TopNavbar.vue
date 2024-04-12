@@ -89,7 +89,7 @@
 							</div>
 						</button>
 						<ul class="dropdown-menu dropdown-menu-end">
-							<template v-if="isCustomerLogined">
+							<template v-if="isCustomerLoggedIn">
 								<li><NuxtLink to="/account" class="dropdown-item">Account</NuxtLink></li>
 								<li><button class="btn dropdown-item" @click="signOut()">Log Out</button></li>
 							</template>
@@ -128,7 +128,7 @@ const { status: loginStatus, signOut } = useAuth();
 
 const tooltips = ref(<CartTooltips>{});
 
-const isCustomerLogined = computed(() => {
+const isCustomerLoggedIn = computed(() => {
 	return loginStatus.value === "authenticated";
 });
 
