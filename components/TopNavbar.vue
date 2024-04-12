@@ -89,8 +89,14 @@
 							</div>
 						</button>
 						<ul class="dropdown-menu dropdown-menu-end">
-							<li><NuxtLink to="/login" class="dropdown-item">Log In</NuxtLink></li>
-							<li><NuxtLink to="/signup" class="dropdown-item">Sign Up</NuxtLink></li>
+							<template v-if="isCustomerLogined">
+								<li><NuxtLink to="/account" class="dropdown-item">Account</NuxtLink></li>
+								<li><button class="btn dropdown-item" @click="signOut()">Log Out</button></li>
+							</template>
+							<template v-else>
+								<li><NuxtLink to="/login" class="dropdown-item">Log In</NuxtLink></li>
+								<li><NuxtLink to="/signup" class="dropdown-item">Sign Up</NuxtLink></li>
+							</template>
 						</ul>
 					</div>
 				</menu>
@@ -118,8 +124,13 @@ export interface CartTooltips {
 }
 
 const { $Tooltip: Tooltip } = useNuxtApp();
+const { status: loginStatus, signOut } = useAuth();
 
 const tooltips = ref(<CartTooltips>{});
+
+const isCustomerLogined = computed(() => {
+	return loginStatus.value === "authenticated";
+});
 
 onMounted(() => {
 	tooltips.value.search = new Tooltip(document.getElementById("top-navbar-search-btn") as HTMLElement);
