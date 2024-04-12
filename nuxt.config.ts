@@ -8,6 +8,6 @@ export default defineNuxtConfig({
 		},
 	},
 	modules: ["@sidebase/nuxt-auth"],
-	auth: { provider: { type: "authjs" } },
+	auth: { globalAppMiddleware: true, provider: { type: "authjs" } },
 	css: ["~/assets/styles/main.scss"],
 });

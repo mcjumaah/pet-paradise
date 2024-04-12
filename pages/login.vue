@@ -32,7 +32,6 @@
 
 <script setup lang="ts">
 definePageMeta({
-	middleware: "auth",
 	auth: {
 		unauthenticatedonly: true,
 		navigateauthenticatedto: "/",
