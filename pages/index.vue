@@ -71,6 +71,10 @@
 </template>
 
 <script setup lang="ts">
+definePageMeta({
+	auth: false,
+});
+
 const dummyFeaturedProducts = [
 	{
 		name: "Pedigree",
