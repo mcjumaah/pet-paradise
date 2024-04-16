@@ -2,11 +2,11 @@ import { H3Event } from "h3";
 import * as productModel from "../model/product";
 import * as productService from "../services/productService";
 
-export const find = async (event: H3Event) => {
+export const findAll = async (event: H3Event) => {
 	try {
 		const queryParam = getQuery(event);
 
-		const result = await productService.getProducts(queryParam.id as string, queryParam.pageNum as string);
+		const result = await productService.getProducts(queryParam.pageNum as string);
 
 		return {
 			data: result,
@@ -15,6 +15,23 @@ export const find = async (event: H3Event) => {
 		throw createError({
 			statusCode: 500,
 			statusMessage: "Something went wrong",
+		});
+	}
+};
+
+export const findOne = async (event: H3Event) => {
+	try {
+		const queryParam = getQuery(event);
+
+		const result = await productService.getProduct(queryParam.id as string);
+
+		return {
+			data: result,
+		};
+	} catch {
+		throw createError({
+			statusCode: 400,
+			statusMessage: "Bad Request",
 		});
 	}
 };
@@ -66,7 +83,7 @@ export const update = async (event: H3Event) => {
 	}
 };
 
-export const deleteById = async (event: H3Event) => {
+export const deleteOne = async (event: H3Event) => {
 	try {
 		const queryParam = getQuery(event);
 
