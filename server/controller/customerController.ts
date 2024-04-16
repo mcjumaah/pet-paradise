@@ -18,6 +18,23 @@ export const findAll = async (event: H3Event) => {
 	}
 };
 
+export const findOne = async (event: H3Event) => {
+	try {
+		const queryParam = getQuery(event);
+
+		const result = await customerModel.findById(queryParam.id as string);
+
+		return {
+			data: result,
+		};
+	} catch {
+		throw createError({
+			statusCode: 500,
+			statusMessage: "Something went wrong",
+		});
+	}
+};
+
 export const save = async (event: H3Event) => {
 	try {
 		const body = await readBody(event);
