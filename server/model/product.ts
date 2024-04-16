@@ -1,5 +1,6 @@
 import { sql } from "../db";
 import { keysToCamelCase } from "../utils/entityFieldsUtil";
+import { PaginationSql, paginationSql } from "../utils/paginationUtil";
 
 export type Product = {
 	id: number;
@@ -13,30 +14,11 @@ export type Product = {
 
 export const findAll = async (pageNum: string = "0") => {
 	try {
-		const pageNumInt = parseInt(pageNum);
-		const pageSize = 10;
-		const offset = pageNumInt * pageSize;
-
-		const result = (await sql({
-			query: `SELECT * FROM product LIMIT ? OFFSET ?`,
-			values: [pageSize.toString(), offset.toString()],
-		})) as Product[];
-
-		const totalCountRows = (await sql({
-			query: `SELECT COUNT(*) AS total FROM product`,
-		})) as any[];
-		const totalCount = totalCountRows[0].total;
-		const totalPages = Math.ceil(totalCount / pageSize);
+		const { result, pagination } = await paginationSql(pageNum, `SELECT * FROM product`);
 
 		return keysToCamelCase({
-			content: result,
-			pagination: {
-				pageNumber: pageNumInt,
-				pageSize: pageSize,
-				totalElements: result.length,
-				totalPages: totalPages,
-				isLastPage: pageNumInt === totalPages - 1,
-			},
+			content: result as Product[],
+			pagination: pagination,
 		});
 	} catch (error) {
 		return error;

@@ -1,5 +1,6 @@
 import { sql } from "../db";
 import { keysToCamelCase } from "../utils/entityFieldsUtil";
+import { PaginationSql, paginationSql } from "../utils/paginationUtil";
 
 export type Customer = {
 	id: number;
@@ -12,11 +13,14 @@ export type Customer = {
 	phoneNumber: string;
 };
 
-export const findAll = async () => {
+export const findAll = async (pageNum: string = "0") => {
 	try {
-		const result = await sql({ query: `SELECT * FROM customer` });
+		const { result, pagination } = await paginationSql(pageNum, `SELECT * FROM customer`);
 
-		return keysToCamelCase(result) as Customer[];
+		return keysToCamelCase({
+			content: result as Customer[],
+			pagination: pagination,
+		});
 	} catch (error) {
 		return error;
 	}
@@ -43,6 +47,21 @@ export const findOneByCredential = async (data: Pick<Customer, "email" | "passwo
 			await sql({
 				query: `SELECT * FROM customer WHERE email = ? AND password = ?`,
 				values: [data.email, data.password],
+			})
+		) as Customer[];
+
+		return result.length === 1 ? result[0] : null;
+	} catch (error) {
+		return error;
+	}
+};
+
+export const findOneByEmail = async (data: Pick<Customer, "email">) => {
+	try {
+		const result = keysToCamelCase(
+			await sql({
+				query: `SELECT * FROM customer WHERE email = ?`,
+				values: [data.email],
 			})
 		) as Customer[];
 

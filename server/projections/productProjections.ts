@@ -1,4 +1,4 @@
-import { Pagination } from "../db";
+import { Pagination } from "../utils/paginationUtil";
 import { PriceProjection } from "./priceProjections";
 
 export interface ProductInterface {
