@@ -1,5 +1,6 @@
 import * as productModel from "../model/product";
 import * as priceModel from "../model/price";
+import * as priceService from "./priceService";
 import {
 	ProductProjection,
 	ProductSummaryProjection,
@@ -7,9 +8,8 @@ import {
 } from "../projections/productProjections";
 import { PriceProjection } from "../projections/priceProjections";
 import { mapObjectToClass } from "../utils/entityFieldsUtil";
-import * as priceService from "./priceService";
 
-export const getProducts = async (id: string, pageNum: string = "0") => {
+export const getProducts = async (id?: string, pageNum: string = "0") => {
 	let result: ProductProjection | ProductsPaginationProjection;
 
 	if (id) {
