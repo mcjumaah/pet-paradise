@@ -2,25 +2,25 @@
 	<form id="login-form" class="login-form d-flex flex-column row-gap-4" @submit.prevent="handleSignIn()">
 		<div class="form-floating">
 			<input
-				id="email-input"
+				id="login-email-input"
 				class="form-control"
 				name="email"
 				type="email"
 				placeholder="name@example.com"
 				aria-label="Email Address"
 			/>
-			<label for="email-input" class="text-muted">Email address</label>
+			<label for="login-email-input" class="text-muted">Email address</label>
 		</div>
 		<div class="form-floating">
 			<input
-				id="password-input"
+				id="login-password-input"
 				class="form-control"
 				name="password"
 				type="password"
 				placeholder="Password"
 				aria-label="Password"
 			/>
-			<label for="password-input" class="text-muted">Password</label>
+			<label for="login-password-input" class="text-muted">Password</label>
 		</div>
 
 		<div class="login-btn-wrapper d-flex flex-column">
@@ -42,8 +42,10 @@ const { signIn } = useAuth();
 
 function handleSignIn() {
 	const loginFormEl = document.getElementById("login-form") as HTMLFormElement;
+
 	const emailInput = loginFormEl?.elements.namedItem("email") as HTMLInputElement;
 	const passwordInput = loginFormEl?.elements.namedItem("password") as HTMLInputElement;
+
 	const emailVal = emailInput.value;
 	const passwordVal = passwordInput.value;
 
