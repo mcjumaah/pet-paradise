@@ -1,5 +1,6 @@
 import { H3Event } from "h3";
-import * as customerModel from "../model/costumer";
+import * as customerModel from "../model/customer";
+import * as customerService from "../services/customerService";
 
 export const findAll = async (event: H3Event) => {
 	try {
@@ -22,16 +23,13 @@ export const findOne = async (event: H3Event) => {
 	try {
 		const queryParam = getQuery(event);
 
-		const result = await customerModel.findById(queryParam.id as string);
+		const result = await customerService.getCustomer(queryParam.id as string, queryParam.email as string);
 
 		return {
 			data: result,
 		};
-	} catch {
-		throw createError({
-			statusCode: 500,
-			statusMessage: "Something went wrong",
-		});
+	} catch (error) {
+		throw error;
 	}
 };
 
@@ -86,7 +84,7 @@ export const update = async (event: H3Event) => {
 	}
 };
 
-export const deleteById = async (event: H3Event) => {
+export const deleteOne = async (event: H3Event) => {
 	try {
 		const queryParam = getQuery(event);
 

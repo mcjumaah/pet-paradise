@@ -10,6 +10,7 @@ router.post("/product", defineEventHandler(productCtrl.save));
 router.put("/product", defineEventHandler(productCtrl.update));
 router.delete("/product", defineEventHandler(productCtrl.deleteOne));
 
+router.get("/customer", defineEventHandler(customerCtrl.findOne));
 router.post("/customer", defineEventHandler(customerCtrl.save));
 
 export default useBase("/api", router.handler);

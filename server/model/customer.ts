@@ -37,7 +37,7 @@ export const findById = async (id: string) => {
 
 		return result.length === 1 ? result[0] : null;
 	} catch (error) {
-		return error;
+		throw error;
 	}
 };
 
@@ -56,18 +56,18 @@ export const findOneByCredential = async (data: Pick<Customer, "email" | "passwo
 	}
 };
 
-export const findOneByEmail = async (data: Pick<Customer, "email">) => {
+export const findOneByEmail = async (email: string) => {
 	try {
 		const result = keysToCamelCase(
 			await sql({
 				query: `SELECT * FROM customer WHERE email = ?`,
-				values: [data.email],
+				values: [email],
 			})
 		) as Customer[];
 
 		return result.length === 1 ? result[0] : null;
 	} catch (error) {
-		return error;
+		throw error;
 	}
 };
 

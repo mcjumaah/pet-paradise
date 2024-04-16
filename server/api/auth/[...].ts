@@ -1,7 +1,7 @@
 // file: ~/server/api/auth/[...].ts
 import { NuxtAuthHandler } from "#auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-import * as customerModel from "../../model/costumer";
+import * as customerModel from "../../model/customer";
 
 export default NuxtAuthHandler({
 	pages: {
