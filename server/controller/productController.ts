@@ -1,12 +1,12 @@
 import { H3Event } from "h3";
 import * as productModel from "../model/product";
-import { getProducts } from "../services/productService";
+import * as productService from "../services/productService";
 
 export const find = async (event: H3Event) => {
 	try {
 		const queryParam = getQuery(event);
 
-		const result = await getProducts(queryParam.id as string, queryParam.pageNum as string);
+		const result = await productService.getProducts(queryParam.id as string, queryParam.pageNum as string);
 
 		return {
 			data: result,
@@ -68,7 +68,6 @@ export const update = async (event: H3Event) => {
 
 export const deleteById = async (event: H3Event) => {
 	try {
-		const body = await readBody(event);
 		const queryParam = getQuery(event);
 
 		const result = await productModel.deleteById(queryParam.id as string);
@@ -77,7 +76,7 @@ export const deleteById = async (event: H3Event) => {
 			return {
 				data: {
 					code: 204,
-					message: "Successfully deleted",
+					message: "Successfully deleted Product",
 				},
 			};
 		} else {
