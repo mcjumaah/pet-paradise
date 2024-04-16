@@ -118,9 +118,9 @@
 
 <script setup lang="ts">
 export interface CartTooltips {
-	search: any;
-	cart: any;
-	account: any;
+	search: typeof Tooltip.prototype;
+	cart: typeof Tooltip.prototype;
+	account: typeof Tooltip.prototype;
 }
 
 const { $Tooltip: Tooltip } = useNuxtApp();
@@ -133,9 +133,9 @@ const isCustomerLoggedIn = computed(() => {
 });
 
 onMounted(() => {
-	tooltips.value.search = new Tooltip(document.getElementById("top-navbar-search-btn") as HTMLElement);
-	tooltips.value.cart = new Tooltip(document.getElementById("top-navbar-cart-link") as HTMLElement);
-	tooltips.value.account = new Tooltip(document.getElementById("top-navbar-account-btn") as HTMLElement);
+	tooltips.value.search = Tooltip.getOrCreateInstance("#top-navbar-search-btn");
+	tooltips.value.cart = Tooltip.getOrCreateInstance("#top-navbar-cart-link");
+	tooltips.value.account = Tooltip.getOrCreateInstance("#top-navbar-account-btn");
 });
 </script>
 

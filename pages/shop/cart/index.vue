@@ -10,6 +10,7 @@
 						data-bs-toggle="tooltip"
 						data-bs-title="Select All"
 						data-bs-trigger="hover"
+						data-bs-offset="0,10"
 						type="checkbox"
 						v-model="isSelectedAll"
 					/>
@@ -65,7 +66,13 @@
 			<p class="mb-0">
 				Total ({{ selectedItemsId.length }} item/s): <span class="text-primary fs-4">₱{{ selectedItemsTotalPrice }}</span>
 			</p>
-			<div id="checkout-button-wrapper" data-bs-toggle="tooltip" data-bs-title="Select Item's to Checkout" tabindex="0">
+			<div
+				id="checkout-button-wrapper"
+				data-bs-toggle="tooltip"
+				data-bs-title="Select Item's to Checkout"
+				data-bs-offset="0,10"
+				tabindex="0"
+			>
 				<NuxtLink
 					to="/shop/cart/checkout"
 					class="btn btn-primary"
@@ -81,8 +88,8 @@
 
 <script setup lang="ts">
 export interface CartTooltips {
-	selectAll: any;
-	checkout: any;
+	selectAll: typeof Tooltip.prototype;
+	checkout: typeof Tooltip.prototype;
 }
 
 const { $Tooltip: Tooltip } = useNuxtApp();
@@ -122,8 +129,8 @@ function setCheckoutItems() {
 }
 
 onMounted(() => {
-	tooltips.value.selectAll = new Tooltip(document.getElementById("cart-select-all") as HTMLElement);
-	tooltips.value.checkout = new Tooltip(document.getElementById("checkout-button-wrapper") as HTMLElement);
+	tooltips.value.selectAll = Tooltip.getOrCreateInstance("#cart-select-all");
+	tooltips.value.checkout = Tooltip.getOrCreateInstance("#checkout-button-wrapper");
 });
 </script>
 
