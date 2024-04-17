@@ -1,6 +1,7 @@
 import { H3Event } from "h3";
 import * as customerModel from "../model/customer";
 import * as customerService from "../services/customerService";
+import { CustomerProjection } from "../projections/customerProjections";
 
 export const findAll = async (event: H3Event) => {
 	try {
@@ -37,7 +38,7 @@ export const save = async (event: H3Event) => {
 	try {
 		const body = await readBody(event);
 
-		const result = await customerModel.save({
+		const result: CustomerProjection | null = await customerModel.save({
 			firstName: body.firstName,
 			lastName: body.lastName,
 			middleName: body.middleName,
@@ -48,7 +49,7 @@ export const save = async (event: H3Event) => {
 		});
 
 		return {
-			data: result,
+			data: mapObjectToClass(result, CustomerProjection),
 		};
 	} catch {
 		throw createError({

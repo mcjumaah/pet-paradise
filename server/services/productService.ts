@@ -7,7 +7,6 @@ import {
 	ProductsPaginationProjection,
 } from "../projections/productProjections";
 import { PriceProjection } from "../projections/priceProjections";
-import { mapObjectToClass } from "../utils/entityFieldsUtil";
 
 export const getProducts = async (pageNum: string = "0") => {
 	const result = (await productModel.findAll(pageNum)) as ProductsPaginationProjection;

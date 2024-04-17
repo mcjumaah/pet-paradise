@@ -1,7 +1,8 @@
 import * as customerModel from "../model/customer";
+import { CustomerProjection } from "../projections/customerProjections";
 
 export const getCustomer = async (id?: string, email?: string) => {
-	let customer: customerModel.Customer | null;
+	let customer: CustomerProjection | null;
 
 	if (id && !email) {
 		customer = await customerModel.findById(id);
@@ -14,5 +15,5 @@ export const getCustomer = async (id?: string, email?: string) => {
 		});
 	}
 
-	return customer;
+	return mapObjectToClass(customer, CustomerProjection);
 };
