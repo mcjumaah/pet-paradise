@@ -15,5 +15,5 @@ export const getCustomer = async (id?: string, email?: string) => {
 		});
 	}
 
-	return mapObjectToClass(customer, CustomerProjection);
+	return customer ? await mapObjectToClass(customer, CustomerProjection) : null;
 };
