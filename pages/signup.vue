@@ -81,6 +81,7 @@ const createdPassword = ref<string>();
 const confirmedPassword = ref<string>();
 const isEmailValid = ref<boolean>();
 const nextBtnTooltip = ref<typeof Tooltip.prototype>();
+const isStringValidEmail = ref<boolean>();
 
 const isEmailInputEmpty = computed(() => {
 	if (typeof email.value !== "undefined" && email.value?.length > 0) {
@@ -96,19 +97,10 @@ const isEmailInputEmpty = computed(() => {
 	}
 });
 
-const isStringValidEmail = computed(() => {
-	let pattern = /^[^\s@]+@[^\s@]+\.com$/;
-
-	if (email.value) {
-		return pattern.test(email.value);
-	} else {
-		return undefined;
-	}
-});
-
 watch(email, () => {
 	if (typeof isEmailValid.value !== "undefined") {
 		isEmailValid.value = undefined;
+		isStringValidEmail.value = undefined;
 	}
 });
 
@@ -121,8 +113,10 @@ const emailInputValidationClass = computed(() => {
 });
 
 async function handleSignUp() {
+	isStringValidEmail.value = email.value ? validateStringForEmail(email.value) : false;
+
 	if (email.value && isStringValidEmail.value) {
-		isEmailValid.value = (await fetchCustomerByEmail(email.value))?.data ? false : true;
+		isEmailValid.value = !(await fetchCustomerByEmail(email.value))?.data;
 	} else {
 		isEmailValid.value = false;
 	}
