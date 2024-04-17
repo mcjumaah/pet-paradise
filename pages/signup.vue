@@ -80,6 +80,7 @@ definePageMeta({
 });
 
 const { $Tooltip: Tooltip } = useNuxtApp();
+const signupCredentials = useSignupCredentials();
 
 const email = ref<string>();
 const createdPassword = ref<string>();
@@ -147,6 +148,8 @@ async function handleSignUp() {
 		arePasswordsMatch.value = createdPassword.value === confirmedPassword.value;
 
 		if (arePasswordsMatch.value) {
+			signupCredentials.value.email = email.value ? email.value : "";
+			signupCredentials.value.password = confirmedPassword.value ? confirmedPassword.value : "";
 		}
 	}
 }
