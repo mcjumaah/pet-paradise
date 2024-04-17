@@ -31,11 +31,13 @@
 				<input
 					id="create-password-input"
 					class="form-control"
+					:class="passwordsInputValidationClass"
 					name="create-password"
 					type="password"
 					placeholder="Create Password"
 					aria-label="Password"
 					required
+					v-model="createdPassword"
 				/>
 				<label for="login-password-input" class="text-muted">Create Password</label>
 			</div>
@@ -43,13 +45,16 @@
 				<input
 					id="confirm-password-input"
 					class="form-control"
+					:class="passwordsInputValidationClass"
 					name="confirm-password"
 					type="password"
 					placeholder="Confirm Password"
 					aria-label="Password"
 					required
+					v-model="confirmedPassword"
 				/>
 				<label for="login-password-input" class="text-muted">Confirm Password</label>
+				<div class="invalid-feedback">Passwords does not match each other.</div>
 			</div>
 		</template>
 
@@ -82,6 +87,7 @@ const confirmedPassword = ref<string>();
 const isEmailValid = ref<boolean>();
 const nextBtnTooltip = ref<typeof Tooltip.prototype>();
 const isStringValidEmail = ref<boolean>();
+const arePasswordsMatch = ref<boolean>();
 
 const isEmailInputEmpty = computed(() => {
 	if (typeof email.value !== "undefined" && email.value?.length > 0) {
@@ -97,6 +103,24 @@ const isEmailInputEmpty = computed(() => {
 	}
 });
 
+const emailInputValidationClass = computed(() => {
+	return isEmailValid.value === true
+		? "is-valid"
+		: isEmailValid.value === false && typeof email.value !== "undefined" && email.value?.length > 0
+		? "is-invalid"
+		: "";
+});
+
+const passwordsInputValidationClass = computed(() => {
+	return arePasswordsMatch.value === true
+		? "is-valid"
+		: arePasswordsMatch.value === false &&
+		  ((typeof createdPassword.value !== "undefined" && createdPassword.value?.length > 0) ||
+				(typeof confirmedPassword.value !== "undefined" && confirmedPassword.value?.length > 0))
+		? "is-invalid"
+		: "";
+});
+
 watch(email, () => {
 	if (typeof isEmailValid.value !== "undefined") {
 		isEmailValid.value = undefined;
@@ -104,24 +128,26 @@ watch(email, () => {
 	}
 });
 
-const emailInputValidationClass = computed(() => {
-	return isEmailValid.value === true
-		? "is-valid"
-		: isEmailValid.value === false && typeof email.value !== "undefined" && email.value?.length > 0
-		? "is-invalid "
-		: "";
+watch([createdPassword, confirmedPassword], () => {
+	if (arePasswordsMatch.value === true) {
+		arePasswordsMatch.value = undefined;
+	}
 });
 
 async function handleSignUp() {
-	isStringValidEmail.value = email.value ? validateStringForEmail(email.value) : false;
+	if (!isEmailValid.value) {
+		isStringValidEmail.value = email.value ? validateStringForEmail(email.value) : false;
 
-	if (email.value && isStringValidEmail.value) {
-		isEmailValid.value = !(await fetchCustomerByEmail(email.value))?.data;
+		if (email.value && isStringValidEmail.value) {
+			isEmailValid.value = !(await fetchCustomerByEmail(email.value))?.data;
+		} else {
+			isEmailValid.value = false;
+		}
 	} else {
-		isEmailValid.value = false;
-	}
+		arePasswordsMatch.value = createdPassword.value === confirmedPassword.value;
 
-	if (isEmailValid.value) {
+		if (arePasswordsMatch.value) {
+		}
 	}
 }
 
