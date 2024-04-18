@@ -37,13 +37,13 @@
 </template>
 
 <script setup lang="ts">
+const { $routePathHelper: routePath } = useNuxtApp();
+
 const pathTitle = computed(() => {
-	let currentPath = useRoute().path;
-	return currentPath == "/login"
-		? "Log In"
-		: currentPath == "/signup"
-		? "Sign Up"
-		: currentPath.replace("/", "").charAt(0).toUpperCase() + currentPath.slice(2);
+	return basePathTitle.value == "Login" ? "Log In" : basePathTitle.value == "Signup" ? "Sign Up" : routePath().title();
+});
+const basePathTitle = computed(() => {
+	return routePath().title(0);
 });
 </script>
 

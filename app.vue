@@ -33,7 +33,7 @@ const computedLayout = ref<LayoutKey>("default");
 const layoutName = computed<false | LayoutKey>(() => {
 	let withNoHeaders = ["Home", "Signup", "Login"];
 	let isPerProductPage = basePathTitle.value === "Shop" && pathArr.value.length === 2 && pathTitle.value !== "Cart";
-	let isSignupLoginPage = pathTitle.value === "Signup" || pathTitle.value === "Login";
+	let isSignupLoginPage = basePathTitle.value === "Signup" || pathTitle.value === "Login";
 
 	if (isSignupLoginPage) {
 		computedLayout.value = "login-signup";
