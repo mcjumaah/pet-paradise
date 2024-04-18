@@ -1,5 +1,5 @@
 <template>
-	<form id="signup-form" class="login-form d-flex flex-column row-gap-4" @submit.prevent="handleSignUp()" novalidate>
+	<form id="signup-form" class="signup-form d-flex flex-column row-gap-4" @submit.prevent="handleSignUp()" novalidate>
 		<input type="email" style="display: none" />
 		<input type="password" style="display: none" />
 
@@ -185,7 +185,7 @@ onMounted(() => {
 </script>
 
 <style scoped lang="scss">
-.login-form {
+.signup-form {
 	input.form-control,
 	button {
 		font-size: 14px;
