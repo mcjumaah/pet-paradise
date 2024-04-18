@@ -121,3 +121,10 @@ button.navbar-toggler:hover {
 		}
 	}
 }
+
+.required-asterisk {
+	&::after {
+		content: "*";
+		color: rgba(255, 0, 0, 0.6);
+	}
+}
