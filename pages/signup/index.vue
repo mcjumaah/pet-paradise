@@ -75,7 +75,7 @@
 </template>
 
 <script setup lang="ts">
-import type { Customer } from "~/server/model/customer";
+import type { CustomerProjection } from "~/server/projections/customerProjections";
 import formatFetchErrorResponseData from "~/utils/formatFetchError";
 
 definePageMeta({
@@ -159,24 +159,27 @@ async function validateInputEmail(email: string) {
 	try {
 		isLoading.value = true;
 
-		const customer: { data: Customer } = await $fetch("/api/customer", {
+		let customerAvailabilty: { available: boolean; customer: CustomerProjection | null };
+		const { data } = await $fetch("/api/customer/validate-new-email", {
 			method: "GET",
 			query: {
 				email,
 			},
 		});
 
+		customerAvailabilty = data;
+
+		isEmailValid.value = customerAvailabilty.available;
+		errorMessage.value = isEmailValid.value ? undefined : "An account associated with this email address already exists.";
 		isLoading.value = false;
-		isEmailValid.value = customer ? false : true;
-		errorMessage.value = "An account associated with this email address already exists.";
 	} catch (error) {
 		const errorResponse = formatFetchErrorResponseData(error);
 		console.log(errorResponse?.statusCode);
 		if (errorResponse?.statusCode == 400 && errorResponse?.statusMessage === "Invalid email") {
 			isEmailValid.value = false;
 			errorMessage.value = errorResponse.message;
-		} else if (errorResponse?.statusCode == 404 && errorResponse?.statusMessage === "Customer Not Found") {
-			isEmailValid.value = true;
+		} else {
+			alert(error);
 		}
 		isLoading.value = false;
 	}
