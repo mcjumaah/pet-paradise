@@ -23,6 +23,26 @@ export const validateIsStringEmail = (potentialEmail: string) => {
 	}
 };
 
+export const validatePassword = (potentialPassword: string) => {
+	const breakdown = {
+		hasLowerCase: /[a-z]/.test(potentialPassword),
+		hasUpperCase: /[A-Z]/.test(potentialPassword),
+		hasDigit: /\d/.test(potentialPassword),
+		hasSpecialChar: /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/.test(potentialPassword),
+		hasMinLength: potentialPassword.length >= 8,
+	};
+
+	return {
+		isStrong:
+			breakdown.hasLowerCase &&
+			breakdown.hasUpperCase &&
+			breakdown.hasDigit &&
+			breakdown.hasSpecialChar &&
+			breakdown.hasMinLength,
+		breakdown,
+	};
+};
+
 export const validateIsStringPhoneNumber = (potentialPhoneNum: string) => {
 	if (potentialPhoneNum.length === 11) {
 		const prefix = potentialPhoneNum.substring(0, 2);
