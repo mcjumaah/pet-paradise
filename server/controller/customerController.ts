@@ -92,7 +92,7 @@ export const deleteOne = async (event: H3Event) => {
 		if (result) {
 			return {
 				data: {
-					code: 204,
+					statusCode: 204,
 					message: "Successfully deleted Customer",
 				},
 			};
@@ -106,5 +106,19 @@ export const deleteOne = async (event: H3Event) => {
 			statusCode: 500,
 			statusMessage: "Something went wrong",
 		});
+	}
+};
+
+export const validateNewemail = async (event: H3Event) => {
+	try {
+		const queryParam = getQuery(event);
+
+		const result = await customerService.validateNewemail(queryParam.email as string);
+
+		return {
+			data: result,
+		};
+	} catch (error) {
+		throw error;
 	}
 };

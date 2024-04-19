@@ -42,3 +42,15 @@ export const createCustomer = async (customerDto: customerModel.CustomerDTO) => 
 
 	customerModel.save(customerDto);
 };
+
+export const validateNewemail = async (email: string) => {
+	let customer: CustomerProjection | null;
+
+	validateIsStringEmail(email);
+	customer = await customerModel.findOneByEmail(email);
+
+	return {
+		available: customer === null,
+		customer: customer ?? null,
+	};
+};
