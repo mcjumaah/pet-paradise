@@ -3,9 +3,3 @@ export const useSignupCredentials = () => {
 		return { email: "test@mail.com", password: "test123" };
 	});
 };
-
-export function validateStringForEmail(email: string) {
-	let pattern = /^[^\s@]+@[^\s@]+\.com$/;
-
-	return pattern.test(email);
-}

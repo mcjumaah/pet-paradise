@@ -18,11 +18,7 @@
 			/>
 			<label for="signup-email-input" class="text-muted">Email address</label>
 			<div class="invalid-feedback">
-				{{
-					isStringValidEmail
-						? "An account associated with this email address already exists."
-						: "Please input a valid email address."
-				}}
+				{{ errorMessage }}
 			</div>
 		</div>
 
@@ -80,6 +76,7 @@
 
 <script setup lang="ts">
 import type { Customer } from "~/server/model/customer";
+import formatFetchErrorResponseData from "~/utils/formatFetchError";
 
 definePageMeta({
 	auth: false,
@@ -93,9 +90,9 @@ const createdPassword = ref<string>();
 const confirmedPassword = ref<string>();
 const isEmailValid = ref<boolean>();
 const nextBtnTooltip = ref<typeof Tooltip.prototype>();
-const isStringValidEmail = ref<boolean>();
 const arePasswordsMatch = ref<boolean>();
 const isLoading = ref<boolean>();
+const errorMessage = ref<string>();
 
 const isEmailInputEmpty = computed(() => {
 	if (typeof email.value !== "undefined" && email.value?.length > 0) {
@@ -132,7 +129,6 @@ const passwordsInputValidationClass = computed(() => {
 watch(email, () => {
 	if (typeof isEmailValid.value !== "undefined") {
 		isEmailValid.value = undefined;
-		isStringValidEmail.value = undefined;
 	}
 });
 
@@ -144,10 +140,8 @@ watch([createdPassword, confirmedPassword], () => {
 
 async function handleSignUp() {
 	if (!isEmailValid.value) {
-		isStringValidEmail.value = email.value ? validateStringForEmail(email.value) : false;
-
-		if (email.value && isStringValidEmail.value) {
-			isEmailValid.value = !(await fetchCustomerByEmail(email.value))?.data;
+		if (email.value) {
+			await validateInputEmail(email.value);
 		} else {
 			isEmailValid.value = false;
 		}
@@ -161,7 +155,7 @@ async function handleSignUp() {
 	}
 }
 
-async function fetchCustomerByEmail(email: string) {
+async function validateInputEmail(email: string) {
 	try {
 		isLoading.value = true;
 
@@ -173,9 +167,18 @@ async function fetchCustomerByEmail(email: string) {
 		});
 
 		isLoading.value = false;
-		return customer;
+		isEmailValid.value = customer ? false : true;
+		errorMessage.value = "An account associated with this email address already exists.";
 	} catch (error) {
-		alert(error);
+		const errorResponse = formatFetchErrorResponseData(error);
+		console.log(errorResponse?.statusCode);
+		if (errorResponse?.statusCode == 400 && errorResponse?.statusMessage === "Invalid email") {
+			isEmailValid.value = false;
+			errorMessage.value = errorResponse.message;
+		} else if (errorResponse?.statusCode == 404 && errorResponse?.statusMessage === "Customer Not Found") {
+			isEmailValid.value = true;
+		}
+		isLoading.value = false;
 	}
 }
 
