@@ -16,7 +16,7 @@
 				required
 				v-model="email"
 			/>
-			<label for="signup-email-input" class="text-muted">Email address</label>
+			<label for="signup-email-input" class="text-muted required-asterisk">Email address</label>
 			<div class="invalid-feedback">
 				{{ errorMessage }}
 			</div>
@@ -35,7 +35,7 @@
 					required
 					v-model="createdPassword"
 				/>
-				<label for="login-password-input" class="text-muted">Create Password</label>
+				<label for="login-password-input" class="text-muted required-asterisk">Create Password</label>
 				<div class="invalid-feedback">Passwords is Weak.</div>
 			</div>
 			<div class="form-floating">
@@ -50,7 +50,7 @@
 					required
 					v-model="confirmedPassword"
 				/>
-				<label for="login-password-input" class="text-muted">Confirm Password</label>
+				<label for="login-password-input" class="text-muted required-asterisk">Confirm Password</label>
 				<div v-if="passwordValidation?.isStrong" class="invalid-feedback">Passwords do not match.</div>
 			</div>
 		</template>
