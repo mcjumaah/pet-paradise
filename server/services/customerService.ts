@@ -31,19 +31,29 @@ export const createCustomer = async (customerDto: customerModel.CustomerDTO) => 
 		) {
 			throw createError({
 				statusCode: 400,
-				statusMessage: `Missing value for ${key}.`,
+				statusMessage: `Incomplete Request Form`,
+				message: `Missing value for \`${key}\` field.`,
 			});
 		} else if (key === "email") {
-			validateIsStringEmail(customerDto["email"]);
+			validateIsStringEmail(customerDto[key]);
+		} else if (key === "password") {
+			const passwordValidation = validatePassword(customerDto[key]);
+			if (!passwordValidation.isStrong) {
+				throw createError({
+					statusCode: 400,
+					statusMessage: `Weak Password`,
+					message: `Supplied password is weak.`,
+				});
+			}
 		} else if (key === "phoneNumber") {
-			validateIsStringPhoneNumber(customerDto["phoneNumber"]);
+			validateIsStringPhoneNumber(customerDto[key]);
 		}
 	}
 
 	customerModel.save(customerDto);
 };
 
-export const validateNewemail = async (email: string) => {
+export const validateNewEmail = async (email: string) => {
 	let customer: CustomerProjection | null;
 
 	validateIsStringEmail(email);

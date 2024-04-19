@@ -109,11 +109,25 @@ export const deleteOne = async (event: H3Event) => {
 	}
 };
 
-export const validateNewemail = async (event: H3Event) => {
+export const validateNewEmail = async (event: H3Event) => {
 	try {
 		const queryParam = getQuery(event);
 
-		const result = await customerService.validateNewemail(queryParam.email as string);
+		const result = await customerService.validateNewEmail(queryParam.email as string);
+
+		return {
+			data: result,
+		};
+	} catch (error) {
+		throw error;
+	}
+};
+
+export const validateNewPassword = async (event: H3Event) => {
+	try {
+		const queryParam = getQuery(event);
+
+		const result = validatePassword(queryParam.password as string);
 
 		return {
 			data: result,

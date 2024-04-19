@@ -12,6 +12,7 @@ router.delete("/product", defineEventHandler(productCtrl.deleteOne));
 
 router.get("/customer", defineEventHandler(customerCtrl.findOne));
 router.post("/customer", defineEventHandler(customerCtrl.save));
-router.get("/customer/validate-new-email", defineEventHandler(customerCtrl.validateNewemail));
+router.get("/customer/validate-new-email", defineEventHandler(customerCtrl.validateNewEmail));
+router.get("/customer/validate-new-password", defineEventHandler(customerCtrl.validateNewPassword));
 
 export default useBase("/api", router.handler);
