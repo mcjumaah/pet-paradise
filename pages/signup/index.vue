@@ -27,7 +27,7 @@
 				<input
 					id="create-password-input"
 					class="form-control"
-					:class="passwordsInputValidationClass"
+					:class="passwordValidation?.isStrong ? 'is-valid ' : passwordsInputValidationClass"
 					name="create-password"
 					type="password"
 					placeholder="Create Password"
@@ -36,6 +36,7 @@
 					v-model="createdPassword"
 				/>
 				<label for="login-password-input" class="text-muted">Create Password</label>
+				<div class="invalid-feedback">Passwords is Weak.</div>
 			</div>
 			<div class="form-floating">
 				<input
@@ -50,7 +51,7 @@
 					v-model="confirmedPassword"
 				/>
 				<label for="login-password-input" class="text-muted">Confirm Password</label>
-				<div class="invalid-feedback">Passwords does not match each other.</div>
+				<div v-if="passwordValidation?.isStrong" class="invalid-feedback">Passwords do not match.</div>
 			</div>
 		</template>
 
@@ -76,6 +77,7 @@
 
 <script setup lang="ts">
 import type { CustomerProjection } from "~/server/projections/customerProjections";
+import type { PasswordValidation } from "~/server/utils/customerValidation";
 import formatFetchErrorResponseData from "~/utils/formatFetchError";
 
 definePageMeta({
@@ -88,6 +90,7 @@ const signupCredentials = useSignupCredentials();
 const email = ref<string>();
 const createdPassword = ref<string>();
 const confirmedPassword = ref<string>();
+const passwordValidation = ref<PasswordValidation>();
 const isEmailValid = ref<boolean>();
 const nextBtnTooltip = ref<typeof Tooltip.prototype>();
 const arePasswordsMatch = ref<boolean>();
@@ -119,9 +122,10 @@ const emailInputValidationClass = computed(() => {
 const passwordsInputValidationClass = computed(() => {
 	return arePasswordsMatch.value === true
 		? "is-valid"
-		: arePasswordsMatch.value === false &&
-		  ((typeof createdPassword.value !== "undefined" && createdPassword.value?.length > 0) ||
-				(typeof confirmedPassword.value !== "undefined" && confirmedPassword.value?.length > 0))
+		: (arePasswordsMatch.value === false &&
+				((typeof createdPassword.value !== "undefined" && createdPassword.value?.length > 0) ||
+					(typeof confirmedPassword.value !== "undefined" && confirmedPassword.value?.length > 0))) ||
+		  (!passwordValidation.value?.isStrong && typeof passwordValidation.value !== "undefined")
 		? "is-invalid"
 		: "";
 });
@@ -132,7 +136,11 @@ watch(email, () => {
 	}
 });
 
-watch([createdPassword, confirmedPassword], () => {
+watch([createdPassword, confirmedPassword], async () => {
+	if (createdPassword.value) {
+		validateInputPassword(createdPassword.value);
+	}
+
 	if (arePasswordsMatch.value === true) {
 		arePasswordsMatch.value = undefined;
 	}
@@ -184,6 +192,25 @@ async function validateInputEmail(email: string) {
 		isLoading.value = false;
 	}
 }
+
+const validateInputPassword = _Debounce(async (password: string) => {
+	try {
+		isLoading.value = true;
+
+		const { data } = await $fetch("/api/customer/validate-new-password", {
+			method: "GET",
+			query: {
+				password,
+			},
+		});
+		passwordValidation.value = data;
+
+		isLoading.value = false;
+	} catch (error) {
+		alert(error);
+		isLoading.value = false;
+	}
+}, 500);
 
 onMounted(() => {
 	nextBtnTooltip.value = Tooltip.getOrCreateInstance("#signup-next-btn-wrapper");
