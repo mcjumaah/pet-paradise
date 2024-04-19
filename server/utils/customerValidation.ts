@@ -23,6 +23,16 @@ export const validateIsStringEmail = (potentialEmail: string) => {
 	}
 };
 
+export interface PasswordValidation {
+	isStrong: boolean;
+	breakdown: {
+		hasLowerCase: boolean;
+		hasUpperCase: boolean;
+		hasDigit: boolean;
+		hasSpecialChar: boolean;
+		hasMinLength: boolean;
+	};
+}
 export const validatePassword = (potentialPassword: string) => {
 	const breakdown = {
 		hasLowerCase: /[a-z]/.test(potentialPassword),
@@ -40,7 +50,7 @@ export const validatePassword = (potentialPassword: string) => {
 			breakdown.hasSpecialChar &&
 			breakdown.hasMinLength,
 		breakdown,
-	};
+	} as PasswordValidation;
 };
 
 export const validateIsStringPhoneNumber = (potentialPhoneNum: string) => {
