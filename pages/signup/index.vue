@@ -42,7 +42,7 @@
 				<input
 					id="confirm-password-input"
 					class="form-control"
-					:class="passwordsInputValidationClass"
+					:class="passwordValidation?.isStrong ? passwordsInputValidationClass : ''"
 					name="confirm-password"
 					type="password"
 					placeholder="Confirm Password"
@@ -141,12 +141,13 @@ watch([createdPassword, confirmedPassword], async () => {
 		validateInputPassword(createdPassword.value);
 	}
 
-	if (arePasswordsMatch.value === true) {
+	if (typeof arePasswordsMatch.value !== "undefined") {
 		arePasswordsMatch.value = undefined;
 	}
 });
 
 async function handleSignUp() {
+	isLoading.value = true;
 	if (!isEmailValid.value) {
 		if (email.value) {
 			await validateInputEmail(email.value);
@@ -159,8 +160,12 @@ async function handleSignUp() {
 		if (arePasswordsMatch.value) {
 			signupCredentials.value.email = email.value ? email.value : "";
 			signupCredentials.value.password = confirmedPassword.value ? confirmedPassword.value : "";
+			isLoading.value = false;
+
+			navigateTo("/signup/create-account");
 		}
 	}
+	isLoading.value = false;
 }
 
 async function validateInputEmail(email: string) {
@@ -195,8 +200,6 @@ async function validateInputEmail(email: string) {
 
 const validateInputPassword = _Debounce(async (password: string) => {
 	try {
-		isLoading.value = true;
-
 		const { data } = await $fetch("/api/customer/validate-new-password", {
 			method: "GET",
 			query: {
@@ -204,11 +207,8 @@ const validateInputPassword = _Debounce(async (password: string) => {
 			},
 		});
 		passwordValidation.value = data;
-
-		isLoading.value = false;
 	} catch (error) {
 		alert(error);
-		isLoading.value = false;
 	}
 }, 500);
 
