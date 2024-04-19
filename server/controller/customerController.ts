@@ -37,8 +37,7 @@ export const findOne = async (event: H3Event) => {
 export const save = async (event: H3Event) => {
 	try {
 		const body = await readBody(event);
-
-		const result: CustomerProjection | null = await customerModel.save({
+		const customerRequest = {
 			firstName: body.firstName,
 			lastName: body.lastName,
 			middleName: body.middleName,
@@ -46,16 +45,15 @@ export const save = async (event: H3Event) => {
 			password: body.password,
 			address: body.address,
 			phoneNumber: body.phoneNumber,
-		});
+		};
+
+		const result = await customerService.createCustomer(customerRequest);
 
 		return {
-			data: mapObjectToClass(result, CustomerProjection),
+			data: result,
 		};
-	} catch {
-		throw createError({
-			statusCode: 500,
-			statusMessage: "Something went wrong",
-		});
+	} catch (error) {
+		throw error;
 	}
 };
 
