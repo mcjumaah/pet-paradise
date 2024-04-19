@@ -13,6 +13,11 @@ export type Customer = {
 	phoneNumber: string;
 };
 
+export type CustomerDTO = Pick<
+	Customer,
+	"firstName" | "lastName" | "middleName" | "email" | "password" | "address" | "phoneNumber"
+>;
+
 export const findAll = async (pageNum: string = "0") => {
 	try {
 		const { result, pagination } = await paginationSql(pageNum, `SELECT * FROM customer`);
@@ -71,9 +76,7 @@ export const findOneByEmail = async (email: string) => {
 	}
 };
 
-export const save = async (
-	data: Pick<Customer, "firstName" | "lastName" | "middleName" | "email" | "password" | "address" | "phoneNumber">
-) => {
+export const save = async (data: CustomerDTO) => {
 	try {
 		await sql({
 			query: `
@@ -104,7 +107,7 @@ export const save = async (
 
 export const update = async (
 	id: string,
-	data: Pick<Customer, "firstName" | "lastName" | "middleName" | "email" | "password" | "address" | "phoneNumber">
+	data: Pick<CustomerDTO, "firstName" | "lastName" | "middleName" | "email" | "password" | "address" | "phoneNumber">
 ) => {
 	try {
 		await sql({
