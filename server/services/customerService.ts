@@ -50,7 +50,8 @@ export const createCustomer = async (customerDto: customerModel.CustomerDTO) => 
 		}
 	}
 
-	customerModel.save(customerDto);
+	const createdCustomer = await customerModel.save(customerDto);
+	return validateIsCustomerFound(createdCustomer);
 };
 
 export const validateNewEmail = async (email: string) => {
