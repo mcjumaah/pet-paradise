@@ -3,3 +3,7 @@ export const useSignupCredentials = () => {
 		return { email: "test@mail.com", password: "StrongPass123!" };
 	});
 };
+
+export const useHasCreatedNewCustomerAccount = () => {
+	return useState<boolean>("has-newly-created-customer-account", () => false);
+};
