@@ -187,7 +187,6 @@ async function validateInputEmail(email: string) {
 		isLoading.value = false;
 	} catch (error) {
 		const errorResponse = formatFetchErrorResponseData(error);
-		console.log(errorResponse?.statusCode);
 		if (errorResponse?.statusCode == 400 && errorResponse?.statusMessage === "Invalid email") {
 			isEmailValid.value = false;
 			errorMessage.value = errorResponse.message;
