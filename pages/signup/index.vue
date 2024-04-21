@@ -160,7 +160,6 @@ async function handleSignUp() {
 		if (arePasswordsMatch.value) {
 			signupCredentials.value.email = email.value ? email.value : "";
 			signupCredentials.value.password = confirmedPassword.value ? confirmedPassword.value : "";
-			isLoading.value = false;
 
 			navigateTo("/signup/create-account");
 		}
@@ -213,6 +212,10 @@ const validateInputPassword = _Debounce(async (password: string) => {
 
 onMounted(() => {
 	nextBtnTooltip.value = Tooltip.getOrCreateInstance("#signup-next-btn-wrapper");
+});
+
+onBeforeRouteLeave(() => {
+	isLoading.value = false;
 });
 </script>
 
