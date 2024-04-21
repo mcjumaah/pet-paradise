@@ -3,6 +3,7 @@
 		<input
 			:id="props.inputId"
 			class="form-control"
+			:class="props.inputValid === true ? 'is-valid ' : props.inputValid === false ? 'is-invalid ' : ''"
 			:name="props.inputName"
 			:type="props.inputType"
 			:placeholder="props.inputPlaceholder || 'Placeholder'"
@@ -31,10 +32,12 @@ export interface Props {
 	inputPlaceholder?: string;
 	inputAutocomplete?: string;
 	inputRequired?: boolean;
+	inputValid?: boolean;
 }
 const props = withDefaults(defineProps<Props>(), {
 	inputAutocomplete: "off",
 	inputRequired: false,
+	inputValid: undefined,
 });
 
 const model = defineModel<any>();
