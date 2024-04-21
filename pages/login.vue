@@ -68,9 +68,10 @@ function handleSignIn() {
 
 onMounted(() => {
 	if (route.query.email && hasCreatedNewCustomerAccount.value) {
-		const { emailInput } = getLoginFormInputs();
+		const { emailInput, passwordInput } = getLoginFormInputs();
 
 		emailInput.value = route.query.email as string;
+		passwordInput.value = "";
 	}
 });
 
