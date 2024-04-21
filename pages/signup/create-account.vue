@@ -87,12 +87,12 @@
 <script setup lang="ts">
 definePageMeta({
 	auth: false,
-	// middleware: [
-	// 	function () {
-	// 		const signupCredentials = useSignupCredentials();
-	// 		if (!signupCredentials.value.email && !signupCredentials.value.password) return navigateTo("/signup");
-	// 	},
-	// ],
+	middleware: [
+		function () {
+			const signupCredentials = useSignupCredentials();
+			if (!signupCredentials.value.email && !signupCredentials.value.password) return navigateTo("/signup");
+		},
+	],
 });
 
 import type { CustomerProjection } from "~/server/projections/customerProjections";
@@ -196,6 +196,13 @@ function startToastCountdown() {
 
 onMounted(() => {
 	customerCreatedToast.value = Toast.getOrCreateInstance("#customer-created-toast");
+});
+
+onBeforeRouteLeave(() => {
+	signupCredentials.value = {
+		email: "",
+		password: "",
+	};
 });
 </script>
 
