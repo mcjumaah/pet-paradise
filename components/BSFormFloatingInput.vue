@@ -12,9 +12,9 @@
 			:required="props.inputRequired"
 			v-model="model"
 		/>
-		<label :for="props.inputId" class="text-muted" :class="props.inputRequired ? 'required-asterisk' : ''">
-			{{ kebabToTitleCase(props.inputName) }}</label
-		>
+		<label :for="props.inputId" class="text-muted">
+			{{ kebabToTitleCase(props.inputName) }}<span v-if="props.inputRequired" class="text-danger">*</span>
+		</label>
 		<div class="invalid-feedback">
 			<slot name="invalidMessage">Please provide a valid {{ kebabToTitleCase(props.inputName).toLowerCase() }}.</slot>
 		</div>
