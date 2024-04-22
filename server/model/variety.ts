@@ -5,8 +5,11 @@ export type Variety = {
 	id: number;
 	name: string;
 	selectionId: number;
+	productItemId: number;
 	priceId: number;
 };
+
+export type VarietyDTO = Pick<Variety, "name" | "selectionId" | "productItemId" | "priceId">;
 
 export const findAll = async () => {
 	try {
@@ -15,6 +18,19 @@ export const findAll = async () => {
 		return keysToCamelCase(result) as Variety[];
 	} catch (error) {
 		return error;
+	}
+};
+
+export const findAllByPriceId = async (priceId: string) => {
+	try {
+		const result = await sql({
+			query: `SELECT * FROM variety WHERE price_id = ?`,
+			values: [priceId],
+		});
+
+		return keysToCamelCase(result) as Variety[];
+	} catch (error) {
+		throw error;
 	}
 };
 
@@ -33,17 +49,18 @@ export const findById = async (id: string) => {
 	}
 };
 
-export const save = async (data: Pick<Variety, "name" | "selectionId" | "priceId">) => {
+export const save = async (data: VarietyDTO) => {
 	try {
 		await sql({
 			query: `
 				INSERT INTO variety (
 					name, 
 					selection_id, 
+					product_item_id, 
 					price_id
-				) VALUES (?, ?, ?)
+				) VALUES (?, ?, ?, ?)
 			`,
-			values: [data.name, data.selectionId, data.priceId],
+			values: [data.name, data.selectionId, data.productItemId, data.priceId],
 		});
 
 		const result = keysToCamelCase(
@@ -58,7 +75,7 @@ export const save = async (data: Pick<Variety, "name" | "selectionId" | "priceId
 	}
 };
 
-export const update = async (id: string, data: Pick<Variety, "name" | "selectionId" | "priceId">) => {
+export const update = async (id: string, data: VarietyDTO) => {
 	try {
 		await sql({
 			query: `
@@ -66,10 +83,11 @@ export const update = async (id: string, data: Pick<Variety, "name" | "selection
 				SET 
 					name = ?, 
 					selection_id = ?, 
+					product_item_id = ?, 
 					price_id = ? 
 				WHERE id = ?
 			`,
-			values: [data.name, data.selectionId, data.priceId, id],
+			values: [data.name, data.selectionId, data.productItemId, data.priceId, id],
 		});
 
 		return await findById(id);

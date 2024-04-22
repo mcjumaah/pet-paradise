@@ -12,6 +12,8 @@ export type Product = {
 	cartId: number;
 };
 
+export type ProductDTO = Pick<Product, "sku" | "name" | "stock" | "images" | "soldNum">;
+
 export const findAll = async (pageNum: string = "0") => {
 	try {
 		const { result, pagination } = await paginationSql(pageNum, `SELECT * FROM product`);
@@ -36,11 +38,11 @@ export const findById = async (id: string) => {
 
 		return result.length === 1 ? result[0] : null;
 	} catch (error) {
-		return error;
+		throw error;
 	}
 };
 
-export const save = async (data: Pick<Product, "sku" | "name" | "stock" | "images" | "soldNum">) => {
+export const save = async (data: ProductDTO) => {
 	try {
 		await sql({
 			query: `
@@ -66,7 +68,7 @@ export const save = async (data: Pick<Product, "sku" | "name" | "stock" | "image
 	}
 };
 
-export const update = async (id: string, data: Pick<Product, "sku" | "name" | "stock" | "images" | "soldNum">) => {
+export const update = async (id: string, data: ProductDTO) => {
 	try {
 		await sql({
 			query: `

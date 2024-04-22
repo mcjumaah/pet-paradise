@@ -22,12 +22,17 @@ export const getProductPriceSummary = async (productId: number) => {
 		: null;
 };
 
-export const getPriceSelectionVariety = async (varietyId: number) => {
-	const variety = (await varietyModel.findById(varietyId.toString())) as varietyModel.Variety;
-	const selection = (await selectionModel.findById(variety.selectionId.toString())) as selectionModel.ProductSelection;
+export const getPriceSelectionsVariety = async (priceId: number) => {
+	const varieties = await varietyModel.findAllByPriceId(priceId.toString());
+	let formattedVarieties: { name: string; variety: string }[] = [];
 
-	return {
-		name: selection.name,
-		variety: variety.name,
-	};
+	varieties.forEach(async (variety) => {
+		const selection = await selectionModel.findById(variety.selectionId.toString());
+
+		if (selection) {
+			formattedVarieties.push({ name: selection.name, variety: variety.name });
+		}
+	});
+
+	return formattedVarieties;
 };

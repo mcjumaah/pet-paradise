@@ -7,6 +7,8 @@ export type ProductSelection = {
 	productId: number;
 };
 
+export type ProductSelectionDTO = Pick<ProductSelection, "name" | "productId">;
+
 export const findAll = async () => {
 	try {
 		const result = await sql({ query: `SELECT * FROM selection` });
@@ -28,11 +30,11 @@ export const findById = async (id: string) => {
 
 		return result.length === 1 ? result[0] : null;
 	} catch (error) {
-		return error;
+		throw error;
 	}
 };
 
-export const save = async (data: Pick<ProductSelection, "name" | "productId">) => {
+export const save = async (data: ProductSelectionDTO) => {
 	try {
 		await sql({
 			query: `
@@ -55,7 +57,7 @@ export const save = async (data: Pick<ProductSelection, "name" | "productId">) =
 	}
 };
 
-export const update = async (id: string, data: Pick<ProductSelection, "name" | "productId">) => {
+export const update = async (id: string, data: ProductSelectionDTO) => {
 	try {
 		await sql({
 			query: `

@@ -21,17 +21,20 @@ export const getProducts = async (pageNum: string = "0") => {
 };
 
 export const getProduct = async (id: string) => {
-	let result = (await productModel.findById(id)) as ProductProjection;
-	const priceModelArr = (await priceModel.findAllByProductId(id.toString())) as priceModel.Price[];
-	result.price = priceModelArr as any[] as PriceProjection[];
+	let result = (await productModel.findById(id)) as any as ProductProjection;
+	const priceModelArr = await priceModel.findAllByProductId(id.toString());
 
-	for (let [index, price] of result.price.entries()) {
-		price.selection = await priceService.getPriceSelectionVariety(priceModelArr[index].varietyId);
+	if (result) {
+		result.prices = priceModelArr as any[] as PriceProjection[];
 
-		result.price[index] = await mapObjectToClass(price, PriceProjection);
+		for (let [index, price] of result.prices.entries()) {
+			price.selections = await priceService.getPriceSelectionsVariety(priceModelArr[index].id);
+
+			result.prices[index] = await mapObjectToClass(price, PriceProjection);
+		}
+
+		result = await mapObjectToClass(result, ProductProjection);
 	}
-
-	result = await mapObjectToClass(result, ProductProjection);
 
 	return result;
 };

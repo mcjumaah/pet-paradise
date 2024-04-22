@@ -5,8 +5,9 @@ export type Price = {
 	id: number;
 	value: number;
 	productId: number;
-	varietyId: number;
 };
+
+export type PriceDTO = Pick<Price, "value" | "productId">;
 
 export const findAll = async () => {
 	try {
@@ -29,7 +30,7 @@ export const findAllByProductId = async (productId: string) => {
 
 		return result;
 	} catch (error) {
-		return error;
+		throw error;
 	}
 };
 
@@ -48,18 +49,17 @@ export const findById = async (id: string) => {
 	}
 };
 
-export const save = async (data: Pick<Price, "value" | "productId" | "varietyId">) => {
+export const save = async (data: PriceDTO) => {
 	try {
 		await sql({
 			query: `
 				INSERT INTO price (
 					value, 
-					product_id, 
-					variety_id
+					product_id
 				) 
-				VALUES (?, ?, ?)
+				VALUES (?, ?)
 			`,
-			values: [data.value, data.productId, data.varietyId],
+			values: [data.value, data.productId],
 		});
 
 		const result = keysToCamelCase(
@@ -74,18 +74,17 @@ export const save = async (data: Pick<Price, "value" | "productId" | "varietyId"
 	}
 };
 
-export const update = async (id: string, data: Pick<Price, "value" | "productId" | "varietyId">) => {
+export const update = async (id: string, data: PriceDTO) => {
 	try {
 		await sql({
 			query: `
 				UPDATE price 
 				SET 
 					name = ?, 
-					product_id = ?, 
-					variety_id = ? 
+					product_id = ? 
 				WHERE id = ?
 			`,
-			values: [data.value, data.productId, data.varietyId, id],
+			values: [data.value, data.productId, id],
 		});
 
 		return await findById(id);
