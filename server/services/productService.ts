@@ -1,5 +1,7 @@
 import * as productModel from "../model/product";
 import * as priceModel from "../model/price";
+import * as selectionModel from "../model/selection";
+import * as varietyModel from "../model/variety";
 import * as priceService from "./priceService";
 import {
 	ProductProjection,
@@ -7,6 +9,7 @@ import {
 	ProductsPaginationProjection,
 } from "../projections/productProjections";
 import { PriceProjection } from "../projections/priceProjections";
+import { SelectionProjection } from "../projections/selectionProjection";
 
 export const getProducts = async (pageNum: string = "0") => {
 	const result = (await productModel.findAll(pageNum)) as ProductsPaginationProjection;
@@ -23,8 +26,10 @@ export const getProducts = async (pageNum: string = "0") => {
 export const getProduct = async (id: string) => {
 	let result = (await productModel.findById(id)) as any as ProductProjection;
 	const priceModelArr = await priceModel.findAllByProductId(id.toString());
+	const selectionModelArr = await selectionModel.findAllByProductId(id.toString());
 
 	if (result) {
+		// For `prices` field
 		result.prices = priceModelArr as any[] as PriceProjection[];
 
 		for (let [index, price] of result.prices.entries()) {
@@ -33,6 +38,18 @@ export const getProduct = async (id: string) => {
 			result.prices[index] = await mapObjectToClass(price, PriceProjection);
 		}
 
+		// For `selections` field
+		result.selections = selectionModelArr as any[] as SelectionProjection[];
+
+		for (let [index, selection] of result.selections.entries()) {
+			selection.varieties = (await varietyModel.findAllBySelectionId(selectionModelArr[index].id.toString())).map(
+				(variety) => variety.name
+			);
+
+			result.selections[index] = await mapObjectToClass(selection, SelectionProjection);
+		}
+
+		// Finishing Touches
 		result = await mapObjectToClass(result, ProductProjection);
 	}
 
