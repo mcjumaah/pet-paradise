@@ -1,4 +1,5 @@
 import { Pagination } from "../utils/paginationUtil";
+import { DescriptionProjection } from "./descriptionProjection";
 import { PriceProjection } from "./priceProjections";
 import { SelectionProjection } from "./selectionProjection";
 
@@ -11,8 +12,9 @@ export interface ProductInterface {
 	prices: PriceProjection[];
 	selections: SelectionProjection[];
 	images: string[];
+	description: DescriptionProjection;
 }
-export interface ProductSummaryInterface extends Omit<ProductInterface, "prices" | "selections"> {
+export interface ProductSummaryInterface extends Omit<ProductInterface, "prices" | "selections" | "description"> {
 	price: {
 		min: number;
 		max: number;
@@ -32,7 +34,8 @@ export class ProductProjection implements ProductInterface {
 		public soldNum: number,
 		public prices: PriceProjection[],
 		public selections: SelectionProjection[],
-		public images: string[]
+		public images: string[],
+		public description: DescriptionProjection
 	) {
 		this.id = id;
 		this.sku = sku;
@@ -42,6 +45,7 @@ export class ProductProjection implements ProductInterface {
 		this.prices = prices;
 		this.selections = selections;
 		this.images = images;
+		this.description = description;
 	}
 }
 export class ProductSummaryProjection implements ProductSummaryInterface {
