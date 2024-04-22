@@ -19,6 +19,19 @@ export const findAll = async () => {
 	}
 };
 
+export const findAllByProductId = async (productId: string) => {
+	try {
+		const result = await sql({
+			query: `SELECT * FROM selection WHERE product_id = ?`,
+			values: [productId],
+		});
+
+		return keysToCamelCase(result) as ProductSelection[];
+	} catch (error) {
+		throw error;
+	}
+};
+
 export const findById = async (id: string) => {
 	try {
 		const result = keysToCamelCase(
