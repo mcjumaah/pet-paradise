@@ -49,8 +49,9 @@
 
 		<div class="products container grid gap-4 py-4">
 			<NuxtLink
+				v-if="!pending"
 				v-for="(product, index) in products"
-				:key="`${product.id} - ${index}`"
+				:key="`${index} | P-${product.id}`"
 				:to="`/shop/${product.id}`"
 				class="card text-start shadow bg-body-2 text-decoration-none"
 				:title="product.name"
@@ -67,6 +68,7 @@
 					<p class="price card-text text-primary-emphasis">{{ getProductPrice(product.price) }}</p>
 				</div>
 			</NuxtLink>
+			<ProductLoadingCard v-else v-for="index in 10" />
 		</div>
 
 		<nav class="pagination-bottom py-3" aria-label="Shop Products Botom Pagination">
@@ -94,6 +96,7 @@
 <script setup lang="ts">
 import type { Pagination } from "~/app.vue";
 import type { ProductSummaryProjection, ProductsPaginationProjection } from "~/server/projections/productProjections";
+import type { Pagination as ServerPagination } from "~/server/utils/paginationUtil";
 
 const dummyProductTypes = ["Food & Treats", "Supplies", "Toys", "Clothing & Accessories", "Health & Wellness"];
 
@@ -102,14 +105,31 @@ const pagination = ref(<Pagination>{
 	currentPage: 1,
 });
 
-watch(
-	() => pagination.value.currentPage,
-	(newPage, oldPage) => {
-		if (newPage != oldPage) {
-			fetchProducts(newPage - 1);
-		}
+const {
+	data: productsData,
+	pending,
+	error,
+	execute,
+} = useFetch("/api/products", {
+	method: "GET",
+	query: { pageNum: pagination.value.currentPage - 1 },
+	immediate: false,
+	transform: (_productsData) => {
+		const data: { content: ProductSummaryProjection[]; pagination: ServerPagination } = _productsData.data;
+
+		products.value = data.content;
+		pagination.value.totalPages = data.pagination.totalPages;
+
+		return data;
+	},
+	watch: [() => pagination.value.currentPage],
+});
+
+watch(error, (newError) => {
+	if (newError) {
+		alert(newError);
 	}
-);
+});
 
 function getPageIsToDisplay(index: number) {
 	if (pagination.value.currentPage < 3) {
@@ -130,25 +150,8 @@ function getProductPrice(price: ProductSummaryProjection["price"]) {
 	}
 }
 
-async function fetchProducts(pageNum: number = 0) {
-	try {
-		const result: { data: ProductsPaginationProjection } = await $fetch("/api/product", {
-			method: "GET",
-			query: {
-				pageNum,
-			},
-		});
-
-		products.value = result.data.content;
-		pagination.value.currentPage = result.data.pagination.pageNumber + 1;
-		pagination.value.totalPages = result.data.pagination.totalPages;
-	} catch (error) {
-		alert(error);
-	}
-}
-
 onMounted(() => {
-	fetchProducts();
+	execute();
 });
 </script>
 
