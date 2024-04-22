@@ -24,15 +24,16 @@ export const getProductPriceSummary = async (productId: number) => {
 
 export const getPriceSelectionsVariety = async (priceId: number) => {
 	const varieties = await varietyModel.findAllByPriceId(priceId.toString());
-	let formattedVarieties: { name: string; variety: string }[] = [];
 
-	varieties.forEach(async (variety) => {
-		const selection = await selectionModel.findById(variety.selectionId.toString());
+	const formattedVarieties = await Promise.all(
+		varieties.map(async (variety) => {
+			const selection = await selectionModel.findById(variety.selectionId.toString());
 
-		if (selection) {
-			formattedVarieties.push({ name: selection.name, variety: variety.name });
-		}
-	});
+			if (selection) {
+				return { name: selection.name, variety: variety.name };
+			}
+		})
+	);
 
-	return formattedVarieties;
+	return formattedVarieties.filter((item) => typeof item !== "undefined") as { name: string; variety: string }[];
 };
