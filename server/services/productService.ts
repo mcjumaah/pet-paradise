@@ -2,6 +2,7 @@ import * as productModel from "../model/product";
 import * as priceModel from "../model/price";
 import * as selectionModel from "../model/selection";
 import * as varietyModel from "../model/variety";
+import * as descriptionModel from "../model/description";
 import * as priceService from "./priceService";
 import {
 	ProductProjection,
@@ -10,6 +11,7 @@ import {
 } from "../projections/productProjections";
 import { PriceProjection } from "../projections/priceProjections";
 import { SelectionProjection } from "../projections/selectionProjection";
+import { DescriptionProjection } from "../projections/descriptionProjection";
 
 export const getProducts = async (pageNum: string = "0") => {
 	const result = (await productModel.findAll(pageNum)) as ProductsPaginationProjection;
@@ -48,6 +50,8 @@ export const getProduct = async (id: string) => {
 
 			result.selections[index] = await mapObjectToClass(selection, SelectionProjection);
 		}
+
+		result.description = await mapObjectToClass(await descriptionModel.findOneByProductId(id), DescriptionProjection);
 
 		// Finishing Touches
 		result = await mapObjectToClass(result, ProductProjection);
