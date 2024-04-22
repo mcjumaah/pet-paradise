@@ -4,14 +4,14 @@ import * as customerCtrl from "../controller/customerController";
 
 const router = createRouter();
 
-router.get("/products", defineEventHandler(productCtrl.findAll));
-router.get("/product", defineEventHandler(productCtrl.findOne));
-router.post("/product", defineEventHandler(productCtrl.save));
-router.put("/product", defineEventHandler(productCtrl.update));
-router.delete("/product", defineEventHandler(productCtrl.deleteOne));
+router.get("/products", defineEventHandler(productCtrl.getProducts));
+router.get("/product", defineEventHandler(productCtrl.getProduct));
+router.post("/product", defineEventHandler(productCtrl.createProduct));
+router.put("/product", defineEventHandler(productCtrl.editProduct));
+router.delete("/product", defineEventHandler(productCtrl.deleteProduct));
 
-router.get("/customer", defineEventHandler(customerCtrl.findOne));
-router.post("/customer", defineEventHandler(customerCtrl.save));
+router.get("/customer", defineEventHandler(customerCtrl.getCustomer));
+router.post("/customer", defineEventHandler(customerCtrl.createCustomer));
 router.get("/customer/validate-new-email", defineEventHandler(customerCtrl.validateNewEmail));
 router.get("/customer/validate-new-password", defineEventHandler(customerCtrl.validateNewPassword));
 

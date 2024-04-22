@@ -2,7 +2,7 @@ import { H3Event } from "h3";
 import * as productModel from "../model/product";
 import * as productService from "../services/productService";
 
-export const findAll = async (event: H3Event) => {
+export const getProducts = async (event: H3Event) => {
 	try {
 		const queryParam = getQuery(event);
 
@@ -19,7 +19,7 @@ export const findAll = async (event: H3Event) => {
 	}
 };
 
-export const findOne = async (event: H3Event) => {
+export const getProduct = async (event: H3Event) => {
 	try {
 		const queryParam = getQuery(event);
 
@@ -36,7 +36,7 @@ export const findOne = async (event: H3Event) => {
 	}
 };
 
-export const save = async (event: H3Event) => {
+export const createProduct = async (event: H3Event) => {
 	try {
 		const body = await readBody(event);
 
@@ -59,7 +59,7 @@ export const save = async (event: H3Event) => {
 	}
 };
 
-export const update = async (event: H3Event) => {
+export const editProduct = async (event: H3Event) => {
 	try {
 		const queryParam = getQuery(event);
 		const body = await readBody(event);
@@ -83,7 +83,7 @@ export const update = async (event: H3Event) => {
 	}
 };
 
-export const deleteOne = async (event: H3Event) => {
+export const deleteProduct = async (event: H3Event) => {
 	try {
 		const queryParam = getQuery(event);
 

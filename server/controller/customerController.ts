@@ -20,7 +20,7 @@ export const findAll = async (event: H3Event) => {
 	}
 };
 
-export const findOne = async (event: H3Event) => {
+export const getCustomer = async (event: H3Event) => {
 	try {
 		const queryParam = getQuery(event);
 
@@ -34,7 +34,7 @@ export const findOne = async (event: H3Event) => {
 	}
 };
 
-export const save = async (event: H3Event) => {
+export const createCustomer = async (event: H3Event) => {
 	try {
 		const body = await readBody(event);
 		const customerRequest = {
