@@ -34,6 +34,19 @@ export const findAllByPriceId = async (priceId: string) => {
 	}
 };
 
+export const findAllBySelectionId = async (selectionId: string) => {
+	try {
+		const result = await sql({
+			query: `SELECT * FROM variety WHERE selection_id = ?`,
+			values: [selectionId],
+		});
+
+		return keysToCamelCase(result) as Variety[];
+	} catch (error) {
+		throw error;
+	}
+};
+
 export const findById = async (id: string) => {
 	try {
 		const result = keysToCamelCase(
