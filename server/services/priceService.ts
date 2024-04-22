@@ -1,6 +1,7 @@
 import * as priceModel from "../model/price";
 import * as varietyModel from "../model/variety";
 import * as selectionModel from "../model/selection";
+import { SelectionOnPriceProjection } from "../projections/selectionProjection";
 
 export const getProductPriceSummary = async (productId: number) => {
 	const priceArr = (await priceModel.findAllByProductId(productId.toString())) as priceModel.Price[];
@@ -25,15 +26,13 @@ export const getProductPriceSummary = async (productId: number) => {
 export const getPriceSelectionsVariety = async (priceId: number) => {
 	const varieties = await varietyModel.findAllByPriceId(priceId.toString());
 
-	const formattedVarieties = await Promise.all(
+	const formattedVarieties: SelectionOnPriceProjection[] = await Promise.all(
 		varieties.map(async (variety) => {
 			const selection = await selectionModel.findById(variety.selectionId.toString());
 
-			if (selection) {
-				return { name: selection.name, variety: variety.name };
-			}
+			return { name: selection?.name || "", variety: variety.name };
 		})
 	);
 
-	return formattedVarieties.filter((item) => typeof item !== "undefined") as { name: string; variety: string }[];
+	return formattedVarieties;
 };
