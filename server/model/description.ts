@@ -8,6 +8,8 @@ export type Description = {
 	productId: number;
 };
 
+export type DescriptionDTO = Pick<Description, "text" | "images" | "productId">;
+
 export const findAll = async () => {
 	try {
 		const result = await sql({ query: `SELECT * FROM description` });
@@ -33,7 +35,22 @@ export const findById = async (id: string) => {
 	}
 };
 
-export const save = async (data: Pick<Description, "text" | "images" | "productId">) => {
+export const findOneByProductId = async (productId: string) => {
+	try {
+		const result = keysToCamelCase(
+			await sql({
+				query: `SELECT * FROM description WHERE product_id = ?`,
+				values: [productId],
+			})
+		) as Description[];
+
+		return result.length === 1 ? result[0] : null;
+	} catch (error) {
+		throw error;
+	}
+};
+
+export const save = async (data: DescriptionDTO) => {
 	try {
 		await sql({
 			query: `
@@ -59,7 +76,7 @@ export const save = async (data: Pick<Description, "text" | "images" | "productI
 	}
 };
 
-export const update = async (id: string, data: Pick<Description, "text" | "images" | "productId">) => {
+export const update = async (id: string, data: DescriptionDTO) => {
 	try {
 		await sql({
 			query: `
