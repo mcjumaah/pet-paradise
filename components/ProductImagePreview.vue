@@ -39,6 +39,15 @@ const maxStep = computed(() => {
 	return imagesNum ? imagesNum - 4 : 0;
 });
 
+watch(
+	() => props.images,
+	() => {
+		if (props.images.length > 0) {
+			previewImage.value = props.images[0];
+		}
+	}
+);
+
 function getIsVisibleInImgCol(index: number) {
 	return currentStep.value <= maxStep.value && currentStep.value <= index && index <= 3 + currentStep.value;
 }

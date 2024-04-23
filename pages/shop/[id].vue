@@ -7,7 +7,7 @@
 		<main class="d-flex flex-column row-gap-4 bg-body-2 pt-4">
 			<section class="product-preview-action py-5 bg-white">
 				<div class="container d-flex column-gap-5 justify-content-center">
-					<ProductImagePreview :images="(product?.images as string[])" />
+					<ProductImagePreview :images="!pending ? (product?.images as string[]) :[]" />
 
 					<div class="product-action d-flex flex-column row-gap-4">
 						<div>
