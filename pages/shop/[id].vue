@@ -13,11 +13,11 @@
 						<div>
 							<h5 class="poppins-medium">{{ product?.name }}</h5>
 							<p>{{ formattedSoldNum }} <span class="text-muted">Sold</span></p>
-							<div class="bg-body-2 text-primary px-3 py-2 poppins-semibold fs-2">{{ product?.price }}</div>
+							<div class="bg-body-2 text-primary px-3 py-2 poppins-semibold fs-2">{{ displayedPrice }}</div>
 						</div>
 
 						<div class="selects px-4 text-muted d-flex flex-column row-gap-4">
-							<VarietiesSelects :selections="product?.selections" v-model="selectedSelections" />
+							<VarietiesSelects :selections="product?.selections" v-model="selectedVarieties" />
 							<div class="d-flex column-gap-4">
 								<label class="pt-2" for="product-quantity-select-wrapper">Quantity</label>
 								<div id="product-quantity-select-wrapper" class="d-flex w-100 column-gap-3 row-gap-2 flex-wrap">
@@ -57,9 +57,9 @@
 				<div class="container d-flex flex-column row-gap-5">
 					<div class="d-flex column-gap-5 poppins-medium">
 						<h4 class="text-primary text-decoration-underline">Description</h4>
-						<h4 class="text-muted">Additional Information</h4>
+						<!-- <h4 class="text-muted">Additional Information</h4> -->
 					</div>
-					<p class="description-text whitespace-pre-line">{{ product?.description.text }}</p>
+					<p class="description-text whitespace-pre-line">{{ productDescription }}</p>
 					<div class="description-images d-flex flex-wrap justify-content-center gap-4">
 						<img v-for="(img, index) in product?.description.images" :src="img" />
 					</div>
@@ -70,25 +70,37 @@
 </template>
 
 <script setup lang="ts">
+import type { ProductProjection } from "~/server/projections/productProjections";
+import type { SelectionOnPriceProjection } from "~/server/projections/selectionProjection";
+
 const route = useRoute();
 
-const product = useDummyProducts().value.find((product) => {
-	if (product.id === parseInt(route.params.id as string)) {
-		return product;
-	}
-});
-const cartItems = useDummyCartItems();
-const checkoutItems = useCheckoutItems();
+// const DummyProduct = useDummyProducts().value.find((product) => {
+// 	if (product.id === parseInt(route.params.id as string)) {
+// 		return product;
+// 	}
+// });
 
-const selectedSelections = ref<SelectedVariety[]>([]);
+const { data: product, pending } = useFetch("/api/product", {
+	method: "GET",
+	query: { id: route.params.id },
+	transform: (_product) => _product.data as ProductProjection,
+});
+
+// const cartItems = useDummyCartItems();
+// const checkoutItems = useCheckoutItems();
+
+const selectedVarieties = ref<SelectionOnPriceProjection[]>([]);
 const quantity = ref<number>(1);
+const productDescription = ref("");
 
 const pageTitle = computed(() => {
 	let maxLength = 20;
 	let title: string;
+	const name = product.value?.name;
 
-	if (product?.name) {
-		title = product?.name.length > maxLength ? product?.name.slice(0, maxLength - 3) + "..." : product?.name;
+	if (name) {
+		title = name.length > maxLength ? name.slice(0, maxLength - 3) + "..." : name;
 	} else {
 		title = "Product";
 	}
@@ -97,7 +109,7 @@ const pageTitle = computed(() => {
 });
 
 const formattedSoldNum = computed(() => {
-	let num = product?.soldNum;
+	let num = product.value?.soldNum;
 
 	if (num && num >= 1000) {
 		return Math.floor(num / 1000) + "K+";
@@ -105,35 +117,57 @@ const formattedSoldNum = computed(() => {
 		return num?.toString() || num;
 	}
 });
-const neededProductDetailsToMove = computed(() => {
-	let productDetails = (({ name, price, images }) => ({ name, price, images }))(product as Product);
-	return productDetails;
+
+const displayedPrice = computed(() => {
+	const lowestPrice = Math.min(...(product.value?.prices || []).map((price) => parseFloat(price.value.toString())));
+	const highestPrice = Math.max(...(product.value?.prices || []).map((price) => parseFloat(price.value.toString())));
+	const priceRange = lowestPrice !== highestPrice ? `₱${lowestPrice} - ₱${highestPrice}` : `₱${lowestPrice}`;
+
+	return product.value?.selections.length === selectedVarieties.value.length
+		? `₱${getSelectedVarietiesPrice(selectedVarieties.value)}`
+		: priceRange;
 });
 
+// const neededProductDetailsToMove = computed(() => {
+// 	let productDetails = (({ name, price, images }) => ({ name, price, images }))(product.value as ProductProjection);
+// 	return productDetails;
+// });
+
 function addToCart() {
-	let latestProductInCart = cartItems.value[cartItems.value.length - 1];
-
-	let productToAdd = {
-		id: latestProductInCart.id + 1,
-		...neededProductDetailsToMove.value,
-		selectedVariety: selectedSelections.value,
-		quantity: quantity.value,
-	};
-
-	cartItems.value.push(productToAdd);
+	// let latestProductInCart = cartItems.value[cartItems.value.length - 1];
+	// let productToAdd = {
+	// 	id: latestProductInCart.id + 1,
+	// 	...neededProductDetailsToMove.value,
+	// 	selectedVariety: selectedVarieties.value,
+	// 	quantity: quantity.value,
+	// };
+	// cartItems.value.push(productToAdd);
 }
 async function setToBuyNow() {
-	let latestProductInCart = cartItems.value[cartItems.value.length - 1];
-
-	let productToAdd = {
-		id: latestProductInCart.id + 1,
-		...neededProductDetailsToMove.value,
-		selectedVariety: selectedSelections.value,
-		quantity: quantity.value,
-	};
-
-	checkoutItems.value.push(productToAdd);
+	// let latestProductInCart = cartItems.value[cartItems.value.length - 1];
+	// let productToAdd = {
+	// 	id: latestProductInCart.id + 1,
+	// 	...neededProductDetailsToMove.value,
+	// 	selectedVariety: selectedVarieties.value,
+	// 	quantity: quantity.value,
+	// };
+	// checkoutItems.value.push(productToAdd);
 }
+
+function getSelectedVarietiesPrice(selectedVarieties: SelectionOnPriceProjection[]) {
+	const matchingPrice = product.value?.prices.find((price) => {
+		const isEqual = price.selections.every((selection, index) => {
+			return selection.name === selectedVarieties[index].name && selection.variety === selectedVarieties[index].variety;
+		});
+
+		return isEqual;
+	});
+	return matchingPrice ? parseFloat(matchingPrice.value.toString()) : null;
+}
+
+onMounted(() => {
+	productDescription.value = product.value?.description.text ?? "";
+});
 
 useSeoMeta({
 	title: pageTitle,
