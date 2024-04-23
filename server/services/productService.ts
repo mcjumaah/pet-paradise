@@ -28,6 +28,14 @@ export const getProducts = async (pageNum: string = "0") => {
 export const getProduct = async (id: string) => {
 	let result = (await productModel.findById(id)) as any as ProductProjection;
 	const priceModelArr = await priceModel.findAllByProductId(id.toString());
+	if (priceModelArr.length <= 0) {
+		throw createError({
+			statusCode: 404,
+			statusMessage: "`prices` Field Not Found",
+			message: "Product missing values for `prices` field.",
+		});
+	}
+
 	const selectionModelArr = await selectionModel.findAllByProductId(id.toString());
 
 	if (result) {
@@ -51,7 +59,15 @@ export const getProduct = async (id: string) => {
 			result.selections[index] = await mapObjectToClass(selection, SelectionProjection);
 		}
 
-		result.description = await mapObjectToClass(await descriptionModel.findOneByProductId(id), DescriptionProjection);
+		const description = await descriptionModel.findOneByProductId(id);
+		if (!description) {
+			throw createError({
+				statusCode: 404,
+				statusMessage: "`description` Field Not Found",
+				message: "Product missing values for `description` field.",
+			});
+		}
+		result.description = await mapObjectToClass(description, DescriptionProjection);
 
 		// Finishing Touches
 		result = await mapObjectToClass(result, ProductProjection);

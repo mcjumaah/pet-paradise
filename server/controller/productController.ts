@@ -28,11 +28,8 @@ export const getProduct = async (event: H3Event) => {
 		return {
 			data: result,
 		};
-	} catch {
-		throw createError({
-			statusCode: 400,
-			statusMessage: "Bad Request",
-		});
+	} catch (error) {
+		throw error;
 	}
 };
 
