@@ -4,16 +4,16 @@
 			v-if="isOnTopbar"
 			class="is-on-topbar d-flex flex-column flex-lg-row row-gap-3 py-2 py-lg-0 column-gap-5 poppins-medium ps-0"
 		>
-			<NuxtLink to="/">Home</NuxtLink>
-			<NuxtLink to="/shop">Shop</NuxtLink>
-			<NuxtLink to="/about">About</NuxtLink>
-			<NuxtLink to="/contact">Contact</NuxtLink>
+			<NuxtLink to="/" prefetch>Home</NuxtLink>
+			<NuxtLink to="/shop" :class="basePathTitle === 'Shop' ? 'router-link-active' : ''" prefetch>Shop</NuxtLink>
+			<NuxtLink to="/about" prefetch>About</NuxtLink>
+			<NuxtLink to="/contact" prefetch>Contact</NuxtLink>
 		</menu>
 		<menu v-else class="d-flex column-gap-5 poppins-medium ps-0">
-			<NuxtLink to="/">Home</NuxtLink>
-			<NuxtLink to="/shop">Shop</NuxtLink>
-			<NuxtLink to="/about">About</NuxtLink>
-			<NuxtLink to="/contact">Contact</NuxtLink>
+			<NuxtLink to="/" prefetch>Home</NuxtLink>
+			<NuxtLink to="/shop" :class="basePathTitle === 'Shop' ? 'router-link-active' : ''" prefetch>Shop</NuxtLink>
+			<NuxtLink to="/about" prefetch>About</NuxtLink>
+			<NuxtLink to="/contact" prefetch>Contact</NuxtLink>
 		</menu>
 	</div>
 </template>
@@ -24,6 +24,12 @@ export interface Props {
 }
 const props = withDefaults(defineProps<Props>(), {
 	isOnTopbar: false,
+});
+
+const { $routePathHelper: routePath } = useNuxtApp();
+
+const basePathTitle = computed(() => {
+	return routePath().title(0);
 });
 </script>
 
@@ -44,7 +50,7 @@ const props = withDefaults(defineProps<Props>(), {
 			padding-inline: 0;
 		}
 
-		&.router-link-exact-active {
+		&.router-link-active {
 			background-color: var(--bs-primary);
 			color: white;
 
