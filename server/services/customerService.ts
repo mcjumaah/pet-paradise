@@ -1,4 +1,5 @@
 import * as customerModel from "../model/customer";
+import * as cartModel from "../model/cart";
 import { CustomerProjection } from "../projections/customerProjections";
 
 export const getCustomer = async (id?: string, email?: string) => {
@@ -50,8 +51,17 @@ export const createCustomer = async (customerDto: customerModel.CustomerDTO) => 
 		}
 	}
 
-	const createdCustomer = await customerModel.save(customerDto);
-	return validateIsCustomerFound(createdCustomer);
+	const createdCustomer = await validateIsCustomerFound(await customerModel.save(customerDto));
+	const cart = await cartModel.save({ itemCount: 0, customerId: createdCustomer.id });
+	if (!cart) {
+		throw createError({
+			statusCode: 404,
+			statusMessage: "Cart Not Found",
+			message: "Something went wrong when assigning cart for created customer.",
+		});
+	}
+
+	return createdCustomer;
 };
 
 export const validateNewEmail = async (email: string) => {
