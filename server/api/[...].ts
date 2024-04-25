@@ -10,6 +10,7 @@ router.get("/product", defineEventHandler(productCtrl.getProduct));
 router.post("/product", defineEventHandler(productCtrl.createProduct));
 router.put("/product", defineEventHandler(productCtrl.editProduct));
 router.delete("/product", defineEventHandler(productCtrl.deleteProduct));
+router.post("/product/to-cart", defineEventHandler(productCtrl.addToCart));
 
 router.get("/customer", defineEventHandler(customerCtrl.getCustomer));
 router.post("/customer", defineEventHandler(customerCtrl.createCustomer));

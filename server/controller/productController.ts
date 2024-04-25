@@ -105,3 +105,21 @@ export const deleteProduct = async (event: H3Event) => {
 		});
 	}
 };
+
+export const addToCart = async (event: H3Event) => {
+	try {
+		const body = await readBody(event);
+		const requestBody = {
+			productId: body.productId,
+			priceId: body.priceId,
+			quantity: body.quantity,
+			cartId: body.cartId,
+		};
+
+		const result = await productService.addToCart(requestBody);
+
+		return { data: result };
+	} catch (error) {
+		throw error;
+	}
+};

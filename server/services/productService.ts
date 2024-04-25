@@ -3,6 +3,7 @@ import * as priceModel from "../model/price";
 import * as selectionModel from "../model/selection";
 import * as varietyModel from "../model/variety";
 import * as descriptionModel from "../model/description";
+import * as productItemModel from "../model/productItem";
 import * as priceService from "./priceService";
 import {
 	ProductProjection,
@@ -12,6 +13,7 @@ import {
 import { PriceProjection } from "../projections/priceProjections";
 import { SelectionProjection } from "../projections/selectionProjection";
 import { DescriptionProjection } from "../projections/descriptionProjection";
+import { CustomerDTO } from "../model/customer";
 
 export const getProducts = async (pageNum: string = "0") => {
 	const result = (await productModel.findAll(pageNum)) as ProductsPaginationProjection;
@@ -72,6 +74,33 @@ export const getProduct = async (id: string) => {
 		// Finishing Touches
 		result = await mapObjectToClass(result, ProductProjection);
 	}
+
+	return result;
+};
+
+export const addToCart = async (requestBody: { productId: number; priceId: number; quantity: number; cartId: number }) => {
+	const productItemDto: productItemModel.ProductItemDTO = {
+		status: "ON_CART",
+		quantity: requestBody.quantity,
+		totalPrice: 0,
+		productId: requestBody.productId,
+		priceId: requestBody.priceId,
+		orderId: null,
+		cartId: requestBody.cartId,
+	};
+
+	const selectedVarietyPrice = await priceModel.findById(productItemDto.priceId.toString());
+	if (selectedVarietyPrice) {
+		productItemDto.totalPrice = selectedVarietyPrice?.value * productItemDto.quantity;
+	} else {
+		throw createError({
+			statusCode: 404,
+			statusMessage: "`price` Not Found",
+			message: "Supplied `priceId` does not exist.",
+		});
+	}
+
+	const result = await productItemModel.save(productItemDto);
 
 	return result;
 };

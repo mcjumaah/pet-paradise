@@ -45,7 +45,7 @@ export const findById = async (id: string) => {
 
 		return result.length === 1 ? result[0] : null;
 	} catch (error) {
-		return error;
+		throw error;
 	}
 };
 
