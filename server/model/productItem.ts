@@ -8,11 +8,15 @@ export type ProductItem = {
 	quantity: number;
 	totalPrice: number;
 	productId: number;
-	orderId: number;
-	cartId: number;
+	priceId: number;
+	orderId: number | null;
+	cartId: number | null;
 };
 
-export type ProductItemDTO = Pick<ProductItem, "status" | "quantity" | "totalPrice" | "productId" | "orderId" | "cartId">;
+export type ProductItemDTO = Pick<
+	ProductItem,
+	"status" | "quantity" | "totalPrice" | "productId" | "priceId" | "orderId" | "cartId"
+>;
 
 export type ProductItemPaginated = {
 	content: ProductItem[];
@@ -56,11 +60,12 @@ export const save = async (data: ProductItemDTO) => {
 					quantity, 
 					total_price, 
 					product_id, 
+					price_id, 
 					order_id, 
 					cart_id
-				) VALUES (?, ?, ?, ?, ?, ?)
+				) VALUES (?, ?, ?, ?, ?, ?, ?)
 			`,
-			values: [data.status, data.quantity, data.totalPrice, data.productId, data.orderId, data.cartId],
+			values: [data.status, data.quantity, data.totalPrice, data.productId, data.priceId, data.orderId, data.cartId],
 		});
 
 		const result = keysToCamelCase(
@@ -69,7 +74,15 @@ export const save = async (data: ProductItemDTO) => {
 			})
 		) as ProductItem[];
 
-		return result.length === 1 ? result[0] : null;
+		if (result.length === 1) {
+			return result[0];
+		} else {
+			throw createError({
+				statusCode: 404,
+				statusMessage: "`productItem` Not Found",
+				message: "Something went wrong. Can't find created `productItem`.",
+			});
+		}
 	} catch (error) {
 		throw error;
 	}
@@ -85,11 +98,12 @@ export const update = async (id: string, data: ProductItemDTO) => {
 					quantity = ?, 
 					total_price = ?, 
 					product_id = ?, 
+					price_id = ?, 
 					order_id = ?, 
 					cart_id = ?, 
 				WHERE id = ?
 			`,
-			values: [data.status, data.quantity, data.totalPrice, data.productId, data.orderId, data.cartId, id],
+			values: [data.status, data.quantity, data.totalPrice, data.productId, data.priceId, data.orderId, data.cartId, id],
 		});
 
 		return await findById(id);
