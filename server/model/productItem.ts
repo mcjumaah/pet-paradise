@@ -36,6 +36,21 @@ export const findAll = async (pageNum: string = "0") => {
 	}
 };
 
+export const countAllByCartId = async (cartId: string) => {
+	try {
+		const result = keysToCamelCase(
+			(await sql({
+				query: `SELECT COUNT(*) AS item_count FROM product_item WHERE cart_id = ?`,
+				values: [cartId],
+			})) as any[]
+		) as { itemCount: number }[];
+
+		return result.length === 1 ? result[0].itemCount : 0;
+	} catch (error) {
+		throw error;
+	}
+};
+
 export const findById = async (id: string) => {
 	try {
 		const result = keysToCamelCase(

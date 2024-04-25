@@ -4,6 +4,7 @@ import * as selectionModel from "../model/selection";
 import * as varietyModel from "../model/variety";
 import * as descriptionModel from "../model/description";
 import * as productItemModel from "../model/productItem";
+import * as cartModel from "../model/cart";
 import * as priceService from "./priceService";
 import {
 	ProductProjection,
@@ -100,7 +101,20 @@ export const addToCart = async (requestBody: { productId: number; priceId: numbe
 		});
 	}
 
-	const result = await productItemModel.save(productItemDto);
+	const savedProductItem = await productItemModel.save(productItemDto);
 
-	return result;
+	let updatedCart: cartModel.Cart | null = null;
+	if (productItemDto.cartId) {
+		const cart = await cartModel.findById(productItemDto.cartId.toString());
+		const cartItemCount = await productItemModel.countAllByCartId(productItemDto.cartId?.toString());
+
+		if (cart) {
+			updatedCart = await cartModel.update(productItemDto.cartId.toString(), {
+				itemCount: cartItemCount,
+				customerId: cart?.customerId,
+			});
+		}
+	}
+
+	return { productItem: savedProductItem, cart: updatedCart ? updatedCart : null };
 };

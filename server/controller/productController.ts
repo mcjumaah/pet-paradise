@@ -118,7 +118,14 @@ export const addToCart = async (event: H3Event) => {
 
 		const result = await productService.addToCart(requestBody);
 
-		return { data: result };
+		return {
+			data: {
+				statusCode: 200,
+				statusMessage: "OK",
+				message: "Successfully added to cart.",
+				body: result,
+			},
+		};
 	} catch (error) {
 		throw error;
 	}

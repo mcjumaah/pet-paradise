@@ -29,7 +29,7 @@ export const paginationSql: (pageNum: string | undefined, paginationQuery: strin
 
 		const totalCountRows = (await sql({
 			query: `SELECT COUNT(*) AS total FROM customer`,
-		})) as any[];
+		})) as any[] as { total: number }[];
 		const totalCount = totalCountRows[0].total;
 		const totalPages = Math.ceil(totalCount / pageSize);
 
