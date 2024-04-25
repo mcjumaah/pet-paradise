@@ -1,5 +1,6 @@
 import { sql } from "../db";
 import { keysToCamelCase } from "../utils/entityFieldsUtil";
+import { Pagination } from "../utils/paginationUtil";
 
 export type Cart = {
 	id: number;
@@ -9,13 +10,21 @@ export type Cart = {
 
 export type CartDTO = Pick<Cart, "itemCount" | "customerId">;
 
-export const findAll = async () => {
-	try {
-		const result = await sql({ query: `SELECT * FROM cart` });
+export type CartPaginated = {
+	content: Cart[];
+	pagination: Pagination;
+};
 
-		return keysToCamelCase(result) as Cart[];
+export const findAll = async (pageNum: string = "0") => {
+	try {
+		const { result, pagination } = await paginationSql(pageNum, `SELECT * FROM cart`);
+
+		return keysToCamelCase({
+			content: result as Cart[],
+			pagination: pagination,
+		}) as CartPaginated;
 	} catch (error) {
-		return error;
+		throw error;
 	}
 };
 
@@ -25,6 +34,21 @@ export const findById = async (id: string) => {
 			await sql({
 				query: `SELECT * FROM cart WHERE id = ?`,
 				values: [id],
+			})
+		) as Cart[];
+
+		return result.length === 1 ? result[0] : null;
+	} catch (error) {
+		throw error;
+	}
+};
+
+export const findOneByCustomerId = async (customerId: string) => {
+	try {
+		const result = keysToCamelCase(
+			await sql({
+				query: `SELECT * FROM cart WHERE customer_id = ?`,
+				values: [customerId],
 			})
 		) as Cart[];
 
@@ -55,7 +79,7 @@ export const save = async (data: CartDTO) => {
 
 		return result.length === 1 ? result[0] : null;
 	} catch (error) {
-		return error;
+		throw error;
 	}
 };
 
@@ -63,7 +87,7 @@ export const update = async (id: string, data: CartDTO) => {
 	try {
 		await sql({
 			query: `
-				UPDATE description 
+				UPDATE cart 
 				SET 
 					item_count = ?, 
 					customer_id = ? 
@@ -74,7 +98,7 @@ export const update = async (id: string, data: CartDTO) => {
 
 		return await findById(id);
 	} catch (error) {
-		return error;
+		throw error;
 	}
 };
 
@@ -87,6 +111,6 @@ export const deleteById = async (id: string) => {
 
 		return true;
 	} catch (error) {
-		return error;
+		throw error;
 	}
 };
