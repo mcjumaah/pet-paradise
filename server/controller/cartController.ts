@@ -22,7 +22,7 @@ export const getCart = async (event: H3Event) => {
 	try {
 		const queryParam = getQuery(event);
 
-		const result = await cartModel.findById(queryParam.id as string);
+		const result = await cartModel.findOneByCustomerId(queryParam.customerId as string);
 
 		return {
 			data: result,

@@ -54,7 +54,7 @@ export const findOneByCustomerId = async (customerId: string) => {
 
 		return result.length === 1 ? result[0] : null;
 	} catch (error) {
-		return error;
+		throw error;
 	}
 };
 
