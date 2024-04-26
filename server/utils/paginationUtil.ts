@@ -13,19 +13,28 @@ export type PaginationSql = {
 	pagination: Pagination;
 };
 
-export const paginationSql: (pageNum: string | undefined, paginationQuery: string) => Promise<PaginationSql> = async (
-	pageNum = "0",
-	paginationQuery
-) => {
+export const paginationSql: (
+	pageNum: string | undefined,
+	paginationQuery: string,
+	paginationValues?: any[] | null
+) => Promise<PaginationSql> = async (pageNum = "0", paginationQuery, paginationValues = null) => {
 	try {
 		const pageNumInt = parseInt(pageNum);
 		const pageSize = 10;
 		const offset = pageNumInt * pageSize;
 
-		const result = (await sql({
-			query: `${paginationQuery} LIMIT ? OFFSET ?`,
-			values: [pageSize.toString(), offset.toString()],
-		})) as any[];
+		let result: any[];
+		if (paginationValues) {
+			result = (await sql({
+				query: `${paginationQuery} LIMIT ? OFFSET ?`,
+				values: [...paginationValues, pageSize.toString(), offset.toString()],
+			})) as any[];
+		} else {
+			result = (await sql({
+				query: `${paginationQuery} LIMIT ? OFFSET ?`,
+				values: [pageSize.toString(), offset.toString()],
+			})) as any[];
+		}
 
 		const totalCountRows = (await sql({
 			query: `SELECT COUNT(*) AS total FROM customer`,
