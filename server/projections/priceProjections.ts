@@ -1,21 +1,13 @@
+import { SelectionOnPriceProjection } from "./selectionProjection";
+
 export interface PriceInterface {
 	id: number;
 	value: number;
-	selections: {
-		name: string;
-		variety: string;
-	}[];
+	selections: SelectionOnPriceProjection[];
 }
 
 export class PriceProjection implements PriceInterface {
-	constructor(
-		public id: number,
-		public value: number,
-		public selections: {
-			name: string;
-			variety: string;
-		}[]
-	) {
+	constructor(public id: number, public value: number, public selections: SelectionOnPriceProjection[]) {
 		this.id = id;
 		this.value = value;
 		this.selections = selections;
