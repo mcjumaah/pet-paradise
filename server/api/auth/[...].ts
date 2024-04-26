@@ -1,4 +1,3 @@
-// file: ~/server/api/auth/[...].ts
 import { NuxtAuthHandler } from "#auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import * as customerModel from "../../model/customer";
@@ -12,15 +11,23 @@ export default NuxtAuthHandler({
 		CredentialsProvider.default({
 			name: "Credentials",
 			async authorize(credentials: any) {
-				const result = (await customerModel.findOneByCredential({
+				const user = await customerModel.findOneByCredential({
 					email: credentials?.email,
 					password: credentials?.password,
-				})) as customerModel.Customer;
+				});
 
-				if (result.id) {
-					return result;
+				if (user) {
+					return {
+						name: `${user.firstName} ${user.middleName ? user.middleName.charAt(0).toUpperCase() + "." : ""} ${
+							user.lastName
+						}`,
+						email: user.email,
+					};
 				} else {
-					return { error: "Sign in failed. Check the details you provided are correct" };
+					throw createError({
+						statusCode: 401,
+						statusMessage: "Invalid credentials provided",
+					});
 				}
 			},
 		}),
