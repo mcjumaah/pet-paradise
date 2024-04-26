@@ -1,0 +1,39 @@
+import { SelectionOnPriceProjection } from "./selectionProjection";
+
+export interface ProductItemInterface {
+	id: number;
+	status: "ON_CART" | "ON_ORDER";
+	name: string;
+	price: number;
+	quantity: number;
+	totalPrice: number;
+	selection: SelectionOnPriceProjection[];
+	previewImage: string;
+}
+
+export interface ProductItemsPaginatedInterface {
+	content: ProductItemInterface[];
+	pagination: Pagination;
+}
+
+export class ProductItemProjection implements ProductItemInterface {
+	constructor(
+		public id: number,
+		public status: "ON_CART" | "ON_ORDER",
+		public name: string,
+		public price: number,
+		public quantity: number,
+		public totalPrice: number,
+		public selection: SelectionOnPriceProjection[],
+		public previewImage: string
+	) {
+		this.id = id;
+		this.status = status;
+		this.name = name;
+		this.price = price;
+		this.quantity = quantity;
+		this.totalPrice = totalPrice;
+		this.selection = selection;
+		this.previewImage = previewImage;
+	}
+}
