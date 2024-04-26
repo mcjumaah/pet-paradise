@@ -9,7 +9,6 @@ export type Product = {
 	stock: number;
 	images: string[];
 	soldNum: number;
-	cartId: number;
 };
 
 export type ProductDTO = Pick<Product, "sku" | "name" | "stock" | "images" | "soldNum">;
