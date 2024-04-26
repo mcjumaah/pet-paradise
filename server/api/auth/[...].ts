@@ -1,6 +1,7 @@
 import { NuxtAuthHandler } from "#auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import * as customerModel from "../../model/customer";
+import { CustomerProjection } from "~/server/projections/customerProjections";
 
 export default NuxtAuthHandler({
 	pages: {
@@ -17,11 +18,13 @@ export default NuxtAuthHandler({
 				});
 
 				if (user) {
+					const formattedUser = await mapObjectToClass(user, CustomerProjection);
+					console.log(formattedUser);
 					return {
-						name: `${user.firstName} ${user.middleName ? user.middleName.charAt(0).toUpperCase() + "." : ""} ${
-							user.lastName
-						}`,
-						email: user.email,
+						name: `${formattedUser.firstName} ${
+							formattedUser.middleName ? formattedUser.middleName.charAt(0).toUpperCase() + "." : ""
+						} ${formattedUser.lastName}`,
+						email: formattedUser.email,
 					};
 				} else {
 					throw createError({
