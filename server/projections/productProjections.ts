@@ -20,7 +20,7 @@ export interface ProductSummaryInterface extends Omit<ProductInterface, "prices"
 		max: number;
 	} | null;
 }
-export interface ProductsPaginationInterface {
+export interface ProductsPaginatedInterface {
 	content: ProductSummaryProjection[];
 	pagination: Pagination;
 }
@@ -70,7 +70,7 @@ export class ProductSummaryProjection implements ProductSummaryInterface {
 		this.images = images;
 	}
 }
-export class ProductsPaginationProjection implements ProductsPaginationInterface {
+export class ProductsPaginatedProjection implements ProductsPaginatedInterface {
 	constructor(public content: ProductSummaryProjection[], public pagination: Pagination) {
 		this.content = content;
 		this.pagination = pagination;

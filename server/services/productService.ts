@@ -6,18 +6,13 @@ import * as descriptionModel from "../model/description";
 import * as productItemModel from "../model/productItem";
 import * as cartModel from "../model/cart";
 import * as priceService from "./priceService";
-import {
-	ProductProjection,
-	ProductSummaryProjection,
-	ProductsPaginationProjection,
-} from "../projections/productProjections";
+import { ProductProjection, ProductSummaryProjection, ProductsPaginatedProjection } from "../projections/productProjections";
 import { PriceProjection } from "../projections/priceProjections";
 import { SelectionProjection } from "../projections/selectionProjection";
 import { DescriptionProjection } from "../projections/descriptionProjection";
-import { CustomerDTO } from "../model/customer";
 
 export const getProducts = async (pageNum: string = "0") => {
-	const result = (await productModel.findAll(pageNum)) as ProductsPaginationProjection;
+	const result = (await productModel.findAll(pageNum)) as ProductsPaginatedProjection;
 
 	for (const [index, product] of result.content.entries()) {
 		product.price = await priceService.getProductPriceSummary(product.id);
