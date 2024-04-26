@@ -19,3 +19,13 @@ export async function mapObjectToClass<T>(obj: any, classConstructor: { new (...
 
 	return instance;
 }
+
+export async function mapObjectArrayToClass<T>(objArr: any[], classConstructor: { new (...args: any[]): T }): Promise<T[]> {
+	let resultArr: T[] = [];
+
+	for (let obj of objArr) {
+		resultArr.push(await mapObjectToClass(obj, classConstructor));
+	}
+
+	return resultArr;
+}
