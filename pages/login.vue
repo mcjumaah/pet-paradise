@@ -62,7 +62,7 @@ function handleSignIn() {
 	const passwordVal = passwordInput.value;
 
 	if (emailVal && passwordVal) {
-		signIn("credentials", { emailVal, passwordVal });
+		signIn("credentials", { email: emailVal, password: passwordVal });
 	}
 }
 
