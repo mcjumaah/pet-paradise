@@ -1,5 +1,6 @@
 import { H3Event } from "h3";
 import * as cartModel from "../model/cart";
+import * as cartService from "../services/cartService";
 
 export const getCarts = async (event: H3Event) => {
 	try {
@@ -95,5 +96,19 @@ export const deleteCart = async (event: H3Event) => {
 			statusCode: 500,
 			statusMessage: "Something went wrong",
 		});
+	}
+};
+
+export const getCartItems = async (event: H3Event) => {
+	try {
+		const queryParam = getQuery(event);
+
+		const result = await cartService.getCartItems(queryParam.cartId as number);
+
+		return {
+			data: result,
+		};
+	} catch (error) {
+		throw error;
 	}
 };

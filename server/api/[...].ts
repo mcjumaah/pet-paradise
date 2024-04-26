@@ -18,5 +18,6 @@ router.get("/customer/validate-new-email", defineEventHandler(customerCtrl.valid
 router.get("/customer/validate-new-password", defineEventHandler(customerCtrl.validateNewPassword));
 
 router.get("/cart", defineEventHandler(cartCtrl.getCart));
+router.get("/cart/items", defineEventHandler(cartCtrl.getCartItems));
 
 export default useBase("/api", router.handler);

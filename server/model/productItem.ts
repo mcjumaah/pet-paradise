@@ -36,6 +36,19 @@ export const findAll = async (pageNum: string = "0") => {
 	}
 };
 
+export const findAllByCartId = async (cartId: string, pageNum: string = "0") => {
+	try {
+		const { result, pagination } = await paginationSql(pageNum, `SELECT * FROM product_item WHERE cart_id = ?`, [cartId]);
+
+		return keysToCamelCase({
+			content: result as ProductItem[],
+			pagination: pagination,
+		}) as ProductItemPaginated;
+	} catch (error) {
+		throw error;
+	}
+};
+
 export const countAllByCartId = async (cartId: string) => {
 	try {
 		const result = keysToCamelCase(
