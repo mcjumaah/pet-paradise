@@ -5,11 +5,8 @@ import { CustomerProjection } from "../projections/customerProjections";
 export const getCustomer = async (id?: string, email?: string) => {
 	let customer: CustomerProjection | null;
 
-	if (id && !email) {
-		customer = await customerModel.findById(id);
-	} else if (email && !id) {
-		validateIsStringEmail(email);
-		customer = await customerModel.findOneByEmail(email);
+	if (id || email) {
+		customer = await customerModel.findOneByIdAndEmail(id, email);
 	} else {
 		throw createError({
 			statusCode: 400,

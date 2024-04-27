@@ -46,12 +46,12 @@ export const findById = async (id: string) => {
 	}
 };
 
-export const findOneByCredential = async (data: Pick<Customer, "email" | "password">) => {
+export const findOneByEmail = async (email: string) => {
 	try {
 		const result = keysToCamelCase(
 			await sql({
-				query: `SELECT * FROM customer WHERE email = ? AND password = ?`,
-				values: [data.email, data.password],
+				query: `SELECT * FROM customer WHERE email = ?`,
+				values: [email],
 			})
 		) as Customer[];
 
@@ -61,12 +61,32 @@ export const findOneByCredential = async (data: Pick<Customer, "email" | "passwo
 	}
 };
 
-export const findOneByEmail = async (email: string) => {
+export const findOneByIdAndEmail = async (id: string | null = null, email: string | null = null) => {
 	try {
 		const result = keysToCamelCase(
 			await sql({
-				query: `SELECT * FROM customer WHERE email = ?`,
-				values: [email],
+				query: `
+					SELECT * FROM customer 
+					WHERE 
+						(? IS NULL OR id = ?) 
+						AND (? IS NULL OR email = ?)
+				`,
+				values: [id, id, email, email],
+			})
+		) as Customer[];
+
+		return result.length === 1 ? result[0] : null;
+	} catch (error) {
+		throw error;
+	}
+};
+
+export const findOneByCredential = async (data: Pick<Customer, "email" | "password">) => {
+	try {
+		const result = keysToCamelCase(
+			await sql({
+				query: `SELECT * FROM customer WHERE email = ? AND password = ?`,
+				values: [data.email, data.password],
 			})
 		) as Customer[];
 
