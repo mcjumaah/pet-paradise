@@ -8,8 +8,6 @@ export const getCartItems = async (cartId: number) => {
 	const productItems = await productItemModel.findAllByCartId(cartId.toString());
 	const productItemsProjection = await mapObjectArrayToClass(productItems.content, ProductItemProjection);
 
-	console.log(productItems);
-
 	for (let [index, productItem] of productItems.content.entries()) {
 		const product = await productModel.findById(productItem.productId.toString());
 		const price = await priceModel.findById(productItem.priceId.toString());

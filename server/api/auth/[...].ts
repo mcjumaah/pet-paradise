@@ -19,7 +19,6 @@ export default NuxtAuthHandler({
 
 				if (user) {
 					const formattedUser = await mapObjectToClass(user, CustomerProjection);
-					console.log(formattedUser);
 					return {
 						name: `${formattedUser.firstName} ${
 							formattedUser.middleName ? formattedUser.middleName.charAt(0).toUpperCase() + "." : ""
