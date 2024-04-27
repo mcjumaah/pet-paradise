@@ -2,7 +2,7 @@ import * as productItemModel from "../model/productItem";
 import * as productModel from "../model/product";
 import * as priceModel from "../model/price";
 import * as priceService from "./priceService";
-import { ProductItemProjection, ProductItemsPaginatedInterface } from "../projections/productItemProjections";
+import { ProductItemProjection, ProductItemsPaginatedProjection } from "../projections/productItemProjections";
 
 export const getCartItems = async (cartId: number) => {
 	const productItems = await productItemModel.findAllByCartId(cartId.toString());
@@ -38,7 +38,7 @@ export const getCartItems = async (cartId: number) => {
 		productItemsProjection[index].selection = await priceService.getPriceSelectionsVariety(productItem.priceId);
 	}
 
-	const cartItems: ProductItemsPaginatedInterface = {
+	const cartItems: ProductItemsPaginatedProjection = {
 		content: productItemsProjection,
 		pagination: productItems.pagination,
 	};

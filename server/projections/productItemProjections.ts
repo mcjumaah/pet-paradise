@@ -12,7 +12,7 @@ export interface ProductItemInterface {
 }
 
 export interface ProductItemsPaginatedInterface {
-	content: ProductItemInterface[];
+	content: ProductItemProjection[];
 	pagination: Pagination;
 }
 
@@ -35,5 +35,12 @@ export class ProductItemProjection implements ProductItemInterface {
 		this.totalPrice = totalPrice;
 		this.selection = selection;
 		this.previewImage = previewImage;
+	}
+}
+
+export class ProductItemsPaginatedProjection implements ProductItemsPaginatedInterface {
+	constructor(public content: ProductItemProjection[], public pagination: Pagination) {
+		this.content = content;
+		this.pagination = pagination;
 	}
 }
