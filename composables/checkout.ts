@@ -1,14 +1,14 @@
-import type { CartItem as CheckoutItem } from "./dummyCartItems";
+import type { ProductItemProjection } from "~/server/projections/productItemProjections";
 
 export const useCheckoutItems = () => {
-	return useState<CheckoutItem[]>("checkout-items", () => []);
+	return useState<ProductItemProjection[]>("checkout-items", () => []);
 };
 
-export function usePerItemTotalPrice(item: CheckoutItem) {
-	return parseInt(item.price.slice(1)) * item.quantity;
+export function usePerItemTotalPrice(item: ProductItemProjection) {
+	return item.price * item.quantity;
 }
 
-export function useItemsArrTotalPrice(items: CheckoutItem[], idArr?: number[]) {
+export function useItemsArrTotalPrice(items: ProductItemProjection[], idArr?: number[]) {
 	let total = 0;
 	items.forEach((item) => {
 		if (!idArr || idArr.includes(item.id)) {
