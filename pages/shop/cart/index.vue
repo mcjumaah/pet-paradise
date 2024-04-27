@@ -27,7 +27,7 @@
 		</div>
 
 		<div class="d-flex flex-column row-gap-2">
-			<div v-for="(item, index) in dummyCartItems" class="cart-item card bg-body-2 shadow-sm">
+			<div v-for="(item, index) in cartItems?.content" class="cart-item card bg-body-2 shadow-sm">
 				<div class="card-body d-flex justify-content-between px-5 column-gap-4">
 					<div class="d-flex column-gap-3 align-items-center w-100">
 						<div class="form-check">
@@ -41,18 +41,25 @@
 							/>
 						</div>
 						<div :title="item.name" class="d-flex align-items-center column-gap-4">
-							<img :src="item.images[0]" class="product-image rounded" :alt="`Product #${item.id} Image`" />
-							<p class="card-text">{{ item.name }}</p>
+							<img :src="item.previewImage" class="product-image rounded" :alt="`Product #${item.id} Image`" />
+							<div>
+								<p class="card-text line-clamp-2">{{ item.name }}</p>
+								<p class="mb-0 text-muted">
+									Variety: <span v-for="selection in item.selection">{{ selection.variety }}</span>
+								</p>
+							</div>
 						</div>
 					</div>
 
 					<div class="grid text-center w-75 align-items-center">
-						<div title="Unit Price" class="g-col-3 d-flex justify-content-center">{{ item.price }}</div>
+						<div title="Unit Price" class="g-col-3 d-flex justify-content-center">
+							₱{{ parseInt(item.price.toString()) }}
+						</div>
 						<div title="Quantity" class="g-col-3 d-flex justify-content-center">
 							<QuantitySelect v-model="item.quantity" />
 						</div>
 						<div title="Total Price" class="g-col-3 d-flex justify-content-center text-primary">
-							₱{{ getItemTotalPrice(item) }}
+							₱{{ usePerItemTotalPrice(item) }}
 						</div>
 						<div class="g-col-3 d-flex justify-content-center">
 							<button type="button" class="btn link-secondary text-decoration-underline">Delete</button>
@@ -87,29 +94,42 @@
 </template>
 
 <script setup lang="ts">
+import type { ProductItemsPaginatedProjection } from "~/server/projections/productItemProjections";
+
 export interface CartTooltips {
 	selectAll: typeof Tooltip.prototype;
 	checkout: typeof Tooltip.prototype;
 }
 
+const { $currentUserHelper: useCurrentUserHelper } = useNuxtApp();
+const currentUserCart = useCurrentUserHelper().cart;
 const { $Tooltip: Tooltip } = useNuxtApp();
 const checkoutItems = useCheckoutItems();
-const getItemTotalPrice = usePerItemTotalPrice;
+
+const { data: cartItems, pending } = useFetch("/api/cart/items", {
+	method: "GET",
+	query: { cartId: currentUserCart.data?.id },
+	transform: (_product) => _product.data as ProductItemsPaginatedProjection,
+});
 
 const tooltips = ref(<CartTooltips>{});
-const dummyCartItems = useDummyCartItems();
 const selectedItemsId = ref<number[]>([]);
 
-const selectedItemsTotalPrice = computed(() => useItemsArrTotalPrice(dummyCartItems.value, selectedItemsId.value));
 const isSelectedAll = computed({
-	get: () => selectedItemsId.value.length === dummyCartItems.value?.length,
+	get: () => selectedItemsId.value.length === cartItems.value?.content.length,
 	set: (value) => {
-		if (value) {
-			selectedItemsId.value = dummyCartItems.value.map((item) => item.id);
+		if (value && cartItems.value) {
+			selectedItemsId.value = cartItems.value.content.map((item) => item.id);
 		} else {
 			selectedItemsId.value = [];
 		}
 	},
+});
+
+const selectedItemsTotalPrice = computed(() => {
+	if (cartItems.value) {
+		return useItemsArrTotalPrice(cartItems.value.content, selectedItemsId.value);
+	}
 });
 
 watch(selectedItemsId, (newItemsId) => {
@@ -121,11 +141,11 @@ watch(selectedItemsId, (newItemsId) => {
 });
 
 function setCheckoutItems() {
-	dummyCartItems.value.forEach((item) => {
-		if (selectedItemsId.value.includes(item.id)) {
-			checkoutItems.value.push(item);
-		}
-	});
+	// dummyCartItems.value.forEach((item) => {
+	// 	if (selectedItemsId.value.includes(item.id)) {
+	// 		checkoutItems.value.push(item);
+	// 	}
+	// });
 }
 
 onMounted(() => {
