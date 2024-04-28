@@ -34,7 +34,7 @@ export const findAllByProductId = async (productId: string) => {
 	}
 };
 
-export const findById = async (id: string) => {
+export const findById = async (id: number) => {
 	try {
 		const result = keysToCamelCase(
 			await sql({
@@ -74,7 +74,7 @@ export const save = async (data: PriceDTO) => {
 	}
 };
 
-export const update = async (id: string, data: PriceDTO) => {
+export const update = async (id: number, data: PriceDTO) => {
 	try {
 		await sql({
 			query: `

@@ -10,7 +10,7 @@ export const getCartItems = async (cartId: number) => {
 
 	for (let [index, productItem] of productItems.content.entries()) {
 		const product = await productModel.findById(productItem.productId.toString());
-		const price = await priceModel.findById(productItem.priceId.toString());
+		const price = await priceModel.findById(productItem.priceId);
 
 		if (product) {
 			productItemsProjection[index].name = product?.name;
