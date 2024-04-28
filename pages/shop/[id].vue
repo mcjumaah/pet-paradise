@@ -27,22 +27,33 @@
 							</div>
 						</div>
 
+						<div v-if="isInvalid" class="alert alert-danger" role="alert">Please select a variety first.</div>
+
 						<div class="final-action d-flex column-gap-3 pt-3 px-4">
 							<button
 								class="add-to-cart btn btn-outline-primary d-flex w-100 p-2 align-items-center justify-content-center text-start column-gap-2 poppins-medium transition-all"
 								type="button"
 								@click="addToCart()"
+								:disabled="isLoading"
 							>
-								<svg class="flex-shrink-0" xmlns="http://www.w3.org/2000/svg" width="25" height="24" viewBox="0 0 25 24">
-									<path
-										d="M11.5 9h2V6h3V4h-3V1h-2v3h-3v2h3m-4 12c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2Zm10 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2Zm-9.8-3.2v-.1l.9-1.7H16c.7 0 1.4-.4 1.7-1l3.9-7-1.7-1-3.9 7H9L4.8 2H1.5v2h2l3.6 7.6L5.7 14c-.1.3-.2.6-.2 1 0 1.1.9 2 2 2h12v-2H7.9c-.1 0-.2-.1-.2-.2Z"
-									/>
-								</svg>
-								Add To Cart
+								<template v-if="!isLoading">
+									<svg class="flex-shrink-0" xmlns="http://www.w3.org/2000/svg" width="25" height="24" viewBox="0 0 25 24">
+										<path
+											d="M11.5 9h2V6h3V4h-3V1h-2v3h-3v2h3m-4 12c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2Zm10 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2Zm-9.8-3.2v-.1l.9-1.7H16c.7 0 1.4-.4 1.7-1l3.9-7-1.7-1-3.9 7H9L4.8 2H1.5v2h2l3.6 7.6L5.7 14c-.1.3-.2.6-.2 1 0 1.1.9 2 2 2h12v-2H7.9c-.1 0-.2-.1-.2-.2Z"
+										/>
+									</svg>
+									Add To Cart
+								</template>
+								<template v-else>
+									<span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
+									<span role="status">Loading...</span>
+								</template>
 							</button>
+
 							<NuxtLink
 								to="/shop/cart/checkout"
 								class="buy-now btn btn-primary w-100 p-2 transition-all"
+								:class="isLoading ? ' disabled ' : ''"
 								type="button"
 								@click="setToBuyNow()"
 							>
@@ -70,16 +81,26 @@
 </template>
 
 <script setup lang="ts">
+import type { Cart } from "~/server/model/cart";
+import type { ProductItem } from "~/server/model/productItem";
 import type { ProductProjection } from "~/server/projections/productProjections";
 import type { SelectionOnPriceProjection } from "~/server/projections/selectionProjection";
 
-const route = useRoute();
+type AddedItem = {
+	data: {
+		statusCode: number;
+		statusMessage: string;
+		message: string;
+		body: {
+			productItem: ProductItem;
+			cart: Cart | null;
+		};
+	};
+};
 
-// const DummyProduct = useDummyProducts().value.find((product) => {
-// 	if (product.id === parseInt(route.params.id as string)) {
-// 		return product;
-// 	}
-// });
+const route = useRoute();
+const { $currentUserHelper } = useNuxtApp();
+const currentUserHelper = $currentUserHelper();
 
 const { data: product, pending } = useFetch("/api/product", {
 	method: "GET",
@@ -87,12 +108,12 @@ const { data: product, pending } = useFetch("/api/product", {
 	transform: (_product) => _product.data as ProductProjection,
 });
 
-// const cartItems = useDummyCartItems();
-// const checkoutItems = useCheckoutItems();
-
 const selectedVarieties = ref<SelectionOnPriceProjection[]>([]);
 const quantity = ref<number>(1);
 const productDescription = ref("");
+const lastCartAddedItem = ref<AddedItem>();
+const isLoading = ref(false);
+const isInvalid = ref(false);
 
 const pageTitle = computed(() => {
 	let maxLength = 20;
@@ -124,24 +145,58 @@ const displayedPrice = computed(() => {
 	const priceRange = lowestPrice !== highestPrice ? `₱${lowestPrice} - ₱${highestPrice}` : `₱${lowestPrice}`;
 
 	return product.value?.selections.length === selectedVarieties.value.length
-		? `₱${getSelectedVarietiesPrice(selectedVarieties.value)}`
+		? `₱${selectedVarietiesPrice.value?.value}`
 		: priceRange;
 });
 
-// const neededProductDetailsToMove = computed(() => {
-// 	let productDetails = (({ name, price, images }) => ({ name, price, images }))(product.value as ProductProjection);
-// 	return productDetails;
-// });
+const selectedVarietiesPrice = computed(() => {
+	const matchingPrice = product.value?.prices.find((price) => {
+		const isEqual = price.selections.every((selection, index) => {
+			if (selectedVarieties.value.length > 0) {
+				return (
+					selection.name === selectedVarieties.value[index].name &&
+					selection.variety === selectedVarieties.value[index].variety
+				);
+			}
+		});
 
-function addToCart() {
-	// let latestProductInCart = cartItems.value[cartItems.value.length - 1];
-	// let productToAdd = {
-	// 	id: latestProductInCart.id + 1,
-	// 	...neededProductDetailsToMove.value,
-	// 	selectedVariety: selectedVarieties.value,
-	// 	quantity: quantity.value,
-	// };
-	// cartItems.value.push(productToAdd);
+		return isEqual;
+	});
+	return matchingPrice ?? null;
+});
+
+const itemToAdd = computed(() => {
+	return {
+		quantity: quantity.value,
+		productId: product.value?.id,
+		priceId: selectedVarietiesPrice.value?.id,
+		cartId: currentUserHelper.cart.data?.id,
+	};
+});
+
+watch(selectedVarieties.value, () => {
+	isInvalid.value = false;
+});
+
+async function addToCart() {
+	if (selectedVarietiesPrice.value) {
+		try {
+			isLoading.value = true;
+			lastCartAddedItem.value = await $fetch("/api/product/to-cart", {
+				method: "POST",
+				body: itemToAdd.value,
+			});
+
+			await currentUserHelper.cart.fetch();
+			setTimeout(() => {
+				isLoading.value = false;
+			}, 1000);
+		} catch (error) {
+			alert(error);
+		}
+	} else {
+		isInvalid.value = true;
+	}
 }
 async function setToBuyNow() {
 	// let latestProductInCart = cartItems.value[cartItems.value.length - 1];
@@ -152,17 +207,6 @@ async function setToBuyNow() {
 	// 	quantity: quantity.value,
 	// };
 	// checkoutItems.value.push(productToAdd);
-}
-
-function getSelectedVarietiesPrice(selectedVarieties: SelectionOnPriceProjection[]) {
-	const matchingPrice = product.value?.prices.find((price) => {
-		const isEqual = price.selections.every((selection, index) => {
-			return selection.name === selectedVarieties[index].name && selection.variety === selectedVarieties[index].variety;
-		});
-
-		return isEqual;
-	});
-	return matchingPrice ? parseFloat(matchingPrice.value.toString()) : null;
 }
 
 onMounted(() => {
