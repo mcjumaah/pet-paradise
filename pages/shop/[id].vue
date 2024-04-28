@@ -190,7 +190,7 @@ async function addToCart() {
 			await currentUserHelper.cart.fetch();
 			setTimeout(() => {
 				isLoading.value = false;
-			}, 1000);
+			}, 500);
 		} catch (error) {
 			alert(error);
 		}
