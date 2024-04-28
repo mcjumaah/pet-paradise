@@ -50,7 +50,7 @@
 					<NuxtLink
 						to="/shop/cart"
 						id="top-navbar-cart-link"
-						class="to-cart rounded-3 transition-all"
+						class="to-cart rounded-3 transition-all position-relative z-2"
 						title="Cart"
 						data-bs-toggle="tooltip"
 						data-bs-title="Cart"
@@ -69,8 +69,16 @@
 								<clipPath id="a"><path fill="#fff" d="M0 0h28v28H0z" /></clipPath>
 							</defs>
 						</svg>
+						<span
+							v-for="(instance, index) in 2"
+							class="cart-item-count position-absolute start-100 translate-middle badge rounded-pill bg-secondary"
+							:class="index === 1 && hasAdded ? 'scale-125 animate-ping z-0' : 'z-1'"
+						>
+							{{ cartItemCount }}
+							<span class="visually-hidden">cart items</span>
+						</span>
 					</NuxtLink>
-					<div class="account dropdown">
+					<div class="account dropdown position-relative z-1">
 						<button class="btn w-fit h-fit rounded-3 transition-all" title="Account" type="button" data-bs-toggle="dropdown">
 							<div
 								id="top-navbar-account-btn"
@@ -123,10 +131,11 @@ export interface CartTooltips {
 	account: typeof Tooltip.prototype;
 }
 
-const { $Tooltip: Tooltip } = useNuxtApp();
+const { $Tooltip: Tooltip, $currentUserHelper: useCurrentUserHelper } = useNuxtApp();
 const { status: loginStatus, signOut } = useAuth();
 
 const tooltips = ref(<CartTooltips>{});
+const hasAdded = ref(false);
 
 const isCustomerLoggedIn = computed(() => {
 	return loginStatus.value === "authenticated";
@@ -137,6 +146,22 @@ onMounted(() => {
 	tooltips.value.cart = Tooltip.getOrCreateInstance("#top-navbar-cart-link");
 	tooltips.value.account = Tooltip.getOrCreateInstance("#top-navbar-account-btn");
 });
+
+const cartItemCount = computed(() => {
+	return useCurrentUserHelper().cart.data?.itemCount;
+});
+
+watch(
+	() => cartItemCount.value,
+	(newCount, oldCount) => {
+		if (newCount && oldCount && newCount > oldCount) {
+			hasAdded.value = true;
+			setTimeout(() => {
+				hasAdded.value = false;
+			}, 5000);
+		}
+	}
+);
 </script>
 
 <style lang="scss" scoped>
@@ -144,6 +169,19 @@ onMounted(() => {
 	> * {
 		&.to-cart {
 			padding: 0.375rem 0.75rem 0.375rem 0.75rem;
+
+			.animate-ping {
+				animation: ping 1.5s cubic-bezier(0, 0, 0.2, 1) infinite !important;
+				transform: scale(1.3) translate(-38.5%, -38.5%) !important;
+
+				@keyframes ping {
+					75%,
+					100% {
+						transform: scale(2);
+						opacity: 0;
+					}
+				}
+			}
 		}
 
 		&:not(:has(> button)):hover,
