@@ -102,7 +102,7 @@ export const update = async (id: string, data: CartDTO) => {
 	}
 };
 
-export const deleteById = async (id: string) => {
+export const deleteById = async (id: number) => {
 	try {
 		await sql({
 			query: `DELETE FROM cart WHERE id = ?`,

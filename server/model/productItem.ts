@@ -155,7 +155,7 @@ export const update = async (id: number, data: ProductItemDTO) => {
 	}
 };
 
-export const deleteById = async (id: string) => {
+export const deleteById = async (id: number) => {
 	try {
 		await sql({
 			query: `DELETE FROM product_item WHERE id = ?`,

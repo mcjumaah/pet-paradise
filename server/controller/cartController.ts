@@ -1,5 +1,6 @@
 import { H3Event } from "h3";
 import * as cartModel from "../model/cart";
+import * as productItemModel from "../model/productItem";
 import * as cartService from "../services/cartService";
 
 export const getCarts = async (event: H3Event) => {
@@ -77,7 +78,7 @@ export const deleteCart = async (event: H3Event) => {
 	try {
 		const queryParam = getQuery(event);
 
-		const result = await cartModel.deleteById(queryParam.id as string);
+		const result = await cartModel.deleteById(queryParam.id as number);
 
 		if (result) {
 			return {
@@ -108,6 +109,30 @@ export const getCartItems = async (event: H3Event) => {
 		return {
 			data: result,
 		};
+	} catch (error) {
+		throw error;
+	}
+};
+
+export const deleteCartItem = async (event: H3Event) => {
+	try {
+		const queryParam = getQuery(event);
+
+		const result = await productItemModel.deleteById(queryParam.id as number);
+
+		if (result) {
+			return {
+				statusCode: 200,
+				statusMessage: "Successfully Deleted",
+				message: "Successfully deleted cart item.",
+			};
+		} else {
+			throw createError({
+				statusCode: 404,
+				statusMessage: "Delete Unsuccessful",
+				message: "Cart item with the provided id does not exist.",
+			});
+		}
 	} catch (error) {
 		throw error;
 	}
