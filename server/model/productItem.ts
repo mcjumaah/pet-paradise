@@ -64,12 +64,27 @@ export const countAllByCartId = async (cartId: string) => {
 	}
 };
 
-export const findById = async (id: string) => {
+export const findById = async (id: number) => {
 	try {
 		const result = keysToCamelCase(
 			await sql({
 				query: `SELECT * FROM product_item WHERE id = ?`,
 				values: [id],
+			})
+		) as ProductItem[];
+
+		return result.length === 1 ? result[0] : null;
+	} catch (error) {
+		throw error;
+	}
+};
+
+export const findOneInCartByPriceId = async (cartId: number, priceId: number) => {
+	try {
+		const result = keysToCamelCase(
+			await sql({
+				query: `SELECT * FROM product_item WHERE cart_id = ? AND price_id = ?`,
+				values: [cartId, priceId],
 			})
 		) as ProductItem[];
 
@@ -116,7 +131,7 @@ export const save = async (data: ProductItemDTO) => {
 	}
 };
 
-export const update = async (id: string, data: ProductItemDTO) => {
+export const update = async (id: number, data: ProductItemDTO) => {
 	try {
 		await sql({
 			query: `
@@ -128,7 +143,7 @@ export const update = async (id: string, data: ProductItemDTO) => {
 					product_id = ?, 
 					price_id = ?, 
 					order_id = ?, 
-					cart_id = ?, 
+					cart_id = ? 
 				WHERE id = ?
 			`,
 			values: [data.status, data.quantity, data.totalPrice, data.productId, data.priceId, data.orderId, data.cartId, id],

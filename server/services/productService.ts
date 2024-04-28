@@ -85,7 +85,16 @@ export const addToCart = async (requestBody: { productId: number; priceId: numbe
 		cartId: requestBody.cartId,
 	};
 
-	const selectedVarietyPrice = await priceModel.findById(productItemDto.priceId.toString());
+	if (!productItemDto.cartId) {
+		throw createError({
+			statusCode: 422,
+			statusMessage: "Unprocessable Entity",
+			message: "Request payload object doesn't have value for `cartId`",
+		});
+	}
+
+	// Set `totalPrice`
+	const selectedVarietyPrice = await priceModel.findById(productItemDto.priceId);
 	if (selectedVarietyPrice) {
 		productItemDto.totalPrice = selectedVarietyPrice?.value * productItemDto.quantity;
 	} else {
@@ -96,19 +105,29 @@ export const addToCart = async (requestBody: { productId: number; priceId: numbe
 		});
 	}
 
-	const savedProductItem = await productItemModel.save(productItemDto);
+	const similarProductItemInCart = await productItemModel.findOneInCartByPriceId(
+		productItemDto.cartId,
+		productItemDto.priceId
+	);
+
+	let savedProductItem: productItemModel.ProductItem | null = null;
+	if (similarProductItemInCart) {
+		productItemDto.quantity = productItemDto.quantity + similarProductItemInCart.quantity;
+		productItemDto.totalPrice = productItemDto.totalPrice + similarProductItemInCart.totalPrice;
+		savedProductItem = await productItemModel.update(similarProductItemInCart.id, productItemDto);
+	} else {
+		savedProductItem = await productItemModel.save(productItemDto);
+	}
+
+	const cart = await cartModel.findById(productItemDto.cartId.toString());
+	const cartItemCount = await productItemModel.countAllByCartId(productItemDto.cartId?.toString());
 
 	let updatedCart: cartModel.Cart | null = null;
-	if (productItemDto.cartId) {
-		const cart = await cartModel.findById(productItemDto.cartId.toString());
-		const cartItemCount = await productItemModel.countAllByCartId(productItemDto.cartId?.toString());
-
-		if (cart) {
-			updatedCart = await cartModel.update(productItemDto.cartId.toString(), {
-				itemCount: cartItemCount,
-				customerId: cart?.customerId,
-			});
-		}
+	if (cart) {
+		updatedCart = await cartModel.update(productItemDto.cartId.toString(), {
+			itemCount: cartItemCount,
+			customerId: cart?.customerId,
+		});
 	}
 
 	return { productItem: savedProductItem, cart: updatedCart ? updatedCart : null };
