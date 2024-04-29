@@ -119,16 +119,22 @@ export const addToCart = async (requestBody: { productId: number; priceId: numbe
 		savedProductItem = await productItemModel.save(productItemDto);
 	}
 
-	const cart = await cartModel.findById(productItemDto.cartId.toString());
-	const cartItemCount = await productItemModel.countAllByCartId(productItemDto.cartId?.toString());
+	const updatedCart = await updateCartCount(productItemDto.cartId);
+
+	return { productItem: savedProductItem, cart: updatedCart ? updatedCart : null };
+};
+
+export const updateCartCount = async (cartId: number) => {
+	const cart = await cartModel.findById(cartId);
+	const cartItemCount = await productItemModel.countAllByCartId(cartId);
 
 	let updatedCart: cartModel.Cart | null = null;
 	if (cart) {
-		updatedCart = await cartModel.update(productItemDto.cartId.toString(), {
+		updatedCart = await cartModel.update(cartId, {
 			itemCount: cartItemCount,
 			customerId: cart?.customerId,
 		});
 	}
 
-	return { productItem: savedProductItem, cart: updatedCart ? updatedCart : null };
+	return updatedCart;
 };
