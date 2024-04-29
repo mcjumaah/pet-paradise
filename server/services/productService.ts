@@ -4,8 +4,8 @@ import * as selectionModel from "../model/selection";
 import * as varietyModel from "../model/variety";
 import * as descriptionModel from "../model/description";
 import * as productItemModel from "../model/productItem";
-import * as cartModel from "../model/cart";
 import * as priceService from "./priceService";
+import * as cartService from "./cartService";
 import { ProductProjection, ProductSummaryProjection, ProductsPaginatedProjection } from "../projections/productProjections";
 import { PriceProjection } from "../projections/priceProjections";
 import { SelectionProjection } from "../projections/selectionProjection";
@@ -119,22 +119,7 @@ export const addToCart = async (requestBody: { productId: number; priceId: numbe
 		savedProductItem = await productItemModel.save(productItemDto);
 	}
 
-	const updatedCart = await updateCartCount(productItemDto.cartId);
+	const updatedCart = await cartService.updateCartCount(productItemDto.cartId);
 
 	return { productItem: savedProductItem, cart: updatedCart ? updatedCart : null };
-};
-
-export const updateCartCount = async (cartId: number) => {
-	const cart = await cartModel.findById(cartId);
-	const cartItemCount = await productItemModel.countAllByCartId(cartId);
-
-	let updatedCart: cartModel.Cart | null = null;
-	if (cart) {
-		updatedCart = await cartModel.update(cartId, {
-			itemCount: cartItemCount,
-			customerId: cart?.customerId,
-		});
-	}
-
-	return updatedCart;
 };

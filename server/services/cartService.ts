@@ -3,7 +3,6 @@ import * as productModel from "../model/product";
 import * as priceModel from "../model/price";
 import * as cartModel from "../model/cart";
 import * as priceService from "./priceService";
-import * as productService from "./productService";
 import { ProductItemProjection, ProductItemsPaginatedProjection } from "../projections/productItemProjections";
 
 export const getCartItems = async (cartId: number) => {
@@ -53,7 +52,7 @@ export const deleteCartItem = async (productItemId: number) => {
 
 	let updatedCart: cartModel.Cart | null = null;
 	if (productItem?.cartId) {
-		updatedCart = await productService.updateCartCount(productItem.cartId);
+		updatedCart = await updateCartCount(productItem.cartId);
 	}
 
 	if (isCartItemDeleted) {
@@ -67,4 +66,19 @@ export const deleteCartItem = async (productItemId: number) => {
 			message: "Cart item with the provided id does not exist.",
 		});
 	}
+};
+
+export const updateCartCount = async (cartId: number) => {
+	const cart = await cartModel.findById(cartId);
+	const cartItemCount = await productItemModel.countAllByCartId(cartId);
+
+	let updatedCart: cartModel.Cart | null = null;
+	if (cart) {
+		updatedCart = await cartModel.update(cartId, {
+			itemCount: cartItemCount,
+			customerId: cart?.customerId,
+		});
+	}
+
+	return updatedCart;
 };
