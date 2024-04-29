@@ -5,6 +5,21 @@ import * as cartModel from "../model/cart";
 import * as priceService from "./priceService";
 import { ProductItemProjection, ProductItemsPaginatedProjection } from "../projections/productItemProjections";
 
+export const getCart = async (customerId: number) => {
+	const cart = await cartModel.findOneByCustomerId(customerId);
+	if (!cart) {
+		throw createError({
+			statusCode: 404,
+			statusMessage: "Cart Not Found",
+			message: "Customer may not have connected cart.",
+		});
+	}
+
+	const updatedCart = await updateCartCount(cart?.id);
+
+	return updatedCart;
+};
+
 export const getCartItems = async (cartId: number) => {
 	const productItems = await productItemModel.findAllByCartId(cartId.toString());
 	const productItemsProjection = await mapObjectArrayToClass(productItems.content, ProductItemProjection);
@@ -70,15 +85,20 @@ export const deleteCartItem = async (productItemId: number) => {
 
 export const updateCartCount = async (cartId: number) => {
 	const cart = await cartModel.findById(cartId);
-	const cartItemCount = await productItemModel.countAllByCartId(cartId);
-
-	let updatedCart: cartModel.Cart | null = null;
-	if (cart) {
-		updatedCart = await cartModel.update(cartId, {
-			itemCount: cartItemCount,
-			customerId: cart?.customerId,
+	if (!cart) {
+		throw createError({
+			statusCode: 404,
+			statusMessage: "Cart Not Found",
+			message: "No cart found with the provided `cartId`.",
 		});
 	}
+
+	const cartItemCount = await productItemModel.countAllByCartId(cartId);
+
+	const updatedCart = await cartModel.update(cartId, {
+		itemCount: cartItemCount,
+		customerId: cart?.customerId,
+	});
 
 	return updatedCart;
 };

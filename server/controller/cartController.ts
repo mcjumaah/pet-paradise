@@ -23,7 +23,7 @@ export const getCart = async (event: H3Event) => {
 	try {
 		const queryParam = getQuery(event);
 
-		const result = await cartModel.findOneByCustomerId(queryParam.customerId as string);
+		const result = await cartService.getCart(queryParam.customerId as number);
 
 		return {
 			data: result,
@@ -117,7 +117,7 @@ export const deleteCartItem = async (event: H3Event) => {
 	try {
 		const queryParam = getQuery(event);
 
-		const result = await cartService.deleteCartItem(queryParam.id as number);
+		const result = await cartService.deleteCartItem(queryParam.productItemId as number);
 
 		return {
 			statusCode: 200,

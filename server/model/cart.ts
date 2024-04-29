@@ -43,7 +43,7 @@ export const findById = async (id: number) => {
 	}
 };
 
-export const findOneByCustomerId = async (customerId: string) => {
+export const findOneByCustomerId = async (customerId: number) => {
 	try {
 		const result = keysToCamelCase(
 			await sql({
