@@ -1,7 +1,9 @@
 import * as productItemModel from "../model/productItem";
 import * as productModel from "../model/product";
 import * as priceModel from "../model/price";
+import * as cartModel from "../model/cart";
 import * as priceService from "./priceService";
+import * as productService from "./productService";
 import { ProductItemProjection, ProductItemsPaginatedProjection } from "../projections/productItemProjections";
 
 export const getCartItems = async (cartId: number) => {
@@ -42,4 +44,27 @@ export const getCartItems = async (cartId: number) => {
 	};
 
 	return cartItems;
+};
+
+export const deleteCartItem = async (productItemId: number) => {
+	const productItem = await productItemModel.findById(productItemId);
+
+	const isCartItemDeleted = await productItemModel.deleteById(productItemId);
+
+	let updatedCart: cartModel.Cart | null = null;
+	if (productItem?.cartId) {
+		updatedCart = await productService.updateCartCount(productItem.cartId);
+	}
+
+	if (isCartItemDeleted) {
+		return {
+			cart: updatedCart,
+		};
+	} else {
+		throw createError({
+			statusCode: 404,
+			statusMessage: "Delete Unsuccessful",
+			message: "Cart item with the provided id does not exist.",
+		});
+	}
 };
