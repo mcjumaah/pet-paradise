@@ -49,7 +49,7 @@ export const findAllByCartId = async (cartId: string, pageNum: string = "0") => 
 	}
 };
 
-export const countAllByCartId = async (cartId: string) => {
+export const countAllByCartId = async (cartId: number) => {
 	try {
 		const result = keysToCamelCase(
 			(await sql({

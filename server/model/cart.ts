@@ -28,7 +28,7 @@ export const findAll = async (pageNum: string = "0") => {
 	}
 };
 
-export const findById = async (id: string) => {
+export const findById = async (id: number) => {
 	try {
 		const result = keysToCamelCase(
 			await sql({
@@ -83,7 +83,7 @@ export const save = async (data: CartDTO) => {
 	}
 };
 
-export const update = async (id: string, data: CartDTO) => {
+export const update = async (id: number, data: CartDTO) => {
 	try {
 		await sql({
 			query: `
