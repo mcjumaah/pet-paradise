@@ -26,8 +26,12 @@
 			</div>
 		</div>
 
-		<div class="d-flex flex-column row-gap-2">
-			<div v-for="(item, index) in cartItems?.content" class="cart-item card bg-body-2 shadow-sm">
+		<TransitionGroup name="cart-items" tag="div" class="d-flex flex-column row-gap-2">
+			<div
+				v-for="(item, index) in cartItems?.content"
+				:key="`${index} - ${item.id}`"
+				class="cart-item card bg-body-2 shadow-sm"
+			>
 				<div class="card-body d-flex justify-content-between px-5 column-gap-4">
 					<div class="d-flex column-gap-3 align-items-center w-100">
 						<div class="form-check">
@@ -62,12 +66,19 @@
 							₱{{ usePerItemTotalPrice(item) }}
 						</div>
 						<div class="g-col-3 d-flex justify-content-center">
-							<button type="button" class="btn link-secondary text-decoration-underline">Delete</button>
+							<button
+								type="button"
+								class="btn link-secondary text-decoration-underline"
+								:class="getIsDeletingItem(item.id) ? 'disabled ' : ''"
+								@click="selectedItemIdToDelete = item.id"
+							>
+								{{ getIsDeletingItem(item.id) ? "deleting..." : "Delete" }}
+							</button>
 						</div>
 					</div>
 				</div>
 			</div>
-		</div>
+		</TransitionGroup>
 
 		<div class="d-flex align-items-center column-gap-3 justify-content-end pe-5 my-3">
 			<p class="mb-0">
@@ -106,10 +117,33 @@ const currentUserCart = useCurrentUserHelper().cart;
 const { $Tooltip: Tooltip } = useNuxtApp();
 const checkoutItems = useCheckoutItems();
 
-const { data: cartItems, pending } = useFetch("/api/cart/items", {
+const selectedItemIdToDelete = ref<number>();
+const {
+	data: deleteCartItemData,
+	pending: isDeletingCartItem,
+	error: deleteCartItemError,
+} = await useFetch("/api/cart/item", {
+	method: "DELETE",
+	query: {
+		productItemId: selectedItemIdToDelete,
+	},
+	immediate: false,
+	transform: (_deletionData) => {
+		currentUserCart.fetch();
+		return _deletionData;
+	},
+});
+
+const {
+	data: cartItems,
+	pending: isFetchingCartItems,
+	error: fetchCartItemsError,
+	execute: fetchCartItems,
+} = await useFetch("/api/cart/items", {
 	method: "GET",
 	query: { cartId: currentUserCart.data?.id },
-	transform: (_product) => _product.data as ProductItemsPaginatedProjection,
+	transform: (_cartItems) => _cartItems.data as ProductItemsPaginatedProjection,
+	watch: [deleteCartItemData],
 });
 
 const tooltips = ref(<CartTooltips>{});
@@ -140,6 +174,17 @@ watch(selectedItemsId, (newItemsId) => {
 	}
 });
 
+watch([fetchCartItemsError, deleteCartItemError], ([fetchError, deleteError]) => {
+	const error = fetchError || deleteError;
+	if (error) {
+		alert(error);
+	}
+});
+
+function getIsDeletingItem(itemId: number) {
+	return isDeletingCartItem.value && itemId === selectedItemIdToDelete.value;
+}
+
 function setCheckoutItems() {
 	// dummyCartItems.value.forEach((item) => {
 	// 	if (selectedItemsId.value.includes(item.id)) {
@@ -161,6 +206,16 @@ onMounted(() => {
 			height: 6.25rem;
 			width: 6.25rem;
 		}
+	}
+
+	.cart-items-enter-active,
+	.cart-items-leave-active {
+		transition: all 0.5s ease;
+	}
+	.cart-items-enter-from,
+	.cart-items-leave-to {
+		opacity: 0;
+		transform: translateX(30px);
 	}
 }
 </style>
