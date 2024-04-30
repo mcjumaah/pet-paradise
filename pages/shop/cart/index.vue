@@ -94,10 +94,14 @@
 				<NuxtLink
 					to="/shop/cart/checkout"
 					class="btn btn-primary"
-					:class="selectedItemsId.length < 1 ? 'disabled' : ''"
+					:class="isCheckingOut || selectedItemsId.length < 1 ? 'disabled' : ''"
 					@click="setCheckoutItems()"
 				>
-					Check Out
+					<template v-if="!isCheckingOut"> Check Out </template>
+					<template v-else>
+						<span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
+						<span role="status">Cheking Out...</span>
+					</template>
 				</NuxtLink>
 			</div>
 		</div>
@@ -148,6 +152,7 @@ const {
 
 const tooltips = ref(<CartTooltips>{});
 const selectedItemsId = ref<number[]>([]);
+const isCheckingOut = ref<boolean>();
 
 const isSelectedAll = computed({
 	get: () => selectedItemsId.value.length === cartItems.value?.content.length,
@@ -186,11 +191,15 @@ function getIsDeletingItem(itemId: number) {
 }
 
 function setCheckoutItems() {
-	// dummyCartItems.value.forEach((item) => {
-	// 	if (selectedItemsId.value.includes(item.id)) {
-	// 		checkoutItems.value.push(item);
-	// 	}
-	// });
+	isCheckingOut.value = true;
+
+	cartItems.value?.content.forEach((item) => {
+		if (selectedItemsId.value.includes(item.id)) {
+			checkoutItems.value.push(item);
+		}
+	});
+
+	isCheckingOut.value = false;
 }
 
 onMounted(() => {

@@ -14,15 +14,13 @@
 				<div class="checkout-product-list d-flex flex-column row-gap-3">
 					<div v-for="(item, index) in checkoutItems" class="checkout-item d-flex">
 						<div class="d-flex align-items-center column-gap-4 w-75">
-							<img :src="item.images[0]" class="product-image rounded" :alt="`Product #${item.id} Image`" />
+							<img :src="item.previewImage" class="product-image rounded" :alt="`Product #${item.id} Image`" />
 							<p class="card-text">{{ item.name }}</p>
 						</div>
 						<div class="grid w-50 text-center text-muted align-items-center">
-							<span class="g-col-4 d-flex justify-content-center">{{ item.price }}</span>
+							<span class="g-col-4 d-flex justify-content-center">₱{{ item.price }}</span>
 							<span class="g-col-4 d-flex justify-content-center">{{ item.quantity }}</span>
-							<span class="g-col-4 d-flex justify-content-center text-primary"
-								>₱{{ parseInt(item.price.slice(1)) * item.quantity }}</span
-							>
+							<span class="g-col-4 d-flex justify-content-center text-primary">₱{{ item.totalPrice }}</span>
 						</div>
 					</div>
 				</div>
