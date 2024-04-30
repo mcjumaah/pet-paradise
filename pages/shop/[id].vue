@@ -7,7 +7,7 @@
 		<main class="d-flex flex-column row-gap-4 bg-body-2 pt-4">
 			<section class="product-preview-action py-5 bg-white">
 				<div class="container d-flex column-gap-5 justify-content-center">
-					<ProductImagePreview :images="!pending ? (product?.images as string[]) :[]" />
+					<ProductImagePreview :images="!isFetchingProduct ? (product?.images as string[]) :[]" />
 
 					<div class="product-action d-flex flex-column row-gap-4">
 						<div>
@@ -102,7 +102,11 @@ const route = useRoute();
 const { $currentUserHelper } = useNuxtApp();
 const currentUserHelper = $currentUserHelper();
 
-const { data: product, pending } = useFetch("/api/product", {
+const {
+	data: product,
+	pending: isFetchingProduct,
+	error: fetchProductError,
+} = await useFetch("/api/product", {
 	method: "GET",
 	query: { id: route.params.id },
 	transform: (_product) => _product.data as ProductProjection,
@@ -176,6 +180,12 @@ const itemToAdd = computed(() => {
 
 watch(selectedVarieties.value, () => {
 	isInvalid.value = false;
+});
+
+watch(fetchProductError, (error) => {
+	if (error) {
+		alert(error);
+	}
 });
 
 async function addToCart() {
