@@ -72,11 +72,27 @@
 					</div>
 					<p class="description-text whitespace-pre-line">{{ productDescription }}</p>
 					<div class="description-images d-flex flex-wrap justify-content-center gap-4">
-						<img v-for="(img, index) in product?.description.images" :src="img" />
+						<img v-for="(img, index) in product?.description.images" :key="`${index} - ${img.slice(0, 5)}...`" :src="img" />
 					</div>
 				</div>
 			</section>
 		</main>
+
+		<div class="toast-container position-fixed bottom-0 end-0 p-3">
+			<div id="added-to-cart-toast" class="toast" role="alert" data-bs-delay="7500" aria-live="assertive" aria-atomic="true">
+				<div class="toast-header bg-success-subtle">
+					<SvgCart class="me-2" :height="20" :width="20" fill="var(--bs-success)" />
+					<strong class="me-auto">Added To Cart!</strong>
+					<small>Just now</small>
+					<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+				</div>
+				<div class="toast-body">
+					<p class="line-clamp-2 mb-0">
+						{{ quantity }}x of {{ selectedVarieties.length > 0 ? selectedVarieties : "" }} {{ product?.name }}.
+					</p>
+				</div>
+			</div>
+		</div>
 	</div>
 </template>
 
@@ -99,7 +115,7 @@ type AddedItem = {
 };
 
 const route = useRoute();
-const { $currentUserHelper } = useNuxtApp();
+const { $currentUserHelper, $Toast: Toast } = useNuxtApp();
 const currentUserHelper = $currentUserHelper();
 
 const {
@@ -118,6 +134,7 @@ const productDescription = ref("");
 const lastCartAddedItem = ref<AddedItem>();
 const isLoading = ref(false);
 const isInvalid = ref(false);
+const addedToCartToast = ref<typeof Toast.prototype>();
 
 const pageTitle = computed(() => {
 	let maxLength = 20;
@@ -200,6 +217,7 @@ async function addToCart() {
 			await currentUserHelper.cart.fetch();
 			setTimeout(() => {
 				isLoading.value = false;
+				addedToCartToast.value?.show();
 			}, 500);
 		} catch (error) {
 			alert(error);
@@ -221,6 +239,7 @@ async function setToBuyNow() {
 
 onMounted(() => {
 	productDescription.value = product.value?.description.text ?? "";
+	addedToCartToast.value = Toast.getOrCreateInstance("#added-to-cart-toast");
 });
 
 useSeoMeta({
