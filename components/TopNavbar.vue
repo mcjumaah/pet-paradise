@@ -70,9 +70,9 @@
 							</defs>
 						</svg>
 						<span
-							v-for="(instance, index) in 2"
+							v-for="instance in 2"
 							class="cart-item-count position-absolute start-100 translate-middle badge rounded-pill bg-secondary"
-							:class="index === 1 && hasAdded ? 'scale-125 animate-ping z-0' : 'z-1'"
+							:class="instance === 1 && hasAdded ? 'scale-125 animate-ping z-0' : 'z-1'"
 						>
 							{{ cartItemCount }}
 							<span class="visually-hidden">cart items</span>
@@ -131,7 +131,7 @@ export interface CartTooltips {
 	account: typeof Tooltip.prototype;
 }
 
-const { $Tooltip: Tooltip, $currentUserHelper: useCurrentUserHelper } = useNuxtApp();
+const { $currentUserHelper: useCurrentUserHelper, $Tooltip: Tooltip } = useNuxtApp();
 const { status: loginStatus, signOut } = useAuth();
 
 const tooltips = ref(<CartTooltips>{});
@@ -139,12 +139,6 @@ const hasAdded = ref(false);
 
 const isCustomerLoggedIn = computed(() => {
 	return loginStatus.value === "authenticated";
-});
-
-onMounted(() => {
-	tooltips.value.search = Tooltip.getOrCreateInstance("#top-navbar-search-btn");
-	tooltips.value.cart = Tooltip.getOrCreateInstance("#top-navbar-cart-link");
-	tooltips.value.account = Tooltip.getOrCreateInstance("#top-navbar-account-btn");
 });
 
 const cartItemCount = computed(() => {
@@ -162,28 +156,17 @@ watch(
 		}
 	}
 );
+
+onMounted(() => {
+	tooltips.value.search = Tooltip.getOrCreateInstance("#top-navbar-search-btn");
+	tooltips.value.cart = Tooltip.getOrCreateInstance("#top-navbar-cart-link");
+	tooltips.value.account = Tooltip.getOrCreateInstance("#top-navbar-account-btn");
+});
 </script>
 
 <style lang="scss" scoped>
 .nav-icons {
 	> * {
-		&.to-cart {
-			padding: 0.375rem 0.75rem 0.375rem 0.75rem;
-
-			.animate-ping {
-				animation: ping 1.5s cubic-bezier(0, 0, 0.2, 1) infinite !important;
-				transform: scale(1.3) translate(-38.5%, -38.5%) !important;
-
-				@keyframes ping {
-					75%,
-					100% {
-						transform: scale(2);
-						opacity: 0;
-					}
-				}
-			}
-		}
-
 		&:not(:has(> button)):hover,
 		> button:hover {
 			background-color: var(--bs-primary-bg-subtle);
@@ -201,6 +184,28 @@ watch(
 	.search-btn.dropdown {
 		.dropdown-menu {
 			--bs-dropdown-min-width: 25rem;
+		}
+	}
+
+	.to-cart {
+		padding: 0.375rem 0.75rem 0.375rem 0.75rem;
+
+		.animate-ping {
+			animation: ping 1.5s cubic-bezier(0, 0, 0.2, 1) infinite !important;
+			transform: scale(1.3) translate(-38.5%, -38.5%) !important;
+
+			@keyframes ping {
+				75%,
+				100% {
+					transform: scale(2);
+					opacity: 0;
+				}
+			}
+		}
+
+		&.router-link-exact-active {
+			background-color: var(--bs-primary-bg-subtle);
+			border: solid 1px;
 		}
 	}
 }
