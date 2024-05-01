@@ -7,7 +7,7 @@
 			title="Reduce Quantity"
 			type="button"
 			:disabled="quantity <= 1"
-			@click="quantity--"
+			@click="onClickCustomized ? customOnClick('subtract') : quantity--"
 		>
 			-
 		</button>
@@ -19,14 +19,47 @@
 			aria-describedby="button-addon1"
 			v-model="quantity"
 		/>
-		<button v-if="quantity" id="add-quantity" class="btn end-0" title="Add Quantity" type="button" @click="quantity++">
+		<button
+			v-if="quantity"
+			id="add-quantity"
+			class="btn end-0"
+			title="Add Quantity"
+			type="button"
+			@click="onClickCustomized ? customOnClick('add') : quantity++"
+		>
 			+
 		</button>
 	</div>
 </template>
 
 <script setup lang="ts">
+export interface Props {
+	onClickCustomized: boolean;
+}
+const props = withDefaults(defineProps<Props>(), {
+	onClickCustomized: false,
+});
+
+const emits = defineEmits({
+	updateQuantity(payload: number) {
+		if (payload) {
+			return true;
+		}
+	},
+});
+
 const quantity = defineModel({ type: Number, default: 1 });
+
+async function customOnClick(mode: "subtract" | "add") {
+	if (mode == "subtract") {
+		quantity.value--;
+	} else if (mode == "add") {
+		quantity.value++;
+	}
+	await nextTick();
+
+	emits("updateQuantity", quantity.value);
+}
 </script>
 
 <style scoped lang="scss">
