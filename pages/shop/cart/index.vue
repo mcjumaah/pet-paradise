@@ -60,10 +60,14 @@
 							₱{{ parseInt(item.price.toString()) }}
 						</div>
 						<div title="Quantity" class="g-col-3 d-flex justify-content-center">
-							<QuantitySelect v-model="item.quantity" />
+							<QuantitySelect
+								v-model="item.quantity"
+								on-click-customized
+								@update-quantity="(quantity) => updatexItemQuantity(item.id, quantity)"
+							/>
 						</div>
 						<div title="Total Price" class="g-col-3 d-flex justify-content-center text-primary">
-							₱{{ usePerItemTotalPrice(item) }}
+							₱{{ parseInt(item.totalPrice.toString()) }}
 						</div>
 						<div class="g-col-3 d-flex justify-content-center">
 							<button
@@ -109,6 +113,7 @@
 </template>
 
 <script setup lang="ts">
+import type { ProductItem } from "~/server/model/productItem";
 import type { ProductItemsPaginatedProjection } from "~/server/projections/productItemProjections";
 
 export interface CartTooltips {
@@ -153,6 +158,7 @@ const {
 const tooltips = ref(<CartTooltips>{});
 const selectedItemsId = ref<number[]>([]);
 const isCheckingOut = ref<boolean>();
+const lastUpdatedCartItem = ref<ProductItem>();
 
 const isSelectedAll = computed({
 	get: () => selectedItemsId.value.length === cartItems.value?.content.length,
@@ -185,6 +191,22 @@ watch([fetchCartItemsError, deleteCartItemError], ([fetchError, deleteError]) =>
 		alert(error);
 	}
 });
+
+const updatexItemQuantity = _Debounce(async (itemId: number, newQuantity: number) => {
+	try {
+		const response = await $fetch("/api/cart/item/quantity", {
+			method: "PUT",
+			body: {
+				cartItemId: itemId,
+				quantity: newQuantity,
+			},
+		});
+
+		lastUpdatedCartItem.value = response.data;
+	} catch (error) {
+		alert(error);
+	}
+}, 750);
 
 function getIsDeletingItem(itemId: number) {
 	return isDeletingCartItem.value && itemId === selectedItemIdToDelete.value;
