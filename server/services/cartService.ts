@@ -62,13 +62,16 @@ export const getCartItems = async (cartId: number) => {
 
 export const deleteCartItem = async (productItemId: number) => {
 	const productItem = await productItemModel.findById(productItemId);
+	if (!productItem || !productItem.cartId) {
+		throw createError({
+			statusCode: 404,
+			statusMessage: "Product Item Not Found",
+			message: "Cart item with the provided id may not exist.",
+		});
+	}
 
 	const isCartItemDeleted = await productItemModel.deleteById(productItemId);
-
-	let updatedCart: cartModel.Cart | null = null;
-	if (productItem?.cartId) {
-		updatedCart = await updateCartCount(productItem.cartId);
-	}
+	const updatedCart = await updateCartCount(productItem.cartId);
 
 	if (isCartItemDeleted) {
 		return {
@@ -78,7 +81,7 @@ export const deleteCartItem = async (productItemId: number) => {
 		throw createError({
 			statusCode: 404,
 			statusMessage: "Delete Unsuccessful",
-			message: "Cart item with the provided id does not exist.",
+			message: "Cart item with the provided id may not exist.",
 		});
 	}
 };
@@ -101,4 +104,28 @@ export const updateCartCount = async (cartId: number) => {
 	});
 
 	return updatedCart;
+};
+
+export const updateCartItemQuantity = async (productItemId: number, quantity: number) => {
+	const productItem = await productItemModel.findById(productItemId);
+	if (!productItem) {
+		throw createError({
+			statusCode: 404,
+			statusMessage: "Product Item Not Found",
+			message: "Cart item with the provided id may not exist.",
+		});
+	}
+	const productItemUnitPrice = await priceModel.findById(productItem.priceId);
+	if (!productItemUnitPrice) {
+		throw createError({
+			statusCode: 404,
+			statusMessage: "Price Not Found",
+			message: "Cart item does not have a price.",
+		});
+	}
+
+	const newTotalPrice = productItemUnitPrice?.value * quantity;
+	const updatedCartItem = await productItemModel.updateQuantity(productItemId, quantity, newTotalPrice);
+
+	return updatedCartItem;
 };

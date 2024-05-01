@@ -155,6 +155,25 @@ export const update = async (id: number, data: ProductItemDTO) => {
 	}
 };
 
+export const updateQuantity = async (id: number, quantity: number, totalPrice: number) => {
+	try {
+		await sql({
+			query: `
+				UPDATE product_item 
+				SET 
+					quantity = ?, 
+					total_price = ? 
+				WHERE id = ?
+			`,
+			values: [quantity, totalPrice, id],
+		});
+
+		return await findById(id);
+	} catch (error) {
+		throw error;
+	}
+};
+
 export const deleteById = async (id: number) => {
 	try {
 		await sql({

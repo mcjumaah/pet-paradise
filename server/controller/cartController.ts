@@ -129,3 +129,24 @@ export const deleteCartItem = async (event: H3Event) => {
 		throw error;
 	}
 };
+
+export const updateCartItemQuantity = async (event: H3Event) => {
+	try {
+		const body = await readBody(event);
+		const cartItemRequest = {
+			productItemId: body.cartItemId as number,
+			quantity: body.quantity as number,
+		};
+
+		const result = await cartService.updateCartItemQuantity(cartItemRequest.productItemId, cartItemRequest.quantity);
+
+		return {
+			statusCode: 200,
+			statusMessage: "Successfully Updated Quantity",
+			message: "Successfully updated cart item's quantity.",
+			data: result,
+		};
+	} catch (error) {
+		throw error;
+	}
+};

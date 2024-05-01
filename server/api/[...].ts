@@ -19,6 +19,7 @@ router.get("/customer/validate-new-password", defineEventHandler(customerCtrl.va
 
 router.get("/cart", defineEventHandler(cartCtrl.getCart));
 router.get("/cart/items", defineEventHandler(cartCtrl.getCartItems));
+router.put("/cart/item/quantity", defineEventHandler(cartCtrl.updateCartItemQuantity));
 router.delete("/cart/item", defineEventHandler(cartCtrl.deleteCartItem));
 
 export default useBase("/api", router.handler);
