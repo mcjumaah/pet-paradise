@@ -113,7 +113,8 @@ export const addToCart = async (requestBody: { productId: number; priceId: numbe
 	let savedProductItem: productItemModel.ProductItem | null = null;
 	if (similarProductItemInCart) {
 		productItemDto.quantity = productItemDto.quantity + similarProductItemInCart.quantity;
-		productItemDto.totalPrice = productItemDto.totalPrice + similarProductItemInCart.totalPrice;
+		productItemDto.totalPrice =
+			parseInt(productItemDto.totalPrice.toString()) + parseInt(similarProductItemInCart.totalPrice.toString());
 		savedProductItem = await productItemModel.update(similarProductItemInCart.id, productItemDto);
 	} else {
 		savedProductItem = await productItemModel.save(productItemDto);
