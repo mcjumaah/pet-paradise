@@ -78,7 +78,7 @@
 			</section>
 		</main>
 
-		<div class="toast-container position-fixed bottom-0 end-0 p-3">
+		<div class="added-to-cart-toast-container toast-container position-fixed bottom-0 end-0 p-3">
 			<div id="added-to-cart-toast" class="toast" role="alert" data-bs-delay="7500" aria-live="assertive" aria-atomic="true">
 				<div class="toast-header bg-success-subtle">
 					<SvgCart class="me-2" :height="20" :width="20" fill="var(--bs-success)" />
@@ -87,9 +87,12 @@
 					<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
 				</div>
 				<div class="toast-body">
-					<p class="line-clamp-2 mb-0">
+					<NuxtLink
+						to="/shop/cart"
+						class="added-item-details line-clamp-2 mb-0 text-black text-decoration-none transition-all"
+					>
 						{{ quantity }}x of {{ selectedVarieties.length > 0 ? selectedVarieties : "" }} {{ product?.name }}.
-					</p>
+					</NuxtLink>
 				</div>
 			</div>
 		</div>
@@ -299,6 +302,13 @@ useSeoMeta({
 				aspect-ratio: 1 / 1;
 				width: 45%;
 			}
+		}
+	}
+
+	.added-to-cart-toast-container {
+		:deep(.added-item-details:hover) {
+			color: var(--bs-primary) !important;
+			text-decoration: underline !important;
 		}
 	}
 }
