@@ -22,9 +22,9 @@
 
 <script setup lang="ts">
 export interface Props {
-	height: number;
-	width: number;
-	fill: string;
+	height?: number;
+	width?: number;
+	fill?: string;
 }
 const props = withDefaults(defineProps<Props>(), {
 	height: 28,
