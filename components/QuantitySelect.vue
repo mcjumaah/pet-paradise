@@ -34,7 +34,7 @@
 
 <script setup lang="ts">
 export interface Props {
-	onClickCustomized: boolean;
+	onClickCustomized?: boolean;
 }
 const props = withDefaults(defineProps<Props>(), {
 	onClickCustomized: false,
