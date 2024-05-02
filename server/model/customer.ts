@@ -27,7 +27,7 @@ export const findAll = async (pageNum: string = "0") => {
 			pagination: pagination,
 		});
 	} catch (error) {
-		return error;
+		throw error;
 	}
 };
 
@@ -157,7 +157,7 @@ export const update = async (
 
 		return await findById(id);
 	} catch (error) {
-		return error;
+		throw error;
 	}
 };
 
@@ -170,6 +170,6 @@ export const deleteById = async (id: string) => {
 
 		return true;
 	} catch (error) {
-		return error;
+		throw error;
 	}
 };

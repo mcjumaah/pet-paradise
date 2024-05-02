@@ -15,7 +15,7 @@ export const findAll = async () => {
 
 		return keysToCamelCase(result) as Price[];
 	} catch (error) {
-		return error;
+		throw error;
 	}
 };
 
@@ -70,7 +70,7 @@ export const save = async (data: PriceDTO) => {
 
 		return result.length === 1 ? result[0] : null;
 	} catch (error) {
-		return error;
+		throw error;
 	}
 };
 
@@ -89,7 +89,7 @@ export const update = async (id: number, data: PriceDTO) => {
 
 		return await findById(id);
 	} catch (error) {
-		return error;
+		throw error;
 	}
 };
 
@@ -102,6 +102,6 @@ export const deleteById = async (id: string) => {
 
 		return true;
 	} catch (error) {
-		return error;
+		throw error;
 	}
 };
