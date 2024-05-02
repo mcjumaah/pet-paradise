@@ -7,7 +7,7 @@ export type Order = {
 	id: number;
 	orderDate: string;
 	totalPrice: number;
-	paymentDate: number;
+	paymentDate?: number;
 	paymentMethod: OrderPayMethods;
 	customerId: number;
 };
