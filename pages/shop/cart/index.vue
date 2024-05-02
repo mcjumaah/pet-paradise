@@ -226,9 +226,15 @@ function getIsDeletingItem(itemId: number) {
 function setCheckoutItems() {
 	isCheckingOut.value = true;
 
-	cartItems.value?.content.forEach((item) => {
+	cartItems.value?.content.forEach((item, index) => {
 		if (selectedItemsId.value.includes(item.id)) {
-			checkoutItems.value.push(item);
+			const { id, status, ...otherProperties } = item;
+			checkoutItems.value.push({
+				id: index,
+				productItemId: id,
+				origin: "cart",
+				...otherProperties,
+			});
 		}
 	});
 
