@@ -67,7 +67,7 @@
 							/>
 						</div>
 						<div title="Total Price" class="g-col-3 d-flex justify-content-center text-primary">
-							₱{{ parseInt(item.totalPrice.toString()) }}
+							₱{{ usePerItemTotalPrice(item) }}
 						</div>
 						<div class="g-col-3 d-flex justify-content-center">
 							<button
@@ -115,6 +115,17 @@
 <script setup lang="ts">
 import type { ProductItem } from "~/server/model/productItem";
 import type { ProductItemsPaginatedProjection } from "~/server/projections/productItemProjections";
+
+type UpdateItem = {
+	data: {
+		statusCode: number;
+		statusMessage: string;
+		message: string;
+		body: {
+			productItem: ProductItem;
+		};
+	};
+};
 
 export interface CartTooltips {
 	selectAll: typeof Tooltip.prototype;
@@ -194,7 +205,7 @@ watch([fetchCartItemsError, deleteCartItemError], ([fetchError, deleteError]) =>
 
 const updatexItemQuantity = _Debounce(async (itemId: number, newQuantity: number) => {
 	try {
-		const response = await $fetch("/api/cart/item/quantity", {
+		const response: UpdateItem = await $fetch("/api/cart/item/quantity", {
 			method: "PUT",
 			body: {
 				cartItemId: itemId,
@@ -202,7 +213,7 @@ const updatexItemQuantity = _Debounce(async (itemId: number, newQuantity: number
 			},
 		});
 
-		lastUpdatedCartItem.value = response.data;
+		lastUpdatedCartItem.value = response.data.body.productItem;
 	} catch (error) {
 		alert(error);
 	}
