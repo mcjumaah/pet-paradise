@@ -120,6 +120,7 @@ type AddedItem = {
 const route = useRoute();
 const { $currentUserHelper, $Toast: Toast } = useNuxtApp();
 const currentUserHelper = $currentUserHelper();
+const checkoutItems = useCheckoutItems();
 
 const {
 	data: product,
@@ -230,14 +231,18 @@ async function addToCart() {
 	}
 }
 async function setToBuyNow() {
-	// let latestProductInCart = cartItems.value[cartItems.value.length - 1];
-	// let productToAdd = {
-	// 	id: latestProductInCart.id + 1,
-	// 	...neededProductDetailsToMove.value,
-	// 	selectedVariety: selectedVarieties.value,
-	// 	quantity: quantity.value,
-	// };
-	// checkoutItems.value.push(productToAdd);
+	if (product.value && selectedVarietiesPrice.value) {
+		checkoutItems.value.push({
+			id: 1,
+			origin: "buy-now",
+			name: product.value?.name,
+			price: selectedVarietiesPrice.value?.value,
+			quantity: itemToAdd.value.quantity,
+			totalPrice: selectedVarietiesPrice.value?.value * itemToAdd.value.quantity,
+			selection: selectedVarieties.value,
+			previewImage: product.value.images[0],
+		});
+	}
 }
 
 onMounted(() => {
