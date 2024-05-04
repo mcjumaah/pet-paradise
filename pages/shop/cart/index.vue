@@ -82,6 +82,14 @@
 					</div>
 				</div>
 			</div>
+
+			<div
+				v-if="cartItems?.content && cartItems?.content.length <= 0"
+				class="empty-cart-placeholder d-flex flex-column justify-content-center align-items-center row-gap-2"
+			>
+				<img class="empty-cart-image opacity-75" src="/images/empty-cart.png" alt="Empty Cart" />
+				<h4 class="text-muted">Cart is Empty. Add products from the <NuxtLink to="/shop">Shop</NuxtLink>.</h4>
+			</div>
 		</TransitionGroup>
 
 		<div class="d-flex align-items-center column-gap-3 justify-content-end pe-5 my-3">
@@ -172,7 +180,7 @@ const isCheckingOut = ref<boolean>();
 const lastUpdatedCartItem = ref<ProductItem>();
 
 const isSelectedAll = computed({
-	get: () => selectedItemsId.value.length === cartItems.value?.content.length,
+	get: () => selectedItemsId.value.length === cartItems.value?.content.length && cartItems.value?.content.length > 0,
 	set: (value) => {
 		if (value && cartItems.value) {
 			selectedItemsId.value = cartItems.value.content.map((item) => item.id);
@@ -253,6 +261,18 @@ onMounted(() => {
 		.product-image {
 			height: 6.25rem;
 			width: 6.25rem;
+		}
+	}
+
+	.empty-cart-placeholder {
+		height: 132px;
+		width: 934.4px;
+		border: 2.35px dashed var(--bs-dark-border-subtle);
+		border-radius: 6px;
+
+		.empty-cart-image {
+			height: 3.5rem;
+			width: 3.5rem;
 		}
 	}
 
