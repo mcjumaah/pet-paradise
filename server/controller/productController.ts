@@ -1,5 +1,6 @@
 import { H3Event } from "h3";
 import * as productModel from "../model/product";
+import * as orderModel from "../model/order";
 import * as productService from "../services/productService";
 
 export const getProducts = async (event: H3Event) => {
@@ -123,6 +124,30 @@ export const addToCart = async (event: H3Event) => {
 				statusCode: 200,
 				statusMessage: "OK",
 				message: "Successfully added to cart.",
+				body: result,
+			},
+		};
+	} catch (error) {
+		throw error;
+	}
+};
+
+export const orderCheckout = async (event: H3Event) => {
+	try {
+		const body = await readBody(event);
+		const requestBody = {
+			productItemsId: body.productItemsId as number[],
+			paymentMethod: body.paymentMethod as orderModel.OrderPayMethods,
+			customerId: body.customerId as number,
+		};
+
+		const result = await productService.orderCheckout(requestBody);
+
+		return {
+			data: {
+				statusCode: 200,
+				statusMessage: "OK",
+				message: "Successfully ordered.",
 				body: result,
 			},
 		};

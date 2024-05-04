@@ -4,12 +4,14 @@ import * as selectionModel from "../model/selection";
 import * as varietyModel from "../model/variety";
 import * as descriptionModel from "../model/description";
 import * as productItemModel from "../model/productItem";
+import * as orderModel from "../model/order";
 import * as priceService from "./priceService";
 import * as cartService from "./cartService";
 import { ProductProjection, ProductSummaryProjection, ProductsPaginatedProjection } from "../projections/productProjections";
 import { PriceProjection } from "../projections/priceProjections";
 import { SelectionProjection } from "../projections/selectionProjection";
 import { DescriptionProjection } from "../projections/descriptionProjection";
+import moment from "moment";
 
 export const getProducts = async (pageNum: string = "0") => {
 	const result = (await productModel.findAll(pageNum)) as ProductsPaginatedProjection;
@@ -100,7 +102,7 @@ export const addToCart = async (requestBody: { productId: number; priceId: numbe
 	} else {
 		throw createError({
 			statusCode: 404,
-			statusMessage: "`price` Not Found",
+			statusMessage: "Price Not Found",
 			message: "Supplied `priceId` does not exist.",
 		});
 	}
@@ -123,4 +125,49 @@ export const addToCart = async (requestBody: { productId: number; priceId: numbe
 	const updatedCart = await cartService.updateCartCount(productItemDto.cartId);
 
 	return { productItem: savedProductItem, cart: updatedCart ? updatedCart : null };
+};
+
+export const orderCheckout = async (requestBody: {
+	productItemsId: number[];
+	paymentMethod: orderModel.OrderPayMethods;
+	customerId: number;
+}) => {
+	const orderDto: orderModel.OrderDTO = {
+		orderDate: moment().format("YYYY-MM-DD HH:mm:ss"),
+		totalPrice: 0,
+		paymentMethod: "COD",
+		customerId: requestBody.customerId,
+	};
+
+	for (const id of requestBody.productItemsId) {
+		const productItem = await productItemModel.findById(id);
+		if (!productItem) {
+			throw createError({
+				statusCode: 404,
+				statusMessage: "Product Item Not Found",
+				message: "An ID in the supplied `productItemsId` may not exist.",
+			});
+		}
+
+		orderDto.totalPrice = orderDto.totalPrice + parseInt(productItem?.totalPrice.toString());
+	}
+
+	const order = await orderModel.save(orderDto);
+	if (!order) {
+		throw createError({
+			statusCode: 500,
+			statusMessage: "Internal Serve Error",
+			message: "Something went wrong in saving `order`. Can't find potentially saved `order`.",
+		});
+	}
+
+	requestBody.productItemsId.forEach(async (id) => {
+		try {
+			await productItemModel.moveToOrder(id, order.id);
+		} catch (error) {
+			throw error;
+		}
+	});
+
+	return order;
 };

@@ -11,6 +11,7 @@ router.post("/product", defineEventHandler(productCtrl.createProduct));
 router.put("/product", defineEventHandler(productCtrl.editProduct));
 router.delete("/product", defineEventHandler(productCtrl.deleteProduct));
 router.post("/product/to-cart", defineEventHandler(productCtrl.addToCart));
+router.post("/products/to-order", defineEventHandler(productCtrl.orderCheckout));
 
 router.get("/customer", defineEventHandler(customerCtrl.getCustomer));
 router.post("/customer", defineEventHandler(customerCtrl.createCustomer));
