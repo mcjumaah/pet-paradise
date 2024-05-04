@@ -16,7 +16,7 @@ export type OrderDTO = Pick<Order, "orderDate" | "totalPrice" | "paymentDate" | 
 
 export const findAll = async () => {
 	try {
-		const result = await sql({ query: `SELECT * FROM order` });
+		const result = await sql({ query: `SELECT * FROM \`order\`` });
 
 		return keysToCamelCase(result) as Order[];
 	} catch (error) {
@@ -28,7 +28,7 @@ export const findById = async (id: number) => {
 	try {
 		const result = keysToCamelCase(
 			await sql({
-				query: `SELECT * FROM order WHERE id = ?`,
+				query: `SELECT * FROM \`order\` WHERE id = ?`,
 				values: [id],
 			})
 		) as Order[];
@@ -43,7 +43,7 @@ export const save = async (data: OrderDTO) => {
 	try {
 		await sql({
 			query: `
-				INSERT INTO order (
+				INSERT INTO \`order\` (
 					order_date, 
 					total_price, 
 					payment_date, 
@@ -51,12 +51,12 @@ export const save = async (data: OrderDTO) => {
 					customer_id
 				) VALUES (?, ?, ?, ?, ?)
 			`,
-			values: [data.orderDate, data.totalPrice, data.paymentDate, data.paymentMethod, data.customerId],
+			values: [data.orderDate, data.totalPrice, data.paymentDate ?? null, data.paymentMethod, data.customerId],
 		});
 
 		const result = keysToCamelCase(
 			await sql({
-				query: `SELECT * FROM order WHERE id = LAST_INSERT_ID()`,
+				query: `SELECT * FROM \`order\` WHERE id = LAST_INSERT_ID()`,
 			})
 		) as Order[];
 
@@ -70,7 +70,7 @@ export const update = async (id: number, data: OrderDTO) => {
 	try {
 		await sql({
 			query: `
-				UPDATE order 
+				UPDATE \`order\` 
 				SET 
 					order_date = ?, 
 					total_price = ?, 
@@ -91,7 +91,7 @@ export const update = async (id: number, data: OrderDTO) => {
 export const deleteById = async (id: number) => {
 	try {
 		await sql({
-			query: `DELETE FROM order WHERE id = ?`,
+			query: `DELETE FROM \`order\` WHERE id = ?`,
 			values: [id],
 		});
 
