@@ -197,9 +197,10 @@ const birthYear = computed({
 						display: flex;
 						top: 50%;
 						right: 0.5rem;
-						transform: translateY(-50%);
+						transform: translateY(-60%) rotate(-90deg);
 						width: 1.5rem;
 						height: 1.5rem;
+						opacity: 0.75;
 						transition-property: all !important;
 						transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1) !important;
 						transition-duration: 150ms !important;
@@ -207,7 +208,7 @@ const birthYear = computed({
 					}
 
 					&:has(.dp__input_focus)::after {
-						transform: translateY(-50%) rotate(180deg) !important;
+						transform: translateY(-30%) rotate(90deg) !important;
 					}
 				}
 
