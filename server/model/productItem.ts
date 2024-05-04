@@ -174,6 +174,26 @@ export const updateQuantity = async (id: number, quantity: number, totalPrice: n
 	}
 };
 
+export const moveToOrder = async (id: number, orderId: number) => {
+	try {
+		await sql({
+			query: `
+				UPDATE product_item 
+				SET 
+					status = 'ON_ORDER', 
+					order_id = ?, 
+					cart_id = NULL 
+				WHERE id = ?
+			`,
+			values: [orderId, id],
+		});
+
+		return await findById(id);
+	} catch (error) {
+		throw error;
+	}
+};
+
 export const deleteById = async (id: number) => {
 	try {
 		await sql({
