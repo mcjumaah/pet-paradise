@@ -1,5 +1,6 @@
 import { sql } from "../db";
 import { keysToCamelCase } from "../utils/entityFieldsUtil";
+import * as shipmentModel from "../model/shipment";
 
 export type OrderPayMethods = "COD";
 
@@ -13,6 +14,9 @@ export type Order = {
 };
 
 export type OrderDTO = Pick<Order, "orderDate" | "totalPrice" | "paymentDate" | "paymentMethod" | "customerId">;
+
+export type OrderCheckoutDTO = { productItemsId: number[] } & Pick<OrderDTO, "paymentMethod" | "customerId"> &
+	Pick<shipmentModel.ShipmentDTO, "address" | "zipCode" | "country">;
 
 export const findAll = async () => {
 	try {
