@@ -76,7 +76,7 @@ export const update = async (id: number, data: OrderDTO) => {
 					total_price = ?, 
 					payment_date = ?, 
 					payment_method = ?, 
-					customer_id = ?, 
+					customer_id = ? 
 				WHERE id = ?
 			`,
 			values: [data.orderDate, data.totalPrice, data.paymentDate, data.paymentMethod, data.customerId, id],
