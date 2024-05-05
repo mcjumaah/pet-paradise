@@ -85,6 +85,9 @@
 </template>
 
 <script setup lang="ts">
+import type { CustomerProjection } from "~/server/projections/customerProjections";
+import formatFetchErrorResponseData from "~/utils/formatFetchError";
+
 definePageMeta({
 	auth: false,
 	middleware: [
@@ -94,9 +97,6 @@ definePageMeta({
 		},
 	],
 });
-
-import type { CustomerProjection } from "~/server/projections/customerProjections";
-import formatFetchErrorResponseData from "~/utils/formatFetchError";
 
 interface CustomerForm {
 	firstName: string;
