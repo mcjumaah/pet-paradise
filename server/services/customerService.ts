@@ -1,6 +1,7 @@
 import * as customerModel from "../model/customer";
 import * as cartModel from "../model/cart";
 import { CustomerProjection } from "../projections/customerProjections";
+import { validateCustomerForm } from "../utils/customerValidation";
 
 export const getCustomer = async (id?: number, email?: string) => {
 	let customer: customerModel.Customer | null;
@@ -19,34 +20,7 @@ export const getCustomer = async (id?: number, email?: string) => {
 };
 
 export const createCustomer = async (customerDto: customerModel.CustomerDTO) => {
-	const notRequiredField = ["middleName"];
-
-	for (const key in customerDto) {
-		if (
-			customerDto.hasOwnProperty(key) &&
-			customerDto[key as keyof typeof customerDto]?.trim() === "" &&
-			!notRequiredField.includes(key)
-		) {
-			throw createError({
-				statusCode: 400,
-				statusMessage: `Incomplete Request Form`,
-				message: `Missing value for \`${key}\` field.`,
-			});
-		} else if (key === "email") {
-			validateIsStringEmail(customerDto[key]);
-		} else if (key === "password") {
-			const passwordValidation = validatePassword(customerDto[key]);
-			if (!passwordValidation.isStrong) {
-				throw createError({
-					statusCode: 400,
-					statusMessage: `Weak Password`,
-					message: `Supplied password is weak.`,
-				});
-			}
-		} else if (key === "phoneNumber") {
-			validateIsStringPhoneNumber(customerDto[key]);
-		}
-	}
+	await validateCustomerForm(customerDto);
 
 	const createdCustomer = await validateIsCustomerFound(await customerModel.save(customerDto));
 	const cart = await cartModel.save({ itemCount: 0, customerId: createdCustomer.id });
@@ -62,7 +36,7 @@ export const createCustomer = async (customerDto: customerModel.CustomerDTO) => 
 };
 
 export const validateNewEmail = async (email: string) => {
-	validateIsStringEmail(email);
+	await validateIsStringEmail(email);
 	const customer = await customerModel.findOneByEmail(email);
 
 	return {
@@ -70,3 +44,5 @@ export const validateNewEmail = async (email: string) => {
 		customer: customer ? mapObjectToClass(customer, CustomerProjection) : null,
 	};
 };
+
+export const editCustomer = async (id: number, requestBody: customerModel.CustomerUpdateDTO) => {};
