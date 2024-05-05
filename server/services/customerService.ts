@@ -45,4 +45,26 @@ export const validateNewEmail = async (email: string) => {
 	};
 };
 
-export const editCustomer = async (id: number, requestBody: customerModel.CustomerUpdateDTO) => {};
+export const editCustomer = async (id: number, customerDto: customerModel.CustomerUpdateDTO) => {
+	await validateCustomerForm(customerDto);
+
+	if (await customerModel.findById(id)) {
+		const result = await customerModel.update(id, customerDto);
+
+		if (result) {
+			return mapObjectToClass(result, CustomerProjection);
+		} else {
+			throw createError({
+				statusCode: 404,
+				statusMessage: "Customer Not Found",
+				message: "No existing customer with the provided id value.",
+			});
+		}
+	} else {
+		throw createError({
+			statusCode: 404,
+			statusMessage: "Customer Not Found",
+			message: "No existing customer with the provided id value.",
+		});
+	}
+};

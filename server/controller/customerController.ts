@@ -59,26 +59,30 @@ export const createCustomer = async (event: H3Event) => {
 	}
 };
 
-export const update = async (event: H3Event) => {
+export const editCustomer = async (event: H3Event) => {
 	try {
 		const queryParam = getQuery(event);
 		const body = await readBody(event);
-		const requestBody: Omit<customerModel.CustomerDTO, "password"> = {
+		const requestBody: customerModel.CustomerUpdateDTO = {
 			username: body.username,
 			firstName: body.firstName,
 			lastName: body.lastName,
 			middleName: body.middleName,
-			email: body.email,
 			address: body.address,
 			phoneNumber: body.phoneNumber,
 			gender: body.gender,
 			birthDate: body.birthDate,
 		};
 
-		const result = await customerModel.update(queryParam.id as number, requestBody);
+		const result = await customerService.editCustomer(queryParam.id as number, requestBody);
 
 		return {
-			data: result,
+			data: {
+				statusCode: 200,
+				statusMessage: "OK",
+				message: "Successfully edited customer information.",
+				body: result,
+			},
 		};
 	} catch {
 		throw createError({

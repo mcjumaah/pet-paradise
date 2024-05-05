@@ -15,6 +15,7 @@ router.post("/products/to-order", defineEventHandler(productCtrl.orderCheckout))
 
 router.get("/customer", defineEventHandler(customerCtrl.getCustomer));
 router.post("/customer", defineEventHandler(customerCtrl.createCustomer));
+router.put("/customer", defineEventHandler(customerCtrl.editCustomer));
 router.get("/customer/validate-new-email", defineEventHandler(customerCtrl.validateNewEmail));
 router.get("/customer/validate-new-password", defineEventHandler(customerCtrl.validateNewPassword));
 
