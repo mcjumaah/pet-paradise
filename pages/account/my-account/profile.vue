@@ -122,13 +122,16 @@
 <script setup lang="ts">
 import moment from "moment";
 
+const { $currentUserHelper } = useNuxtApp();
+const currentUserData = $currentUserHelper().userData;
+
 const user = ref({
-	username: "juandelacruz123",
-	name: "Juan Dela Cruz",
-	email: "juandelacruz123@gmail.com",
-	phoneNum: "09123456789",
-	gender: "male",
-	birthDate: moment("2000-08-18"),
+	username: currentUserData?.username,
+	name: `${currentUserData?.firstName} ${currentUserData?.lastName}`,
+	email: currentUserData?.email,
+	phoneNum: currentUserData?.phoneNumber,
+	gender: currentUserData?.gender.toLowerCase(),
+	birthDate: moment(currentUserData?.birthDate),
 });
 
 const birthMonth = computed({
@@ -200,7 +203,7 @@ const birthYear = computed({
 						transform: translateY(-60%) rotate(-90deg);
 						width: 1.5rem;
 						height: 1.5rem;
-						opacity: 0.75;
+						opacity: 0.5;
 						transition-property: all !important;
 						transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1) !important;
 						transition-duration: 150ms !important;
