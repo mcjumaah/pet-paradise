@@ -135,10 +135,13 @@ export const addToCart = async (event: H3Event) => {
 export const orderCheckout = async (event: H3Event) => {
 	try {
 		const body = await readBody(event);
-		const requestBody = {
-			productItemsId: body.productItemsId as number[],
-			paymentMethod: body.paymentMethod as orderModel.OrderPayMethods,
-			customerId: body.customerId as number,
+		const requestBody: orderModel.OrderCheckoutDTO = {
+			productItemsId: body.productItemsId,
+			paymentMethod: body.paymentMethod,
+			address: body.address,
+			zipCode: body.zipCode,
+			country: body.country,
+			customerId: body.customerId,
 		};
 
 		const result = await productService.orderCheckout(requestBody);

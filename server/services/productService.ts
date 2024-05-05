@@ -5,6 +5,7 @@ import * as varietyModel from "../model/variety";
 import * as descriptionModel from "../model/description";
 import * as productItemModel from "../model/productItem";
 import * as orderModel from "../model/order";
+import * as shipmentModel from "../model/shipment";
 import * as priceService from "./priceService";
 import * as cartService from "./cartService";
 import { ProductProjection, ProductSummaryProjection, ProductsPaginatedProjection } from "../projections/productProjections";
@@ -127,19 +128,15 @@ export const addToCart = async (requestBody: { productId: number; priceId: numbe
 	return { productItem: savedProductItem, cart: updatedCart ? updatedCart : null };
 };
 
-export const orderCheckout = async (requestBody: {
-	productItemsId: number[];
-	paymentMethod: orderModel.OrderPayMethods;
-	customerId: number;
-}) => {
+export const orderCheckout = async (orderCheckoutDto: orderModel.OrderCheckoutDTO) => {
 	const orderDto: orderModel.OrderDTO = {
 		orderDate: moment().format("YYYY-MM-DD HH:mm:ss"),
 		totalPrice: 0,
 		paymentMethod: "COD",
-		customerId: requestBody.customerId,
+		customerId: orderCheckoutDto.customerId,
 	};
 
-	for (const id of requestBody.productItemsId) {
+	for (const id of orderCheckoutDto.productItemsId) {
 		const productItem = await productItemModel.findById(id);
 		if (!productItem) {
 			throw createError({
@@ -161,7 +158,16 @@ export const orderCheckout = async (requestBody: {
 		});
 	}
 
-	requestBody.productItemsId.forEach(async (id) => {
+	const shipment = await shipmentModel.save({
+		shipmentDate: moment(orderDto.orderDate).add(2, "days").format("YYYY-MM-DD HH:mm:ss"),
+		address: orderCheckoutDto.address,
+		zipCode: orderCheckoutDto.zipCode,
+		country: orderCheckoutDto.country,
+		customerId: orderDto.customerId,
+		orderId: order.id,
+	});
+
+	orderCheckoutDto.productItemsId.forEach(async (id) => {
 		try {
 			await productItemModel.moveToOrder(id, order.id);
 		} catch (error) {
@@ -169,5 +175,8 @@ export const orderCheckout = async (requestBody: {
 		}
 	});
 
-	return order;
+	return {
+		order: order,
+		shipment: shipment,
+	};
 };
