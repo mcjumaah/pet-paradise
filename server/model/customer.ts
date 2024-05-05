@@ -32,6 +32,8 @@ export type CustomerDTO = Pick<
 	| "birthDate"
 >;
 
+export type CustomerUpdateDTO = Omit<CustomerDTO, "email" | "password">;
+
 export const findAll = async (pageNum: number = 0) => {
 	try {
 		const { result, pagination } = await paginationSql(pageNum, `SELECT * FROM customer`);
@@ -124,7 +126,7 @@ export const save = async (data: CustomerDTO) => {
 					address, 
 					phone_number, 
 					gender, 
-					birthDate
+					birth_date
 				) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
 			`,
 			values: [
@@ -153,7 +155,7 @@ export const save = async (data: CustomerDTO) => {
 	}
 };
 
-export const update = async (id: number, data: Omit<CustomerDTO, "password">) => {
+export const update = async (id: number, data: Omit<CustomerDTO, "email" | "password">) => {
 	try {
 		await sql({
 			query: `
@@ -163,11 +165,10 @@ export const update = async (id: number, data: Omit<CustomerDTO, "password">) =>
 					first_name = ?, 
 					last_name = ?, 
 					middle_name = ?, 
-					email = ?, 
 					address = ?, 
 					phone_number = ?, 
 					gender = ?, 
-					birthDate = ? 
+					birth_date = ? 
 				WHERE id = ?
 			`,
 			values: [
@@ -175,7 +176,6 @@ export const update = async (id: number, data: Omit<CustomerDTO, "password">) =>
 				data.firstName,
 				data.lastName,
 				data.middleName,
-				data.email,
 				data.address,
 				data.phoneNumber,
 				data.gender,
