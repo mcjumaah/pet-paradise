@@ -7,7 +7,7 @@ export const getProducts = async (event: H3Event) => {
 	try {
 		const queryParam = getQuery(event);
 
-		const result = await productService.getProducts(queryParam.pageNum as string);
+		const result = await productService.getProducts(queryParam.pageNum as number);
 
 		return {
 			data: result,

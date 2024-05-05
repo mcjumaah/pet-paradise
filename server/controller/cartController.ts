@@ -6,7 +6,7 @@ export const getCarts = async (event: H3Event) => {
 	try {
 		const queryParam = getQuery(event);
 
-		const result = await cartModel.findAll(queryParam.pageNum as string);
+		const result = await cartModel.findAll(queryParam.pageNum as number);
 
 		return {
 			data: result,

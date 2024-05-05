@@ -13,7 +13,7 @@ export type Product = {
 
 export type ProductDTO = Pick<Product, "sku" | "name" | "stock" | "images" | "soldNum">;
 
-export const findAll = async (pageNum: string = "0") => {
+export const findAll = async (pageNum: number = 0) => {
 	try {
 		const { result, pagination } = await paginationSql(pageNum, `SELECT * FROM product`);
 

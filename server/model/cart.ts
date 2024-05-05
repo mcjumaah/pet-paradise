@@ -15,7 +15,7 @@ export type CartPaginated = {
 	pagination: Pagination;
 };
 
-export const findAll = async (pageNum: string = "0") => {
+export const findAll = async (pageNum: number = 0) => {
 	try {
 		const { result, pagination } = await paginationSql(pageNum, `SELECT * FROM cart`);
 

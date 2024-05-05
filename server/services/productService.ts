@@ -13,7 +13,7 @@ import { SelectionProjection } from "../projections/selectionProjection";
 import { DescriptionProjection } from "../projections/descriptionProjection";
 import moment from "moment";
 
-export const getProducts = async (pageNum: string = "0") => {
+export const getProducts = async (pageNum: number = 0) => {
 	const result = (await productModel.findAll(pageNum)) as ProductsPaginatedProjection;
 
 	for (const [index, product] of result.content.entries()) {

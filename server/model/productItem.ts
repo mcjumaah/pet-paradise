@@ -23,7 +23,7 @@ export type ProductItemPaginated = {
 	pagination: Pagination;
 };
 
-export const findAll = async (pageNum: string = "0") => {
+export const findAll = async (pageNum: number = 0) => {
 	try {
 		const { result, pagination } = await paginationSql(pageNum, `SELECT * FROM product_item`);
 
@@ -36,7 +36,7 @@ export const findAll = async (pageNum: string = "0") => {
 	}
 };
 
-export const findAllByCartId = async (cartId: string, pageNum: string = "0") => {
+export const findAllByCartId = async (cartId: string, pageNum: number = 0) => {
 	try {
 		const { result, pagination } = await paginationSql(pageNum, `SELECT * FROM product_item WHERE cart_id = ?`, [cartId]);
 

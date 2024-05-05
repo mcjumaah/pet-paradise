@@ -2,7 +2,7 @@ import * as customerModel from "../model/customer";
 import * as cartModel from "../model/cart";
 import { CustomerProjection } from "../projections/customerProjections";
 
-export const getCustomer = async (id?: string, email?: string) => {
+export const getCustomer = async (id?: number, email?: string) => {
 	let customer: CustomerProjection | null;
 
 	if (id || email) {

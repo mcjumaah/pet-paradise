@@ -14,14 +14,13 @@ export type PaginationSql = {
 };
 
 export const paginationSql: (
-	pageNum: string | undefined,
+	pageNum: number | undefined,
 	paginationQuery: string,
 	paginationValues?: any[] | null
-) => Promise<PaginationSql> = async (pageNum = "0", paginationQuery, paginationValues = null) => {
+) => Promise<PaginationSql> = async (pageNum = 0, paginationQuery, paginationValues = null) => {
 	try {
-		const pageNumInt = parseInt(pageNum);
 		const pageSize = 10;
-		const offset = pageNumInt * pageSize;
+		const offset = pageNum * pageSize;
 
 		let result: any[];
 		if (paginationValues) {
@@ -45,11 +44,11 @@ export const paginationSql: (
 		return {
 			result,
 			pagination: {
-				pageNumber: pageNumInt,
+				pageNumber: pageNum,
 				pageSize: pageSize,
 				totalElements: result.length,
 				totalPages: totalPages,
-				isLastPage: pageNumInt === totalPages - 1,
+				isLastPage: pageNum === totalPages - 1,
 			},
 		};
 	} catch (error) {
