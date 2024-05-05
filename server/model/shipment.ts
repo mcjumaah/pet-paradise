@@ -5,7 +5,7 @@ export type Shipment = {
 	id: number;
 	shipmentDate: string;
 	address: string;
-	zipCode: number;
+	zipCode: string;
 	country: string;
 	customerId: number;
 	orderId: number;
