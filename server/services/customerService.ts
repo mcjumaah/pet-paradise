@@ -3,7 +3,7 @@ import * as cartModel from "../model/cart";
 import { CustomerProjection } from "../projections/customerProjections";
 
 export const getCustomer = async (id?: number, email?: string) => {
-	let customer: CustomerProjection | null;
+	let customer: customerModel.Customer | null;
 
 	if (id || email) {
 		customer = await customerModel.findOneByIdAndEmail(id, email);
@@ -24,7 +24,7 @@ export const createCustomer = async (customerDto: customerModel.CustomerDTO) => 
 	for (const key in customerDto) {
 		if (
 			customerDto.hasOwnProperty(key) &&
-			customerDto[key as keyof typeof customerDto].trim() === "" &&
+			customerDto[key as keyof typeof customerDto]?.trim() === "" &&
 			!notRequiredField.includes(key)
 		) {
 			throw createError({
@@ -62,13 +62,11 @@ export const createCustomer = async (customerDto: customerModel.CustomerDTO) => 
 };
 
 export const validateNewEmail = async (email: string) => {
-	let customer: CustomerProjection | null;
-
 	validateIsStringEmail(email);
-	customer = await customerModel.findOneByEmail(email);
+	const customer = await customerModel.findOneByEmail(email);
 
 	return {
 		available: customer === null,
-		customer: customer ?? null,
+		customer: customer ? mapObjectToClass(customer, CustomerProjection) : null,
 	};
 };

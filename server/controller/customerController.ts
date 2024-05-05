@@ -1,13 +1,12 @@
 import { H3Event } from "h3";
 import * as customerModel from "../model/customer";
 import * as customerService from "../services/customerService";
-import { CustomerProjection } from "../projections/customerProjections";
 
 export const findAll = async (event: H3Event) => {
 	try {
 		const queryParam = getQuery(event);
 
-		const result = await customerModel.findAll(queryParam.pageNum as string);
+		const result = await customerModel.findAll(queryParam.pageNum as number);
 
 		return {
 			data: result,
@@ -24,7 +23,7 @@ export const getCustomer = async (event: H3Event) => {
 	try {
 		const queryParam = getQuery(event);
 
-		const result = await customerService.getCustomer(queryParam.id as string, queryParam.email as string);
+		const result = await customerService.getCustomer(queryParam.id as number, queryParam.email as string);
 
 		return {
 			data: result,
@@ -37,7 +36,8 @@ export const getCustomer = async (event: H3Event) => {
 export const createCustomer = async (event: H3Event) => {
 	try {
 		const body = await readBody(event);
-		const customerRequest = {
+		const customerRequest: customerModel.CustomerDTO = {
+			username: body.username,
 			firstName: body.firstName,
 			lastName: body.lastName,
 			middleName: body.middleName,
@@ -45,6 +45,8 @@ export const createCustomer = async (event: H3Event) => {
 			password: body.password,
 			address: body.address,
 			phoneNumber: body.phoneNumber,
+			gender: body.gender,
+			birthDate: body.birthDate,
 		};
 
 		const result = await customerService.createCustomer(customerRequest);
@@ -61,16 +63,19 @@ export const update = async (event: H3Event) => {
 	try {
 		const queryParam = getQuery(event);
 		const body = await readBody(event);
-
-		const result = await customerModel.update(queryParam.id as string, {
+		const requestBody: Omit<customerModel.CustomerDTO, "password"> = {
+			username: body.username,
 			firstName: body.firstName,
 			lastName: body.lastName,
 			middleName: body.middleName,
 			email: body.email,
-			password: body.password,
 			address: body.address,
 			phoneNumber: body.phoneNumber,
-		});
+			gender: body.gender,
+			birthDate: body.birthDate,
+		};
+
+		const result = await customerModel.update(queryParam.id as number, requestBody);
 
 		return {
 			data: result,
@@ -87,7 +92,7 @@ export const deleteOne = async (event: H3Event) => {
 	try {
 		const queryParam = getQuery(event);
 
-		const result = await customerModel.deleteById(queryParam.id as string);
+		const result = await customerModel.deleteById(queryParam.id as number);
 
 		if (result) {
 			return {

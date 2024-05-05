@@ -1,6 +1,7 @@
+import * as customerModel from "../model/customer";
 import { CustomerProjection } from "../projections/customerProjections";
 
-export const validateIsCustomerFound = (customer: CustomerProjection | null) => {
+export const validateIsCustomerFound = (customer: customerModel.Customer | null) => {
 	if (customer) {
 		return mapObjectToClass(customer, CustomerProjection);
 	} else {

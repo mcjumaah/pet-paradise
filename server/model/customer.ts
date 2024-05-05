@@ -2,23 +2,37 @@ import { sql } from "../db";
 import { keysToCamelCase } from "../utils/entityFieldsUtil";
 import { paginationSql } from "../utils/paginationUtil";
 
+export type Gender = "MALE" | "FEMALE" | "OTHER";
+
 export type Customer = {
 	id: number;
+	username: string;
 	firstName: string;
 	lastName: string;
-	middleName: string;
+	middleName?: string;
 	email: string;
 	password: string;
 	address: string;
 	phoneNumber: string;
+	gender: Gender;
+	birthDate: string;
 };
 
 export type CustomerDTO = Pick<
 	Customer,
-	"firstName" | "lastName" | "middleName" | "email" | "password" | "address" | "phoneNumber"
+	| "username"
+	| "firstName"
+	| "lastName"
+	| "middleName"
+	| "email"
+	| "password"
+	| "address"
+	| "phoneNumber"
+	| "gender"
+	| "birthDate"
 >;
 
-export const findAll = async (pageNum: string = "0") => {
+export const findAll = async (pageNum: number = 0) => {
 	try {
 		const { result, pagination } = await paginationSql(pageNum, `SELECT * FROM customer`);
 
@@ -31,7 +45,7 @@ export const findAll = async (pageNum: string = "0") => {
 	}
 };
 
-export const findById = async (id: string) => {
+export const findById = async (id: number) => {
 	try {
 		const result = keysToCamelCase(
 			await sql({
@@ -61,7 +75,7 @@ export const findOneByEmail = async (email: string) => {
 	}
 };
 
-export const findOneByIdAndEmail = async (id: string | null = null, email: string | null = null) => {
+export const findOneByIdAndEmail = async (id: number | null = null, email: string | null = null) => {
 	try {
 		const result = keysToCamelCase(
 			await sql({
@@ -101,16 +115,30 @@ export const save = async (data: CustomerDTO) => {
 		await sql({
 			query: `
 				INSERT INTO customer (
+					username, 
 					first_name, 
 					last_name, 
 					middle_name, 
 					email, 
 					password, 
 					address, 
-					phone_number
-				) VALUES (?, ?, ?, ?, ?, ?, ?)
+					phone_number, 
+					gender, 
+					birthDate
+				) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
 			`,
-			values: [data.firstName, data.lastName, data.middleName, data.email, data.password, data.address, data.phoneNumber],
+			values: [
+				data.username,
+				data.firstName,
+				data.lastName,
+				data.middleName,
+				data.email,
+				data.password,
+				data.address,
+				data.phoneNumber,
+				data.gender,
+				data.birthDate,
+			],
 		});
 
 		const result = keysToCamelCase(
@@ -125,32 +153,33 @@ export const save = async (data: CustomerDTO) => {
 	}
 };
 
-export const update = async (
-	id: string,
-	data: Pick<CustomerDTO, "firstName" | "lastName" | "middleName" | "email" | "password" | "address" | "phoneNumber">
-) => {
+export const update = async (id: number, data: Omit<CustomerDTO, "password">) => {
 	try {
 		await sql({
 			query: `
 				UPDATE customer 
 				SET 
+					username = ?, 
 					first_name = ?, 
 					last_name = ?, 
 					middle_name = ?, 
 					email = ?, 
-					password = ?, 
 					address = ?, 
-					phone_number = ? 
+					phone_number = ?, 
+					gender = ?, 
+					birthDate = ? 
 				WHERE id = ?
 			`,
 			values: [
+				data.username,
 				data.firstName,
 				data.lastName,
 				data.middleName,
 				data.email,
-				data.password,
 				data.address,
 				data.phoneNumber,
+				data.gender,
+				data.birthDate,
 				id,
 			],
 		});
@@ -161,7 +190,7 @@ export const update = async (
 	}
 };
 
-export const deleteById = async (id: string) => {
+export const deleteById = async (id: number) => {
 	try {
 		await sql({
 			query: `DELETE FROM customer WHERE id = ?`,
