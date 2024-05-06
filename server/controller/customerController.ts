@@ -68,7 +68,6 @@ export const editCustomer = async (event: H3Event) => {
 			firstName: body.firstName,
 			lastName: body.lastName,
 			middleName: body.middleName,
-			address: body.address,
 			phoneNumber: body.phoneNumber,
 			gender: body.gender,
 			birthDate: body.birthDate,

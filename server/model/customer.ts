@@ -32,7 +32,7 @@ export type CustomerDTO = Pick<
 	| "birthDate"
 >;
 
-export type CustomerUpdateDTO = Omit<CustomerDTO, "email" | "password">;
+export type CustomerUpdateDTO = Omit<CustomerDTO, "email" | "password" | "address">;
 
 export const findAll = async (pageNum: number = 0) => {
 	try {
@@ -155,7 +155,7 @@ export const save = async (data: CustomerDTO) => {
 	}
 };
 
-export const update = async (id: number, data: Omit<CustomerDTO, "email" | "password">) => {
+export const update = async (id: number, data: CustomerUpdateDTO) => {
 	try {
 		await sql({
 			query: `
@@ -165,7 +165,6 @@ export const update = async (id: number, data: Omit<CustomerDTO, "email" | "pass
 					first_name = ?, 
 					last_name = ?, 
 					middle_name = ?, 
-					address = ?, 
 					phone_number = ?, 
 					gender = ?, 
 					birth_date = ? 
@@ -176,7 +175,6 @@ export const update = async (id: number, data: Omit<CustomerDTO, "email" | "pass
 				data.firstName,
 				data.lastName,
 				data.middleName,
-				data.address,
 				data.phoneNumber,
 				data.gender,
 				data.birthDate,
