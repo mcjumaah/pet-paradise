@@ -149,6 +149,7 @@ async function handleSignUp() {
 			await validateInputEmail(email.value);
 		} else {
 			isEmailValid.value = false;
+			isLoading.value = false;
 		}
 	} else {
 		arePasswordsMatch.value = createdPassword.value === confirmedPassword.value;
@@ -157,10 +158,16 @@ async function handleSignUp() {
 			signupCredentials.value.email = email.value ? email.value : "";
 			signupCredentials.value.password = confirmedPassword.value ? confirmedPassword.value : "";
 
-			navigateTo("/signup/create-account");
+			setTimeout(async () => {
+				isLoading.value = false;
+
+				await nextTick();
+				navigateTo("/signup/create-account");
+			}, 500);
+		} else {
+			isLoading.value = false;
 		}
 	}
-	isLoading.value = false;
 }
 
 async function validateInputEmail(email: string) {
@@ -177,9 +184,11 @@ async function validateInputEmail(email: string) {
 
 		customerAvailabilty = data;
 
-		isEmailValid.value = customerAvailabilty.available;
-		errorMessage.value = isEmailValid.value ? undefined : "An account associated with this email address already exists.";
-		isLoading.value = false;
+		setTimeout(() => {
+			isEmailValid.value = customerAvailabilty.available;
+			errorMessage.value = isEmailValid.value ? undefined : "An account associated with this email address already exists.";
+			isLoading.value = false;
+		}, 500);
 	} catch (error) {
 		const errorResponse = formatFetchErrorResponseData(error);
 		if (errorResponse?.statusCode == 400 && errorResponse?.statusMessage === "Invalid email") {

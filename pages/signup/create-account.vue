@@ -69,8 +69,9 @@
 			<VueDatePicker
 				class="w-50"
 				input-class-name="birth-date"
-				:enable-time-picker="false"
 				placeholder="Birth Date*"
+				:enable-time-picker="false"
+				auto-apply
 				v-model="customerForm.birthDate"
 			/>
 			<select class="form-select w-50" v-model="selectedGender">
@@ -148,7 +149,7 @@ const customerForm = ref<CustomerForm>({
 const isPhoneNumValid = ref<boolean>();
 const createdCustomer = ref<CustomerProjection>();
 const customerCreatedToast = ref<typeof Toast.prototype>();
-const toastTimer = ref(3);
+const toastTimer = ref(5);
 const selectedGender = ref<"MALE" | "FEMALE" | "OTHER" | "">("");
 
 const areFieldsEmpty = computed(() => {
@@ -202,15 +203,17 @@ async function createAccount() {
 			body: customerForm.value,
 		});
 
-		createdCustomer.value = data;
-		isCustomerCreated.value = data ?? false;
+		setTimeout(() => {
+			createdCustomer.value = data;
+			isCustomerCreated.value = data ?? false;
 
-		isLoading.value = false;
+			isLoading.value = false;
 
-		if (customerCreatedToast.value) {
-			customerCreatedToast.value.show();
-			startToastCountdown();
-		}
+			if (customerCreatedToast.value) {
+				customerCreatedToast.value.show();
+				startToastCountdown();
+			}
+		}, 750);
 	} catch (error) {
 		const errorResponse = formatFetchErrorResponseData(error);
 		if (errorResponse?.statusCode == 400 && errorResponse?.statusMessage === "Invalid phoneNumber") {
