@@ -4,7 +4,7 @@ import type { CustomerProjection } from "~/server/projections/customerProjection
 export default defineNuxtPlugin(async () => {
 	const route = useRoute();
 
-	const { data: authData } = useAuth();
+	const { status, data: authData } = useAuth();
 
 	const { data: customerData } = await useFetch("/api/customer", {
 		method: "GET",
@@ -21,7 +21,18 @@ export default defineNuxtPlugin(async () => {
 		transform: (_cartData: { data: Cart }) => _cartData.data,
 	});
 
-	await execute();
+	const isAuthInitiated = ref(false);
+
+	watch(
+		() => status.value,
+		async (newStatus) => {
+			if (newStatus === "authenticated" && !isAuthInitiated.value) {
+				isAuthInitiated.value = true;
+
+				await execute();
+			}
+		}
+	);
 
 	return {
 		provide: {
