@@ -60,7 +60,7 @@
 					>
 						<SvgCart />
 						<span
-							v-if="isCustomerLoggedIn"
+							v-if="isCustomerLoggedIn && cartItemCount > 0"
 							v-for="instance in 2"
 							class="cart-item-count position-absolute start-100 top-0 translate-middle badge rounded-pill bg-secondary"
 							:class="instance === 1 && hasAdded ? 'scale-125 animate-ping z-0' : 'z-1'"
@@ -133,7 +133,7 @@ const isCustomerLoggedIn = computed(() => {
 });
 
 const cartItemCount = computed(() => {
-	return useCurrentUserHelper().cart.data?.itemCount;
+	return useCurrentUserHelper().cart.data?.itemCount ?? 0;
 });
 
 watch(
