@@ -131,8 +131,15 @@
 
 			<div class="grid mt-3">
 				<label class="empty-for-save-button">&nbsp;</label>
-				<div>
-					<button type="button" class="btn btn-primary py-2 px-3">Save</button>
+				<div class="d-flex">
+					<button
+						type="button"
+						class="btn btn-primary py-2 px-3"
+						:disabled="!isFormChanged || isUpdatingCustomer"
+						@click="updateCustomer()"
+					>
+						<DynamicSpinnerLoader :loading="isUpdatingCustomer">Save</DynamicSpinnerLoader>
+					</button>
 				</div>
 			</div>
 		</section>
@@ -141,6 +148,8 @@
 
 <script setup lang="ts">
 import moment from "moment";
+import type { CustomerUpdateDTO, Gender } from "~/server/model/customer";
+import type { CustomerProjection } from "~/server/projections/customerProjections";
 
 const { $currentUserHelper } = useNuxtApp();
 const currentUserData = $currentUserHelper().userData;
@@ -155,10 +164,42 @@ const user = ref({
 	gender: currentUserData?.gender.toLowerCase(),
 	birthDate: moment(currentUserData?.birthDate),
 });
+const updateCustomerPayload = computed(() => {
+	const payload: CustomerUpdateDTO = {
+		username: user.value.username ?? "",
+		firstName: user.value.firstName ?? "",
+		lastName: user.value.lastName ?? "",
+		middleName: user.value.middleName,
+		gender: user.value.gender?.toUpperCase() as Gender,
+		birthDate: moment(user.value.birthDate).format("YYYY-MM-DD HH:mm:ss"),
+	};
+	return payload;
+});
+const {
+	data: updatedCustomer,
+	status: updateCustomerStatus,
+	error: updateCustomerError,
+	execute: updateCustomer,
+} = await useFetch("/api/customer", {
+	method: "PUT",
+	query: {
+		id: currentUserData?.id,
+	},
+	body: updateCustomerPayload,
+	transform: (_customer) => _customer.data.body as CustomerProjection,
+	immediate: false,
+	watch: false,
+});
+
+const isFormChanged = ref(false);
+
+const isUpdatingCustomer = computed(() => {
+	return updateCustomerStatus.value === "pending" ?? false;
+});
 
 const birthMonth = computed({
 	get() {
-		return { month: user.value.birthDate.month(), year: user.value.birthDate.year() };
+		return { month: moment(user.value.birthDate).month(), year: moment(user.value.birthDate).year() };
 	},
 	set(date) {
 		user.value.birthDate = moment(user.value.birthDate).month(date.month);
@@ -166,11 +207,27 @@ const birthMonth = computed({
 });
 const birthYear = computed({
 	get() {
-		return user.value.birthDate.year();
+		return moment(user.value.birthDate).year();
 	},
 	set(year) {
 		user.value.birthDate = moment(user.value.birthDate).year(year);
 	},
+});
+
+watch(
+	user,
+	() => {
+		isFormChanged.value = true;
+	},
+	{
+		deep: true,
+	}
+);
+
+watch(updateCustomerError, (newError) => {
+	if (newError) {
+		alert(newError);
+	}
 });
 </script>
 
