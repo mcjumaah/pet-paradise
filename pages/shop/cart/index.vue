@@ -232,6 +232,7 @@ function getIsDeletingItem(itemId: number) {
 }
 
 function setCheckoutItems() {
+	tooltips.value.checkout.disable();
 	isCheckingOut.value = true;
 
 	cartItems.value?.content.forEach((item, index) => {
@@ -247,6 +248,7 @@ function setCheckoutItems() {
 	});
 
 	isCheckingOut.value = false;
+	tooltips.value.checkout.enable();
 }
 
 onMounted(() => {

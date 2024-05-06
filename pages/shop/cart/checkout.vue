@@ -78,12 +78,24 @@
 
 				<div
 					id="order-button-wrapper"
+					class="mt-4"
 					data-bs-toggle="tooltip"
 					data-bs-title="Set Shipment Address First"
 					data-bs-placement="left"
 					tabindex="0"
 				>
-					<button class="btn btn-primary mt-4 px-5" type="button" :disabled="isShipmentIncomplete">Place Order</button>
+					<button
+						class="btn btn-primary px-5"
+						:class="isShipmentIncomplete || isPlacingOrder ? 'disabled' : ''"
+						type="button"
+						@click="placeOrder()"
+					>
+						<template v-if="!isPlacingOrder"> Place Order </template>
+						<template v-else>
+							<span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
+							<span role="status">Placing Order...</span>
+						</template>
+					</button>
 				</div>
 			</div>
 		</section>
@@ -91,6 +103,9 @@
 </template>
 
 <script setup lang="ts">
+import type { Order, OrderCheckoutDTO } from "~/server/model/order";
+import type { Shipment } from "~/server/model/shipment";
+
 definePageMeta({
 	middleware: [
 		function () {
@@ -101,24 +116,38 @@ definePageMeta({
 	],
 });
 
-const { $currentUserHelper, $Tooltip: Tooltip } = useNuxtApp();
-const currentUserData = $currentUserHelper().userData;
-const checkoutItems = useCheckoutItems();
-
-const shipment = ref<{
+type ShipmentSetting = {
 	address: string | undefined;
 	zipCode: string;
 	country: string;
 	[key: string]: string | undefined;
-}>({
+};
+type PlacedOrder = {
+	statusCode: number;
+	statusMessage: string;
+	message: string;
+	body: {
+		order: Order;
+		shipment: Shipment;
+	};
+};
+
+const { $currentUserHelper, $Tooltip: Tooltip } = useNuxtApp();
+const currentUserData = $currentUserHelper().userData;
+const checkoutItems = useCheckoutItems();
+
+const shipment = ref<ShipmentSetting>({
 	address: currentUserData?.address,
 	zipCode: "",
 	country: "Philippines",
 });
 const shippingFee = ref(60);
 const orderButtonTooltip = ref<typeof Tooltip.prototype>();
+const isPlacingOrder = ref(false);
+const placedOrder = ref<PlacedOrder>();
 
 const totalCheckoutPrice = computed(() => useItemsArrTotalPrice(checkoutItems.value));
+
 const isShipmentIncomplete = computed(() => {
 	let isIncomplete = false;
 
@@ -132,6 +161,51 @@ const isShipmentIncomplete = computed(() => {
 
 	return isIncomplete;
 });
+
+const orderCheckoutPayload = computed(() => {
+	const payload: OrderCheckoutDTO = {
+		productItemsId: checkoutItems.value.map((item) => item.productItemId ?? 0),
+		paymentMethod: "COD",
+		address: shipment.value.address ?? "",
+		zipCode: shipment.value.zipCode,
+		country: shipment.value.country,
+		customerId: currentUserData?.id || 0,
+	};
+	return payload;
+});
+
+watch(
+	() => isShipmentIncomplete.value,
+	(isIncomplete) => {
+		if (isIncomplete) {
+			orderButtonTooltip.value?.enable();
+		} else {
+			orderButtonTooltip.value?.disable();
+		}
+	}
+);
+
+async function placeOrder() {
+	try {
+		orderButtonTooltip.value?.disable();
+		isPlacingOrder.value = true;
+
+		placedOrder.value = await $fetch("/api/products/to-order", {
+			method: "POST",
+			body: orderCheckoutPayload.value,
+		});
+
+		setTimeout(async () => {
+			isPlacingOrder.value = false;
+			orderButtonTooltip.value?.enable();
+
+			await nextTick();
+			navigateTo("/account/my-purchase");
+		}, 500);
+	} catch (error) {
+		alert(error);
+	}
+}
 
 onMounted(() => {
 	orderButtonTooltip.value = Tooltip.getOrCreateInstance("#order-button-wrapper");
