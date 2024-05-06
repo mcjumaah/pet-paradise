@@ -32,7 +32,7 @@ export type CustomerDTO = Pick<
 	| "birthDate"
 >;
 
-export type CustomerUpdateDTO = Omit<CustomerDTO, "email" | "password" | "address">;
+export type CustomerUpdateDTO = Omit<CustomerDTO, "email" | "password" | "address" | "phoneNumber">;
 
 export const findAll = async (pageNum: number = 0) => {
 	try {
@@ -165,21 +165,11 @@ export const update = async (id: number, data: CustomerUpdateDTO) => {
 					first_name = ?, 
 					last_name = ?, 
 					middle_name = ?, 
-					phone_number = ?, 
 					gender = ?, 
 					birth_date = ? 
 				WHERE id = ?
 			`,
-			values: [
-				data.username,
-				data.firstName,
-				data.lastName,
-				data.middleName,
-				data.phoneNumber,
-				data.gender,
-				data.birthDate,
-				id,
-			],
+			values: [data.username, data.firstName, data.lastName, data.middleName, data.gender, data.birthDate, id],
 		});
 
 		return await findById(id);

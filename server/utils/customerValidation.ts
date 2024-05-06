@@ -26,7 +26,7 @@ export const validateCustomerForm = async (customerDto: customerModel.CustomerDT
 					message: `Supplied password is weak.`,
 				});
 			}
-		} else if (key === "phoneNumber") {
+		} else if (key === "phoneNumber" && "phoneNumber" in customerDto) {
 			await validateIsStringPhoneNumber(customerDto[key]);
 		}
 	}
