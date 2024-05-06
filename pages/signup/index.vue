@@ -65,11 +65,7 @@
 			tabindex="0"
 		>
 			<button type="submit" class="btn btn-primary w-100 text-white" :disabled="isEmailInputEmpty || isLoading">
-				<span v-if="isLoading" class="d-flex column-gap-1 align-items-center justify-content-center">
-					<span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
-					<span role="status">LOADING...</span>
-				</span>
-				<template v-else>NEXT</template>
+				<DynamicSpinnerLoader :loading="isLoading">NEXT</DynamicSpinnerLoader>
 			</button>
 		</div>
 	</form>
@@ -94,7 +90,7 @@ const passwordValidation = ref<PasswordValidation>();
 const isEmailValid = ref<boolean>();
 const nextBtnTooltip = ref<typeof Tooltip.prototype>();
 const arePasswordsMatch = ref<boolean>();
-const isLoading = ref<boolean>();
+const isLoading = ref<boolean>(false);
 const errorMessage = ref<string>();
 
 const isEmailInputEmpty = computed(() => {

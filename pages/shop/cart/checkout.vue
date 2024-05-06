@@ -90,11 +90,7 @@
 						type="button"
 						@click="placeOrder()"
 					>
-						<template v-if="!isPlacingOrder"> Place Order </template>
-						<template v-else>
-							<span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
-							<span role="status">Placing Order...</span>
-						</template>
+						<DynamicSpinnerLoader :loading="isPlacingOrder">Place Order</DynamicSpinnerLoader>
 					</button>
 				</div>
 			</div>
@@ -201,7 +197,7 @@ async function placeOrder() {
 
 			await nextTick();
 			navigateTo("/account/my-purchase");
-		}, 500);
+		}, 750);
 	} catch (error) {
 		alert(error);
 	}

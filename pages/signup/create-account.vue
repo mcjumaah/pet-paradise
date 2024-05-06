@@ -52,11 +52,7 @@
 			<template #invalidMessage>Please provide a valid Phone Number. Hint: 09123456789</template>
 		</BSFormFloatingInput>
 		<button type="submit" class="btn btn-primary w-100 text-white" :disabled="isLoading || areFieldsEmpty">
-			<span v-if="isLoading" class="d-flex column-gap-1 align-items-center justify-content-center">
-				<span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
-				<span role="status">LOADING...</span>
-			</span>
-			<template v-else>Create Account</template>
+			<DynamicSpinnerLoader :loading="isLoading">Create Account</DynamicSpinnerLoader>
 		</button>
 
 		<div class="toast-container position-fixed top-0 end-0 p-3">
@@ -113,7 +109,7 @@ const { $Toast: Toast } = useNuxtApp();
 const signupCredentials = useSignupCredentials();
 const isCustomerCreated = useHasCreatedNewCustomerAccount();
 
-const isLoading = ref<boolean>();
+const isLoading = ref<boolean>(false);
 const customerForm = ref<CustomerForm>({
 	firstName: "",
 	lastName: "",

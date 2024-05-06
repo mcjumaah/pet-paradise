@@ -36,18 +36,14 @@
 								@click="addToCart()"
 								:disabled="isLoading"
 							>
-								<template v-if="!isLoading">
+								<DynamicSpinnerLoader :loading="isLoading">
 									<svg class="flex-shrink-0" xmlns="http://www.w3.org/2000/svg" width="25" height="24" viewBox="0 0 25 24">
 										<path
 											d="M11.5 9h2V6h3V4h-3V1h-2v3h-3v2h3m-4 12c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2Zm10 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2Zm-9.8-3.2v-.1l.9-1.7H16c.7 0 1.4-.4 1.7-1l3.9-7-1.7-1-3.9 7H9L4.8 2H1.5v2h2l3.6 7.6L5.7 14c-.1.3-.2.6-.2 1 0 1.1.9 2 2 2h12v-2H7.9c-.1 0-.2-.1-.2-.2Z"
 										/>
 									</svg>
 									Add To Cart
-								</template>
-								<template v-else>
-									<span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
-									<span role="status">Loading...</span>
-								</template>
+								</DynamicSpinnerLoader>
 							</button>
 
 							<NuxtLink
@@ -222,7 +218,7 @@ async function addToCart() {
 			setTimeout(() => {
 				isLoading.value = false;
 				addedToCartToast.value?.show();
-			}, 500);
+			}, 750);
 		} catch (error) {
 			alert(error);
 		}

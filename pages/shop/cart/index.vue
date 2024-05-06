@@ -26,7 +26,13 @@
 			</div>
 		</div>
 
-		<TransitionGroup name="cart-items" tag="div" class="d-flex flex-column row-gap-2">
+		<TransitionGroup
+			v-if="!isFetchingCartItems"
+			key="cart-items-transition-group"
+			name="cart-items"
+			tag="div"
+			class="d-flex flex-column row-gap-2"
+		>
 			<div
 				v-for="(item, index) in cartItems?.content"
 				:key="`${index} - ${item.id}`"
@@ -84,7 +90,8 @@
 			</div>
 
 			<div
-				v-if="cartItems?.content && cartItems?.content.length <= 0"
+				v-if="cartItems?.content && cartItems?.content.length <= 0 && !isFetchingCartItems"
+				key="cart-items-empty-placeholder"
 				class="empty-cart-placeholder d-flex flex-column justify-content-center align-items-center row-gap-2"
 			>
 				<img class="empty-cart-image opacity-75" src="/images/empty-cart.png" alt="Empty Cart" />
@@ -103,18 +110,9 @@
 				data-bs-offset="0,10"
 				tabindex="0"
 			>
-				<NuxtLink
-					to="/shop/cart/checkout"
-					class="btn btn-primary"
-					:class="isCheckingOut || selectedItemsId.length < 1 ? 'disabled' : ''"
-					@click="setCheckoutItems()"
-				>
-					<template v-if="!isCheckingOut"> Check Out </template>
-					<template v-else>
-						<span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
-						<span role="status">Cheking Out...</span>
-					</template>
-				</NuxtLink>
+				<button class="btn btn-primary" :disabled="isCheckingOut || selectedItemsId.length < 1" @click="setCheckoutItems()">
+					<DynamicSpinnerLoader :loading="isCheckingOut">Check Out</DynamicSpinnerLoader>
+				</button>
 			</div>
 		</div>
 	</div>
@@ -170,13 +168,14 @@ const {
 } = await useFetch("/api/cart/items", {
 	method: "GET",
 	query: { cartId: currentUserCart.data?.id },
+	immediate: false,
 	transform: (_cartItems) => _cartItems.data as ProductItemsPaginatedProjection,
 	watch: [deleteCartItemData],
 });
 
 const tooltips = ref(<CartTooltips>{});
 const selectedItemsId = ref<number[]>([]);
-const isCheckingOut = ref<boolean>();
+const isCheckingOut = ref<boolean>(false);
 const lastUpdatedCartItem = ref<ProductItem>();
 
 const isSelectedAll = computed({
@@ -247,9 +246,18 @@ function setCheckoutItems() {
 		}
 	});
 
-	isCheckingOut.value = false;
+	setTimeout(async () => {
+		isCheckingOut.value = false;
+
+		await nextTick();
+		navigateTo("/shop/cart/checkout");
+	}, 750);
 	tooltips.value.checkout.enable();
 }
+
+onBeforeMount(async () => {
+	await fetchCartItems();
+});
 
 onMounted(() => {
 	tooltips.value.selectAll = Tooltip.getOrCreateInstance("#cart-select-all");
