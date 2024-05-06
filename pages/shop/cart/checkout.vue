@@ -99,6 +99,7 @@
 </template>
 
 <script setup lang="ts">
+import type { Cart } from "~/server/model/cart";
 import type { Order, OrderCheckoutDTO } from "~/server/model/order";
 import type { Shipment } from "~/server/model/shipment";
 
@@ -116,7 +117,6 @@ type ShipmentSetting = {
 	address: string | undefined;
 	zipCode: string;
 	country: string;
-	[key: string]: string | undefined;
 };
 type PlacedOrder = {
 	statusCode: number;
@@ -125,6 +125,7 @@ type PlacedOrder = {
 	body: {
 		order: Order;
 		shipment: Shipment;
+		cart: Cart;
 	};
 };
 
@@ -149,7 +150,7 @@ const isShipmentIncomplete = computed(() => {
 
 	for (let key in shipment.value) {
 		if (shipment.value.hasOwnProperty(key)) {
-			if (!shipment.value[key]) {
+			if (!shipment.value[key as keyof typeof shipment.value]) {
 				isIncomplete = true;
 			}
 		}

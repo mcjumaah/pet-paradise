@@ -175,8 +175,11 @@ export const orderCheckout = async (orderCheckoutDto: orderModel.OrderCheckoutDT
 		}
 	});
 
+	const updatedCart = await cartService.updateCartCountByCustomerId(orderDto.customerId);
+
 	return {
 		order: order,
 		shipment: shipment,
+		cart: updatedCart,
 	};
 };
