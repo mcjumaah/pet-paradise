@@ -11,9 +11,29 @@
 			</div>
 
 			<div class="grid">
-				<label for="profile-name-input" class="form-label">Name</label>
-				<div>
-					<input type="text" id="profile-name-input" class="form-control shadow-inner h-100" v-model="user.name" />
+				<label for="profile-name-input" class="form-label">Full Name</label>
+				<div class="full-name">
+					<input
+						type="text"
+						id="profile-name-input"
+						class="form-control shadow-inner h-100"
+						placeholder="First Name"
+						v-model="user.firstName"
+					/>
+					<input
+						type="text"
+						id="profile-name-input"
+						class="form-control shadow-inner h-100"
+						placeholder="Middle Name"
+						v-model="user.middleName"
+					/>
+					<input
+						type="text"
+						id="profile-name-input"
+						class="form-control shadow-inner h-100"
+						placeholder="Last Name"
+						v-model="user.lastName"
+					/>
 				</div>
 			</div>
 
@@ -127,7 +147,9 @@ const currentUserData = $currentUserHelper().userData;
 
 const user = ref({
 	username: currentUserData?.username,
-	name: `${currentUserData?.firstName} ${currentUserData?.lastName}`,
+	firstName: currentUserData?.firstName,
+	lastName: currentUserData?.lastName,
+	middleName: currentUserData?.middleName,
 	email: currentUserData?.email,
 	phoneNum: currentUserData?.phoneNumber,
 	gender: currentUserData?.gender.toLowerCase(),
