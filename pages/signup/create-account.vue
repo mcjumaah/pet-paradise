@@ -8,6 +8,17 @@
 		<input type="text" style="display: none" />
 
 		<BSFormFloatingInput
+			inputId="create-account-username"
+			inputType="string"
+			inputName="username"
+			inputPlaceholder="vin_esplana123"
+			inputRequired
+			v-model="customerForm.username"
+		/>
+
+		<span class="border-top border-2 border-secondary opacity-50"></span>
+
+		<BSFormFloatingInput
 			inputId="create-account-first-name"
 			inputType="string"
 			inputName="first-name"
@@ -32,6 +43,9 @@
 				v-model="customerForm.lastName"
 			/>
 		</div>
+
+		<span class="border-top border-2 border-secondary opacity-50"></span>
+
 		<BSFormFloatingInput
 			inputId="create-account-address"
 			inputType="string"
@@ -41,7 +55,7 @@
 			v-model="customerForm.address"
 		/>
 		<BSFormFloatingInput
-			inputId="create-phone-number"
+			inputId="create-account-phone-number"
 			inputType="string"
 			inputName="phone-number"
 			inputPlaceholder="09123456789"
@@ -51,6 +65,22 @@
 		>
 			<template #invalidMessage>Please provide a valid Phone Number. Hint: 09123456789</template>
 		</BSFormFloatingInput>
+		<div class="d-flex column-gap-3">
+			<VueDatePicker
+				class="w-50"
+				input-class-name="birth-date"
+				:enable-time-picker="false"
+				placeholder="Birth Date*"
+				v-model="customerForm.birthDate"
+			/>
+			<select class="form-select w-50" v-model="selectedGender">
+				<option disabled value="">Gender<span class="text-danger">*</span></option>
+				<option value="MALE">Male</option>
+				<option value="FEMALE">Female</option>
+				<option value="OTHER">Other</option>
+			</select>
+		</div>
+
 		<button type="submit" class="btn btn-primary w-100 text-white" :disabled="isLoading || areFieldsEmpty">
 			<DynamicSpinnerLoader :loading="isLoading">Create Account</DynamicSpinnerLoader>
 		</button>
@@ -81,6 +111,8 @@
 </template>
 
 <script setup lang="ts">
+import moment from "moment";
+import type { CustomerDTO } from "~/server/model/customer";
 import type { CustomerProjection } from "~/server/projections/customerProjections";
 import formatFetchErrorResponseData from "~/utils/formatFetchError";
 
@@ -94,16 +126,7 @@ definePageMeta({
 	],
 });
 
-interface CustomerForm {
-	firstName: string;
-	lastName: string;
-	middleName: string;
-	email: string;
-	password: string;
-	address: string;
-	phoneNumber: string;
-	[key: string]: string;
-}
+type CustomerForm = CustomerDTO;
 
 const { $Toast: Toast } = useNuxtApp();
 const signupCredentials = useSignupCredentials();
@@ -111,6 +134,7 @@ const isCustomerCreated = useHasCreatedNewCustomerAccount();
 
 const isLoading = ref<boolean>(false);
 const customerForm = ref<CustomerForm>({
+	username: "",
 	firstName: "",
 	lastName: "",
 	middleName: "",
@@ -118,23 +142,41 @@ const customerForm = ref<CustomerForm>({
 	password: signupCredentials.value.password,
 	address: "",
 	phoneNumber: "",
+	gender: "OTHER",
+	birthDate: "",
 });
 const isPhoneNumValid = ref<boolean>();
 const createdCustomer = ref<CustomerProjection>();
 const customerCreatedToast = ref<typeof Toast.prototype>();
 const toastTimer = ref(3);
+const selectedGender = ref<"MALE" | "FEMALE" | "OTHER" | "">("");
 
 const areFieldsEmpty = computed(() => {
 	const form = customerForm.value;
 	const notRequiredField = ["middleName"];
 
 	for (const key in form) {
-		if (form.hasOwnProperty(key) && form[key].trim() === "" && !notRequiredField.includes(key)) {
+		if (form.hasOwnProperty(key) && form[key as keyof typeof form]?.trim() === "" && !notRequiredField.includes(key)) {
 			return true;
 		}
 	}
 	return false;
 });
+
+watch(selectedGender, (newGender) => {
+	if (newGender) {
+		customerForm.value.gender = newGender;
+	}
+});
+
+watch(
+	() => customerForm.value.birthDate,
+	(newBday) => {
+		if (newBday) {
+			customerForm.value.birthDate = moment(newBday).format("YYYY-MM-DD HH:mm:ss");
+		}
+	}
+);
 
 watch(
 	() => customerForm.value.phoneNumber,
@@ -208,6 +250,23 @@ onBeforeRouteLeave(() => {
 	button {
 		font-size: 14px;
 		height: 3.188rem;
+	}
+
+	:deep(.birth-date) {
+		height: 58px;
+		border-radius: 0.375rem;
+		padding-left: 42.5px;
+
+		&.dp__input {
+			font-family: "Poppins", sans-serif;
+			font-weight: 400;
+			font-style: normal;
+			font-size: 16px;
+		}
+
+		& + div > .dp__input_icons {
+			--dp-font-size: 22.5px;
+		}
 	}
 }
 </style>
