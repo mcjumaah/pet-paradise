@@ -106,6 +106,21 @@ export const updateCartCount = async (cartId: number) => {
 	return updatedCart;
 };
 
+export const updateCartCountByCustomerId = async (customerId: number) => {
+	const cart = await cartModel.findOneByCustomerId(customerId);
+	if (!cart) {
+		throw createError({
+			statusCode: 404,
+			statusMessage: "Cart Not Found",
+			message: "No cart found with the provided `customerId`.",
+		});
+	}
+
+	const updatedCart = await updateCartCount(cart.id);
+
+	return updatedCart;
+};
+
 export const updateCartItemQuantity = async (productItemId: number, quantity: number) => {
 	const productItem = await productItemModel.findById(productItemId);
 	if (!productItem) {
