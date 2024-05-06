@@ -49,29 +49,29 @@
 					</p>
 				</div>
 				<div class="cards d-flex flex-wrap justify-content-center gap-4">
-					<WhoWeServeCard title="Pet Lovers" imgSrc="/images/about-page-card-images/pet-lovers.png">
+					<CardWhoWeServe title="Pet Lovers" imgSrc="/images/about-page-card-images/pet-lovers.png">
 						Those who view their pets as cherished family members and seek the best care and products for them.
-					</WhoWeServeCard>
-					<WhoWeServeCard
+					</CardWhoWeServe>
+					<CardWhoWeServe
 						title="Eco-conscious Consumers"
 						imgSrc="/images/about-page-card-images/eco-conscious-consumers.png"
 					>
 						Individuals who prioritize sustainability and environmental responsibility in their purchasing decisions.
-					</WhoWeServeCard>
-					<WhoWeServeCard
+					</CardWhoWeServe>
+					<CardWhoWeServe
 						title="Fashion-forward Pet Owners"
 						imgSrc="/images/about-page-card-images/fashion-forward-pet-owners.png"
 					>
 						Those who appreciate stylish and aesthetically pleasing products for themselves and their pets.
-					</WhoWeServeCard>
-					<WhoWeServeCard title="Tech-Savvy Pet Parents" imgSrc="/images/about-page-card-images/tech-savvy-pet-parents.png">
+					</CardWhoWeServe>
+					<CardWhoWeServe title="Tech-Savvy Pet Parents" imgSrc="/images/about-page-card-images/tech-savvy-pet-parents.png">
 						Individuals who embrace technology and seek innovative products that enhance the well-being and happiness of
 						their pets.
-					</WhoWeServeCard>
-					<WhoWeServeCard title="Pet-related Businesses" imgSrc="/images/about-page-card-images/pet-related-businesses.png">
+					</CardWhoWeServe>
+					<CardWhoWeServe title="Pet-related Businesses" imgSrc="/images/about-page-card-images/pet-related-businesses.png">
 						Veterinary clinics, pet grooming salons, and pet boarding facilities looking for reliable and premium-quality
 						products to enhance their services.
-					</WhoWeServeCard>
+					</CardWhoWeServe>
 				</div>
 			</div>
 		</section>

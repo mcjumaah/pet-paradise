@@ -68,7 +68,7 @@
 					<p class="price card-text text-primary-emphasis">{{ getProductPrice(product.price) }}</p>
 				</div>
 			</NuxtLink>
-			<ProductLoadingCard v-else v-for="index in 10" />
+			<CardProductLoading v-else v-for="index in 10" />
 		</div>
 
 		<nav class="pagination-bottom py-3" aria-label="Shop Products Botom Pagination">

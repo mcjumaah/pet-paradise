@@ -18,14 +18,14 @@
 		<section class="deals-by-pet container py-5">
 			<h2 class="text-center poppins-bold">Deals By Pet</h2>
 			<div class="d-flex gap-5 justify-content-center mt-5">
-				<ByPetCard bgImage="/images/by-dog.png">
+				<CardByPet bgImage="/images/by-dog.png">
 					<template #title>DOG</template>
 					<template #description> Everything you need for your Dog</template>
-				</ByPetCard>
-				<ByPetCard bgImage="/images/by-cat.png">
+				</CardByPet>
+				<CardByPet bgImage="/images/by-cat.png">
 					<template #title>CAT</template>
 					<template #description> Everything you need for your Cat</template>
-				</ByPetCard>
+				</CardByPet>
 			</div>
 		</section>
 
