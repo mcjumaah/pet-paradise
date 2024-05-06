@@ -23,16 +23,11 @@ export default defineNuxtPlugin(async () => {
 
 	const isAuthInitiated = ref(false);
 
-	watch(
-		() => status.value,
-		async (newStatus) => {
-			if (newStatus === "authenticated" && !isAuthInitiated.value) {
-				isAuthInitiated.value = true;
+	if (status.value === "authenticated") {
+		isAuthInitiated.value = true;
 
-				await execute();
-			}
-		}
-	);
+		await execute();
+	}
 
 	return {
 		provide: {
