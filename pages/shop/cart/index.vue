@@ -53,9 +53,16 @@
 						<div :title="item.name" class="d-flex align-items-center column-gap-4">
 							<img :src="item.previewImage" class="product-image rounded" :alt="`Product #${item.id} Image`" />
 							<div>
-								<p class="card-text line-clamp-2">{{ item.name }}</p>
+								<p class="card-text" :class="item.selection.length <= 0 ? 'line-clamp-3' : 'line-clamp-2'">
+									{{ item.name }}
+								</p>
 								<p class="mb-0 text-muted">
-									Variety: <span v-for="selection in item.selection">{{ selection.variety }}</span>
+									<template v-if="item.selection.length > 0">
+										Variety:
+										<span v-for="selection in item.selection" class="text-bg-secondary py-1 px-2 rounded text-white">{{
+											selection.variety
+										}}</span>
+									</template>
 								</p>
 							</div>
 						</div>
