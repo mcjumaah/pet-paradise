@@ -4,6 +4,7 @@
 			<h5 class="card-title poppins-semibold">My Profile</h5>
 			<p class="card-subtitle text-muted">Manage and protect your account</p>
 		</div>
+
 		<section class="profile-form d-flex flex-column row-gap-2">
 			<div class="grid">
 				<label for="profile-user-name" class="form-label">Username</label>
@@ -129,7 +130,7 @@
 				</div>
 			</div>
 
-			<div class="grid mt-3">
+			<div class="save-btn-section grid mt-3">
 				<label class="empty-for-save-button">&nbsp;</label>
 				<div class="d-flex">
 					<button
@@ -140,6 +141,25 @@
 					>
 						<DynamicSpinnerLoader :loading="isUpdatingCustomer">Save</DynamicSpinnerLoader>
 					</button>
+					<div
+						v-if="updateCustomerStatus === 'success' || updateCustomerStatus === 'error'"
+						id="success-error-alert"
+						class="alert alert-success alert-dismissible mb-0 d-flex align-items-center justify-content-between px-3 gap-4"
+						:class="
+							updateCustomerStatus === 'success' ? 'alert-success' : updateCustomerStatus === 'error' ? 'alert-danger' : ''
+						"
+						role="alert"
+					>
+						<div>
+							{{ updateCustomerStatus === "success" ? "Successfully updated" : "Error in updating" }} profile details.
+						</div>
+						<button
+							type="button"
+							class="btn-close p-0 position-relative"
+							data-bs-dismiss="alert"
+							aria-label="Close"
+						></button>
+					</div>
 				</div>
 			</div>
 		</section>
@@ -164,6 +184,12 @@ const user = ref({
 	gender: currentUserData?.gender.toLowerCase(),
 	birthDate: moment(currentUserData?.birthDate),
 });
+const isFormChanged = ref(false);
+
+const isUpdatingCustomer = computed(() => {
+	return updateCustomerStatus.value === "pending" ?? false;
+});
+
 const updateCustomerPayload = computed(() => {
 	const payload: CustomerUpdateDTO = {
 		username: user.value.username ?? "",
@@ -174,27 +200,6 @@ const updateCustomerPayload = computed(() => {
 		birthDate: moment(user.value.birthDate).format("YYYY-MM-DD HH:mm:ss"),
 	};
 	return payload;
-});
-const {
-	data: updatedCustomer,
-	status: updateCustomerStatus,
-	error: updateCustomerError,
-	execute: updateCustomer,
-} = await useFetch("/api/customer", {
-	method: "PUT",
-	query: {
-		id: currentUserData?.id,
-	},
-	body: updateCustomerPayload,
-	transform: (_customer) => _customer.data.body as CustomerProjection,
-	immediate: false,
-	watch: false,
-});
-
-const isFormChanged = ref(false);
-
-const isUpdatingCustomer = computed(() => {
-	return updateCustomerStatus.value === "pending" ?? false;
 });
 
 const birthMonth = computed({
@@ -212,6 +217,22 @@ const birthYear = computed({
 	set(year) {
 		user.value.birthDate = moment(user.value.birthDate).year(year);
 	},
+});
+
+const {
+	data: updatedCustomer,
+	status: updateCustomerStatus,
+	error: updateCustomerError,
+	execute: updateCustomer,
+} = await useFetch("/api/customer", {
+	method: "PUT",
+	query: {
+		id: currentUserData?.id,
+	},
+	body: updateCustomerPayload,
+	transform: (_customer) => _customer.data.body as CustomerProjection,
+	immediate: false,
+	watch: false,
 });
 
 watch(
@@ -297,6 +318,12 @@ watch(updateCustomerError, (newError) => {
 				:deep(input) {
 					box-shadow: inset 0 2px 4px 0 rgb(0 0 0 / 0.05);
 				}
+			}
+		}
+
+		&.save-btn-section {
+			.alert {
+				--bs-alert-padding-y: 0.5rem;
 			}
 		}
 	}
