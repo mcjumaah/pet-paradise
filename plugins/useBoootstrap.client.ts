@@ -12,6 +12,7 @@ export default defineNuxtPlugin((nuxtApp) => {
 		provide: {
 			Tooltip,
 			Toast,
+			Alert,
 		},
 	};
 });
