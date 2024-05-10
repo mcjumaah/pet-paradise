@@ -21,7 +21,7 @@ export const getCart = async (customerId: number) => {
 };
 
 export const getCartItems = async (cartId: number) => {
-	const productItems = await productItemModel.findAllByCartId(cartId.toString());
+	const productItems = await productItemModel.findAllByCartId(cartId);
 	const productItemsProjection = await mapObjectArrayToClass(productItems.content, ProductItemProjection);
 
 	for (let [index, productItem] of productItems.content.entries()) {
