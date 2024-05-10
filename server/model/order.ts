@@ -1,5 +1,5 @@
 import { sql } from "../db";
-import { keysToCamelCase } from "../utils/entityFieldsUtil";
+import { Prettify, keysToCamelCase } from "../utils/entityFieldsUtil";
 import * as shipmentModel from "../model/shipment";
 
 export type OrderPayMethods = "COD";
@@ -15,14 +15,39 @@ export type Order = {
 
 export type OrderDTO = Pick<Order, "orderDate" | "totalPrice" | "paymentDate" | "paymentMethod" | "customerId">;
 
-export type OrderCheckoutDTO = { productItemsId: number[] } & Pick<OrderDTO, "paymentMethod" | "customerId"> &
-	Pick<shipmentModel.ShipmentDTO, "address" | "zipCode" | "country">;
+export type OrderCheckoutDTO = Prettify<
+	{ productItemsId: number[] } & Pick<OrderDTO, "paymentMethod" | "customerId"> &
+		Pick<shipmentModel.ShipmentDTO, "address" | "zipCode" | "country">
+>;
 
-export const findAll = async () => {
+export type OrderPaginated = {
+	content: Order[];
+	pagination: Pagination;
+};
+
+export const findAll = async (pageNum: number = 0) => {
 	try {
-		const result = await sql({ query: `SELECT * FROM \`order\`` });
+		const { result, pagination } = await paginationSql(pageNum, `SELECT * FROM \`order\``);
 
-		return keysToCamelCase(result) as Order[];
+		return keysToCamelCase({
+			content: result as Order[],
+			pagination: pagination,
+		}) as OrderPaginated;
+	} catch (error) {
+		throw error;
+	}
+};
+
+export const findByCustomerId = async (customerId: number, pageNum: number = 0) => {
+	try {
+		const { result, pagination } = await paginationSql(pageNum, `SELECT * FROM \`order\` WHERE customer_id = ?`, [
+			customerId,
+		]);
+
+		return keysToCamelCase({
+			content: result as Order[],
+			pagination: pagination,
+		}) as OrderPaginated;
 	} catch (error) {
 		throw error;
 	}
