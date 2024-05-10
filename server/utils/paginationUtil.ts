@@ -13,11 +13,7 @@ export type PaginationSql = {
 	pagination: Pagination;
 };
 
-export const paginationSql: (
-	pageNum: number | undefined,
-	paginationQuery: string,
-	paginationValues?: any[] | null
-) => Promise<PaginationSql> = async (pageNum = 0, paginationQuery, paginationValues = null) => {
+export const paginationSql = async (pageNum = 0, paginationQuery: string, paginationValues: any[] | null = null) => {
 	try {
 		const pageSize = 10;
 		const offset = pageNum * pageSize;
