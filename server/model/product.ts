@@ -1,6 +1,6 @@
 import { sql } from "../db";
 import { keysToCamelCase } from "../utils/entityFieldsUtil";
-import { PaginationSql, paginationSql } from "../utils/paginationUtil";
+import { paginationSql } from "../utils/paginationUtil";
 
 export type Product = {
 	id: number;
