@@ -2,6 +2,7 @@ import { useBase, createRouter, defineEventHandler } from "#imports";
 import * as productCtrl from "../controller/productController";
 import * as customerCtrl from "../controller/customerController";
 import * as cartCtrl from "../controller/cartController";
+import * as orderCtrl from "../controller/orderController";
 
 const router = createRouter();
 
@@ -23,5 +24,7 @@ router.get("/cart", defineEventHandler(cartCtrl.getCart));
 router.get("/cart/items", defineEventHandler(cartCtrl.getCartItems));
 router.put("/cart/item/quantity", defineEventHandler(cartCtrl.updateCartItemQuantity));
 router.delete("/cart/item", defineEventHandler(cartCtrl.deleteCartItem));
+
+router.get("/orders", defineEventHandler(orderCtrl.getOrders));
 
 export default useBase("/api", router.handler);
