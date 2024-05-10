@@ -1,5 +1,9 @@
 import camelcaseKeys from "camelcase-keys";
 
+export type Prettify<T> = {
+	[K in keyof T]: T[K];
+} & {};
+
 export const keysToCamelCase = (input: any) => {
 	const options = {
 		deep: true,
