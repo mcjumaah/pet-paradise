@@ -1,5 +1,5 @@
 import { sql } from "../db";
-import { keysToCamelCase } from "../utils/entityFieldsUtil";
+import { Prettify, keysToCamelCase } from "../utils/entityFieldsUtil";
 import { Pagination, paginationSql } from "../utils/paginationUtil";
 
 export type ProductItem = {
@@ -36,7 +36,20 @@ export const findAll = async (pageNum: number = 0) => {
 	}
 };
 
-export const findAllByCartId = async (cartId: string, pageNum: number = 0) => {
+export const findAllByOrderId = async (orderId: number, pageNum: number = 0) => {
+	try {
+		const { result, pagination } = await paginationSql(pageNum, `SELECT * FROM product_item WHERE order_id = ?`, [orderId]);
+
+		return keysToCamelCase({
+			content: result as ProductItem[],
+			pagination: pagination,
+		}) as ProductItemPaginated;
+	} catch (error) {
+		throw error;
+	}
+};
+
+export const findAllByCartId = async (cartId: number, pageNum: number = 0) => {
 	try {
 		const { result, pagination } = await paginationSql(pageNum, `SELECT * FROM product_item WHERE cart_id = ?`, [cartId]);
 
