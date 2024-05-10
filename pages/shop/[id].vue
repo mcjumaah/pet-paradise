@@ -87,7 +87,11 @@
 						to="/shop/cart"
 						class="added-item-details line-clamp-2 mb-0 text-black text-decoration-none transition-all"
 					>
-						{{ quantity }}x of {{ selectedVarieties.length > 0 ? selectedVarieties : "" }} {{ product?.name }}.
+						<span class="poppins-bold">{{ quantity }}x</span> of
+						<span class="poppins-bold text-secondary-emphasis">{{
+							selectedVarieties.length > 0 ? formattedVarieties : ""
+						}}</span>
+						-- {{ product?.name }}.
 					</NuxtLink>
 				</div>
 			</div>
@@ -193,6 +197,20 @@ const itemToAdd = computed(() => {
 		priceId: selectedVarietiesPrice.value?.id,
 		cartId: currentUserHelper.cart.data?.id,
 	};
+});
+
+const formattedVarieties = computed(() => {
+	let formatted: string = "";
+
+	for (let [index, selection] of selectedVarieties.value.entries()) {
+		formatted =
+			formatted +
+			(index === 0 ? " " : "") +
+			`${selection.name}: ${selection.variety}` +
+			(index > selectedVarieties.value.length ? "," : "");
+	}
+
+	return formatted;
 });
 
 watch(selectedVarieties.value, () => {
