@@ -10,6 +10,11 @@ export interface OrderInterface {
 	orderItems: ProductItemProjection[];
 }
 
+export interface OrdersPaginatedInterface {
+	content: OrderProjection[];
+	pagination: Pagination;
+}
+
 export class OrderProjection implements OrderInterface {
 	constructor(
 		public id: number,
@@ -25,5 +30,12 @@ export class OrderProjection implements OrderInterface {
 		this.paymentDate = paymentDate;
 		this.paymentType = paymentType;
 		this.orderItems = orderItems;
+	}
+}
+
+export class OrdersPaginatedProjection implements OrdersPaginatedInterface {
+	constructor(public content: OrderProjection[], public pagination: Pagination) {
+		this.content = content;
+		this.pagination = pagination;
 	}
 }
