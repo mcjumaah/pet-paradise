@@ -41,7 +41,7 @@
 					</template>
 				</div>
 			</div>
-			<button type="button" class="btn btn-primary-alt d-flex mx-auto fs-5 poppin-semibold px-5 py-2">Show More</button>
+			<NuxtLink to="/shop" class="btn btn-primary-alt d-flex mx-auto fs-5 poppin-semibold px-5 py-2">Show More</NuxtLink>
 		</section>
 
 		<section class="pet-service d-flex justify-content-center py-5 container">
