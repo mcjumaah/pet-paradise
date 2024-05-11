@@ -105,6 +105,10 @@ const pagination = ref(<Pagination>{
 	currentPage: 1,
 });
 
+const pageNumQuery = computed(() => {
+	return pagination.value.currentPage - 1;
+});
+
 const {
 	data: productsData,
 	pending,
@@ -112,7 +116,7 @@ const {
 	execute,
 } = useFetch("/api/products", {
 	method: "GET",
-	query: { pageNum: pagination.value.currentPage - 1 },
+	query: { pageNum: pageNumQuery },
 	immediate: false,
 	transform: (_productsData) => {
 		const data: { content: ProductSummaryProjection[]; pagination: ServerPagination } = _productsData.data;
@@ -122,7 +126,6 @@ const {
 
 		return data;
 	},
-	watch: [() => pagination.value.currentPage],
 });
 
 watch(error, (newError) => {
