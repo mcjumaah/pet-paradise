@@ -15,15 +15,17 @@ import { DescriptionProjection } from "../projections/descriptionProjection";
 import moment from "moment";
 
 export const getProducts = async (pageNum: number = 0) => {
-	const result = (await productModel.findAll(pageNum)) as ProductsPaginatedProjection;
+	const resultProduct = await productModel.findAll(pageNum);
+	const productsPaginatedProjection: ProductsPaginatedProjection = {
+		content: await mapObjectArrayToClass(resultProduct.content, ProductSummaryProjection),
+		pagination: resultProduct.pagination,
+	};
 
-	for (const [index, product] of result.content.entries()) {
-		product.price = await priceService.getProductPriceSummary(product.id);
-
-		result.content[index] = await mapObjectToClass(product, ProductSummaryProjection);
+	for (const [index, product] of productsPaginatedProjection.content.entries()) {
+		productsPaginatedProjection.content[index].price = await priceService.getProductPriceSummary(product.id);
 	}
 
-	return result;
+	return productsPaginatedProjection;
 };
 
 export const getProduct = async (id: string) => {
