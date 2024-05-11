@@ -13,6 +13,11 @@ export type Product = {
 
 export type ProductDTO = Pick<Product, "sku" | "name" | "stock" | "images" | "soldNum">;
 
+export type ProductPaginated = {
+	content: Product[];
+	pagination: Pagination;
+};
+
 export const findAll = async (pageNum: number = 0) => {
 	try {
 		const { result, pagination } = await paginationSql(pageNum, `SELECT * FROM product`);
@@ -20,7 +25,7 @@ export const findAll = async (pageNum: number = 0) => {
 		return keysToCamelCase({
 			content: result as Product[],
 			pagination: pagination,
-		});
+		}) as ProductPaginated;
 	} catch (error) {
 		throw error;
 	}
