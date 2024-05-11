@@ -1,6 +1,6 @@
 <template>
 	<div class="product-images d-flex column-gap-3">
-		<div class="product-images--column position-relative d-flex flex-column row-gap-1 justify-content-around">
+		<div class="product-images--column position-relative d-flex flex-column justify-content-evenly">
 			<template v-for="(image, index) in props.images" :key="`${image.id} ${image.id}`">
 				<button v-if="currentStep > 0" class="top-prev-btn btn transition-all" type="button" @click="currentStep--">
 					<img src="/svg/chevron-left-white.svg" />
@@ -19,7 +19,7 @@
 				</button>
 			</template>
 		</div>
-		<div class="product-images--selected d-flex border border-primary-subtle align-self-center">
+		<div class="product-images--selected d-flex border border-primary-subtle">
 			<img :src="previewImage" />
 		</div>
 	</div>
@@ -55,7 +55,11 @@ function getIsVisibleInImgCol(index: number) {
 
 <style scoped lang="scss">
 .product-images {
+	--selected-image-h: 26.563rem;
+
 	.product-images--column {
+		height: var(--selected-image-h);
+
 		.product-images--column---item {
 			height: 5.75rem;
 			width: 5.75rem;
@@ -93,8 +97,8 @@ function getIsVisibleInImgCol(index: number) {
 	}
 
 	.product-images--selected {
-		height: 26.563rem;
-		width: 26.563rem;
+		height: var(--selected-image-h);
+		width: var(--selected-image-h);
 	}
 }
 </style>
