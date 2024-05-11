@@ -95,7 +95,7 @@
 
 <script setup lang="ts">
 import type { Pagination } from "~/app.vue";
-import type { ProductSummaryProjection, ProductsPaginatedProjection } from "~/server/projections/productProjections";
+import type { ProductSummaryProjection } from "~/server/projections/productProjections";
 import type { Pagination as ServerPagination } from "~/server/utils/paginationUtil";
 
 const dummyProductTypes = ["Food & Treats", "Supplies", "Toys", "Clothing & Accessories", "Health & Wellness"];
