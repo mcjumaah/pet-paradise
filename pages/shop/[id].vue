@@ -22,7 +22,7 @@
 								<label class="pt-2" for="product-quantity-select-wrapper">Quantity</label>
 								<div id="product-quantity-select-wrapper" class="d-flex w-100 column-gap-3 row-gap-2 flex-wrap">
 									<QuantitySelect class="product-quantity-select" v-model="quantity" />
-									<span class="text-nowrap align-self-center">203415 pieces available</span>
+									<span class="text-nowrap align-self-center">{{ product?.stock }} pieces available</span>
 								</div>
 							</div>
 						</div>
