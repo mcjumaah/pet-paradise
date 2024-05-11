@@ -169,24 +169,22 @@ const displayedPrice = computed(() => {
 	const highestPrice = Math.max(...(product.value?.prices || []).map((price) => parseFloat(price.value.toString())));
 	const priceRange = lowestPrice !== highestPrice ? `₱${lowestPrice} - ₱${highestPrice}` : `₱${lowestPrice}`;
 
-	return product.value?.selections.length === selectedVarieties.value.length
-		? `₱${selectedVarietiesPrice.value?.value}`
+	return product.value?.selections.length === selectedVarieties.value.length && selectedVarietiesPrice.value?.value
+		? `₱${parseInt(selectedVarietiesPrice.value?.value.toString())}`
 		: priceRange;
 });
 
 const selectedVarietiesPrice = computed(() => {
 	const matchingPrice = product.value?.prices.find((price) => {
-		const isEqual = price.selections.every((selection, index) => {
-			if (selectedVarieties.value.length > 0) {
-				return (
-					selection.name === selectedVarieties.value[index].name &&
-					selection.variety === selectedVarieties.value[index].variety
-				);
-			}
+		const isEqual = price.selections.every((selection) => {
+			return selectedVarieties.value.some((selectedVariety) => {
+				return selection.name === selectedVariety.name && selection.variety === selectedVariety.variety;
+			});
 		});
 
 		return isEqual;
 	});
+
 	return matchingPrice ?? null;
 });
 

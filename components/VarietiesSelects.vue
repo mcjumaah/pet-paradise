@@ -4,7 +4,7 @@
 			<label class="selection-name pt-2 h-fit" for="varieties-wrapper">{{ selection.name }}</label>
 			<div id="varieties-wrapper" class="varieties-wrapper d-flex gap-2 text-black flex-wrap w-100">
 				<button
-					v-for="(variety, index) in selection.varieties"
+					v-for="(variety, index) in formatVarieties(selection.varieties)"
 					:key="`${index} - ${variety}`"
 					class="varieties btn btn-light h-fit p-2 border border-secondary-subtle text-nowrap transition-all"
 					:class="isActive(selection.name, variety) ? 'active' : ''"
@@ -19,13 +19,10 @@
 </template>
 
 <script setup lang="ts">
+import type { SelectionProjection } from "~/server/projections/selectionProjection";
+
 export interface Props {
-	selections:
-		| {
-				name: string;
-				varieties: string[];
-		  }[]
-		| undefined;
+	selections: SelectionProjection[] | undefined;
 }
 const props = withDefaults(defineProps<Props>(), {});
 
@@ -46,6 +43,10 @@ async function setSelected(selectedName: string, selectedVariety: string) {
 function isActive(name: string, variety: string) {
 	let selectedInArr = selectedArr.value?.find((s) => s.name === name && s.variety === variety);
 	return selectedInArr ? true : false;
+}
+
+function formatVarieties(varieties: string[]) {
+	return [...new Set(varieties)];
 }
 </script>
 
