@@ -36,7 +36,7 @@ const currentStep = ref(0);
 
 const maxStep = computed(() => {
 	let imagesNum = props.images.length;
-	return imagesNum ? imagesNum - 4 : 0;
+	return imagesNum > 4 ? imagesNum - 4 : 0;
 });
 
 watch(
