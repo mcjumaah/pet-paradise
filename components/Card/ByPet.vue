@@ -1,5 +1,5 @@
 <template>
-	<div class="by-pet-card cursor-pointer">
+	<NuxtLink to="/shop" class="by-pet-card cursor-pointer">
 		<div
 			class="position-relative rounded-4"
 			:style="{
@@ -15,7 +15,7 @@
 		<p class="fs-5 poppins-medium mt-2 transition-all">
 			<slot name="description" class="link-underline-primary">Description Lorem ipsum dolor sit amet consectetur</slot>
 		</p>
-	</div>
+	</NuxtLink>
 </template>
 
 <script setup lang="ts">

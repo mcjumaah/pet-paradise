@@ -1,5 +1,5 @@
 <template>
-	<div>
+	<div class="py-5">
 		<CardWorkInProgress />
 	</div>
 </template>

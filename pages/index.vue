@@ -32,14 +32,14 @@
 		<section class="featured-brands d-flex flex-column gap-5 bg-body-3 py-5">
 			<h2 class="text-center poppins-bold">Featured Brands</h2>
 			<div class="d-flex row-gap-2 column-gap-5 flex-wrap justify-content-center">
-				<div v-for="(product, index) in dummyFeaturedProducts" class="feat-brands-card">
+				<NuxtLink to="/shop" v-for="(product, index) in dummyFeaturedProducts" class="feat-brands-card">
 					<template v-if="index < 4">
 						<div class="card p-4 shadow transition-all">
 							<img :src="product.imagePreview" class="h-100 object-fit-contain" alt="product" />
 						</div>
 						<p class="mt-3 fs-5 poppins-medium text-center transition-all">{{ product.name }}</p>
 					</template>
-				</div>
+				</NuxtLink>
 			</div>
 			<NuxtLink to="/shop" class="btn btn-primary-alt d-flex mx-auto fs-5 poppin-semibold px-5 py-2">Show More</NuxtLink>
 		</section>
@@ -54,12 +54,12 @@
 							by skilled artists, providing a timeless keepsake for pet owners. Options for various mediums including canvas,
 							wood, and digital formats.
 						</p>
-						<button
-							type="button"
+						<NuxtLink
+							to="/pet-portrait-service"
 							class="btn btn-secondary rounded-pill w-fit h-fit poppins-semibold py-2 px-3 shadow transition-all"
 						>
 							Order Now
-						</button>
+						</NuxtLink>
 					</div>
 
 					<img src="/images/pet-portraits.png" class="position-absolute bottom-0 end-0 h-100" alt="Pet Portraits" />

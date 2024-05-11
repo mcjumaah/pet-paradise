@@ -4,7 +4,7 @@
 			<li class="nav-item">
 				<a class="nav-link active" aria-current="page" href="#">All</a>
 			</li>
-			<li class="nav-item">
+			<!-- <li class="nav-item">
 				<a class="nav-link" href="#">To Ship</a>
 			</li>
 			<li class="nav-item">
@@ -12,7 +12,7 @@
 			</li>
 			<li class="nav-item">
 				<a class="nav-link" href="#">Completed</a>
-			</li>
+			</li> -->
 		</ul>
 
 		<section class="purchases-wrapper d-flex flex-column gap-3 py-4 px-2 bg-white border border-top-0 rounded-bottom">
