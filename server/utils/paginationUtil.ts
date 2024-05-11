@@ -32,7 +32,7 @@ export const paginationSql = async (pageNum = 0, paginationQuery: string, pagina
 		}
 
 		const totalCountRows = (await sql({
-			query: `SELECT COUNT(*) AS total FROM customer`,
+			query: `${formatSQLQueryForCount(paginationQuery)}`,
 		})) as any[] as { total: number }[];
 		const totalCount = totalCountRows[0].total;
 		const totalPages = Math.ceil(totalCount / pageSize);
@@ -51,3 +51,15 @@ export const paginationSql = async (pageNum = 0, paginationQuery: string, pagina
 		throw error;
 	}
 };
+
+function formatSQLQueryForCount(query: string) {
+	let queryPieces = query.split("\n");
+
+	for (let i = 0; i < queryPieces.length; i++) {
+		queryPieces[i] = queryPieces[i].replace("*", "COUNT(*) AS total");
+	}
+
+	let formattedQueryString = queryPieces.join("\n");
+
+	return formattedQueryString;
+}
