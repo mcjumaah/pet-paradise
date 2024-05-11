@@ -246,6 +246,7 @@ async function setToBuyNow() {
 	if (product.value && selectedVarietiesPrice.value) {
 		checkoutItems.value.push({
 			id: 1,
+			productItemId: product.value.id,
 			origin: "buy-now",
 			name: product.value?.name,
 			price: selectedVarietiesPrice.value?.value,
