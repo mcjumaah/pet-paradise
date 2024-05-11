@@ -31,9 +31,20 @@ export const paginationSql = async (pageNum = 0, paginationQuery: string, pagina
 			})) as any[];
 		}
 
-		const totalCountRows = (await sql({
-			query: `${formatSQLQueryForCount(paginationQuery)}`,
-		})) as any[] as { total: number }[];
+		type TotalCount = { total: number }[];
+		let totalCountRows: TotalCount;
+
+		if (paginationValues) {
+			totalCountRows = (await sql({
+				query: `${formatSQLQueryForCount(paginationQuery)}`,
+				values: paginationValues,
+			})) as any[] as TotalCount;
+		} else {
+			totalCountRows = (await sql({
+				query: `${formatSQLQueryForCount(paginationQuery)}`,
+			})) as any[] as TotalCount;
+		}
+
 		const totalCount = totalCountRows[0].total;
 		const totalPages = Math.ceil(totalCount / pageSize);
 
