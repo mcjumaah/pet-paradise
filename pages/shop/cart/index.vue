@@ -101,7 +101,7 @@
 				key="cart-items-empty-placeholder"
 				class="empty-cart-placeholder d-flex flex-column w-100 justify-content-center align-items-center row-gap-2"
 			>
-				<img class="empty-cart-image opacity-75" src="/images/empty-cart.png" alt="Empty Cart" />
+				<img class="empty-cart-image opacity-75" src="/images/icons/empty-cart.png" alt="Empty Cart" />
 				<h4 class="text-muted">Cart is Empty. Add products from the <NuxtLink to="/shop">Shop</NuxtLink>.</h4>
 			</div>
 		</TransitionGroup>
