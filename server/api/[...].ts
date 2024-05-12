@@ -28,6 +28,6 @@ router.delete("/cart/item", defineEventHandler(cartCtrl.deleteCartItem));
 
 router.get("/orders", defineEventHandler(orderCtrl.getOrders));
 
-router.get("/category/item-types", defineEventHandler(categoryCtrl.getCategories));
+router.get("/category/item-types", defineEventHandler(categoryCtrl.getItemTypes));
 
 export default useBase("/api", router.handler);

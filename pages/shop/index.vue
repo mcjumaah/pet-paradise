@@ -14,7 +14,7 @@
 					<select id="product-type-custom-form" class="product-type form-select cursor-pointer">
 						<option selected disabled>Item</option>
 						<option value="all">All</option>
-						<option v-for="category in productCategories" value="cat">{{ category }}</option>
+						<option v-for="category in itemTypes" value="cat">{{ category }}</option>
 					</select>
 				</div>
 
@@ -147,13 +147,13 @@ const pageNumQuery = computed(() => {
 const searchQuery = computed(() => route.query.search);
 
 const {
-	data: productCategories,
-	pending: fetchingProductCategories,
-	error: fetchingProductCategoriesError,
+	data: itemTypes,
+	pending: fetchingItemTypes,
+	error: fetchingItemTypesError,
 } = await useFetch("/api/category/item-types", {
 	method: "GET",
-	transform: (_productCategories) => {
-		const data: ItemCategory[] = _productCategories.data.content;
+	transform: (_itemTypes) => {
+		const data: ItemCategory[] = _itemTypes.data.content;
 
 		return data.map((item) => item.name);
 	},
@@ -177,7 +177,7 @@ const {
 	},
 });
 
-watch([fetchingProductsDataError, fetchingProductCategoriesError], (errors) => {
+watch([fetchingProductsDataError, fetchingItemTypesError], (errors) => {
 	if (errors.some((error) => error)) {
 		alert(errors.find((error) => error));
 	}
