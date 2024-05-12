@@ -7,14 +7,13 @@
 					<select id="pet-custom-form" class="pet form-select cursor-pointer">
 						<option selected disabled>Pet</option>
 						<option value="all">All</option>
-						<option value="cat">Cat</option>
-						<option value="dog">Dog</option>
+						<option v-for="(pet, index) in petTypes" :key="`${index} | ${pet}`" :value="pet">{{ pet }}</option>
 					</select>
 
 					<select id="product-type-custom-form" class="product-type form-select cursor-pointer">
 						<option selected disabled>Item</option>
 						<option value="all">All</option>
-						<option v-for="category in itemTypes" value="cat">{{ category }}</option>
+						<option v-for="(item, index) in itemTypes" :key="`${index} | ${item}`" :value="item">{{ item }}</option>
 					</select>
 				</div>
 
@@ -130,6 +129,7 @@
 <script setup lang="ts">
 import type { Pagination } from "~/app.vue";
 import type { ItemCategory } from "~/server/model/itemCategory";
+import type { PetCategory } from "~/server/model/petCategory";
 import type { ProductSummaryProjection } from "~/server/projections/productProjections";
 import type { Pagination as ServerPagination } from "~/server/utils/paginationUtil";
 
@@ -147,6 +147,19 @@ const pageNumQuery = computed(() => {
 const searchQuery = computed(() => route.query.search);
 
 const {
+	data: petTypes,
+	pending: fetchingPetTypes,
+	error: fetchingPetTypesError,
+} = await useFetch("/api/category/pet-types", {
+	method: "GET",
+	transform: (_itemTypes) => {
+		const data: PetCategory[] = _itemTypes.data.content;
+
+		return data.map((item) => item.name);
+	},
+});
+
+const {
 	data: itemTypes,
 	pending: fetchingItemTypes,
 	error: fetchingItemTypesError,
@@ -158,6 +171,7 @@ const {
 		return data.map((item) => item.name);
 	},
 });
+
 const {
 	data: productsData,
 	pending: fetchingProductsData,
@@ -177,7 +191,7 @@ const {
 	},
 });
 
-watch([fetchingProductsDataError, fetchingItemTypesError], (errors) => {
+watch([fetchingProductsDataError, fetchingItemTypesError, fetchingPetTypesError], (errors) => {
 	if (errors.some((error) => error)) {
 		alert(errors.find((error) => error));
 	}
