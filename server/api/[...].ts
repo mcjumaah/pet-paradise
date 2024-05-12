@@ -29,5 +29,6 @@ router.delete("/cart/item", defineEventHandler(cartCtrl.deleteCartItem));
 router.get("/orders", defineEventHandler(orderCtrl.getOrders));
 
 router.get("/category/item-types", defineEventHandler(categoryCtrl.getItemTypes));
+router.get("/category/pet-types", defineEventHandler(categoryCtrl.getPetTypes));
 
 export default useBase("/api", router.handler);
