@@ -4,16 +4,18 @@
 			<div class="container d-flex py-2 px-4 justify-content-between column-gap-5">
 				<div class="filters d-flex align-items-center column-gap-3">
 					<span class="text-nowrap">By Category:</span>
-					<select id="pet-custom-form" class="pet form-select cursor-pointer">
-						<option selected disabled>Pet</option>
-						<option value="all">All</option>
-						<option v-for="(pet, index) in petTypes" :key="`${index} | ${pet}`" :value="pet">{{ pet }}</option>
+					<select id="pet-custom-form" class="pet form-select cursor-pointer" v-model="petTypeFilter">
+						<option :value="-1" selected disabled>Pet</option>
+						<option :value="0">All</option>
+						<option v-for="(pet, index) in petTypes" :key="`${index} | ${pet.id}`" :value="pet.id">{{ pet.name }}</option>
 					</select>
 
-					<select id="product-type-custom-form" class="product-type form-select cursor-pointer">
-						<option selected disabled>Item</option>
-						<option value="all">All</option>
-						<option v-for="(item, index) in itemTypes" :key="`${index} | ${item}`" :value="item">{{ item }}</option>
+					<select id="product-type-custom-form" class="product-type form-select cursor-pointer" v-model="itemTypeFilter">
+						<option :value="-1" selected disabled>Item</option>
+						<option :value="0">All</option>
+						<option v-for="(item, index) in itemTypes" :key="`${index} | ${item.id}`" :value="item.id">
+							{{ item.name }}
+						</option>
 					</select>
 				</div>
 
@@ -128,8 +130,8 @@
 
 <script setup lang="ts">
 import type { Pagination } from "~/app.vue";
-import type { ItemCategory } from "~/server/model/itemCategory";
-import type { PetCategory } from "~/server/model/petCategory";
+import type { ItemCategory, ItemCategoryPaginated } from "~/server/model/itemCategory";
+import type { PetCategory, PetCategoryPaginated } from "~/server/model/petCategory";
 import type { ProductSummaryProjection } from "~/server/projections/productProjections";
 import type { Pagination as ServerPagination } from "~/server/utils/paginationUtil";
 
@@ -139,24 +141,19 @@ const products = ref<ProductSummaryProjection[]>([]);
 const pagination = ref(<Pagination>{
 	currentPage: 1,
 });
+const petTypeFilter = ref<number>(-1);
+const itemTypeFilter = ref<number>(-1);
 
 const pageNumQuery = computed(() => {
 	return pagination.value.currentPage - 1;
 });
 
 const searchQuery = computed(() => route.query.search);
-
-const {
-	data: petTypes,
-	pending: fetchingPetTypes,
-	error: fetchingPetTypesError,
-} = await useFetch("/api/category/pet-types", {
-	method: "GET",
-	transform: (_itemTypes) => {
-		const data: PetCategory[] = _itemTypes.data.content;
-
-		return data.map((item) => item.name);
-	},
+const petTypeQuery = computed(() => {
+	return petTypeFilter.value > 0 ? petTypeFilter.value : undefined;
+});
+const itemTypeQuery = computed(() => {
+	return itemTypeFilter.value > 0 ? itemTypeFilter.value : undefined;
 });
 
 const {
@@ -166,9 +163,18 @@ const {
 } = await useFetch("/api/category/item-types", {
 	method: "GET",
 	transform: (_itemTypes) => {
-		const data: ItemCategory[] = _itemTypes.data.content;
+		return _itemTypes.data.content as ItemCategory[];
+	},
+});
 
-		return data.map((item) => item.name);
+const {
+	data: petTypes,
+	pending: fetchingPetTypes,
+	error: fetchingPetTypesError,
+} = await useFetch("/api/category/pet-types", {
+	method: "GET",
+	transform: (_itemTypes) => {
+		return _itemTypes.data.content as PetCategory[];
 	},
 });
 
@@ -179,7 +185,12 @@ const {
 	execute: fetchProducts,
 } = await useFetch("/api/products", {
 	method: "GET",
-	query: { pageNum: pageNumQuery, search: searchQuery },
+	query: {
+		pageNum: pageNumQuery,
+		search: searchQuery,
+		pet: petTypeQuery,
+		item: itemTypeQuery,
+	},
 	immediate: false,
 	transform: (_productsData) => {
 		const data: { content: ProductSummaryProjection[]; pagination: ServerPagination } = _productsData.data;
