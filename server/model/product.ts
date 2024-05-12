@@ -24,9 +24,12 @@ export const findAll = async (pageNum: number = 0, search: string = "", pet?: nu
 		const { result, pagination } = await paginationSql(
 			pageNum,
 			`
-				SELECT * FROM product p 
-					JOIN product_has_pet_category p_pc ON p_pc.product_id = p.id 
-					JOIN product_has_item_category p_ic ON p_ic.product_id = p.id 
+				SELECT DISTINCT	p.* 
+					FROM product p 
+				LEFT JOIN product_has_pet_category p_pc 
+					ON p_pc.product_id = p.id 
+				LEFT JOIN product_has_item_category p_ic 
+					ON p_ic.product_id = p.id 
 				WHERE (? = '%%' OR p.name LIKE ?) 
 					AND (? IS NULL OR p_pc.pet_category_id = ?) 
 					AND (? IS NULL OR p_ic.item_category_id = ?)
