@@ -14,7 +14,7 @@
 					<select id="product-type-custom-form" class="product-type form-select cursor-pointer">
 						<option selected disabled>Item</option>
 						<option value="all">All</option>
-						<option v-for="pType in dummyProductTypes" value="cat">{{ pType }}</option>
+						<option v-for="category in productCategories" value="cat">{{ category }}</option>
 					</select>
 				</div>
 
@@ -49,7 +49,7 @@
 
 		<div class="products container grid gap-4 py-4">
 			<NuxtLink
-				v-if="!pending && products.length > 0"
+				v-if="!fetchingProductsData && products.length > 0"
 				v-for="(product, index) in products"
 				:key="`${index} | P-${product.id}`"
 				:to="`/shop/${product.id}`"
@@ -59,7 +59,7 @@
 				<img
 					class="card-img-top"
 					:src="product.images ? product.images[0] : '/images/shop-products/no-image-placeholder.png'"
-					:alt="`Image for ${product.name}`"
+					:alt="`Image for ${product.name.slice(0, 10)}...`"
 				/>
 				<div class="card-body d-flex flex-column justify-content-between transition-all">
 					<p class="card-title line-clamp-2">
@@ -69,7 +69,7 @@
 				</div>
 			</NuxtLink>
 
-			<CardProductLoading v-else-if="pending" v-for="index in 10" />
+			<CardProductLoading v-else-if="fetchingProductsData" v-for="index in 10" />
 
 			<div v-else class="empty-shop-placeholder g-col-12 d-flex flex-column align-items-center py-3">
 				<div class="empty-shop-image">
@@ -129,10 +129,9 @@
 
 <script setup lang="ts">
 import type { Pagination } from "~/app.vue";
+import type { ItemCategory } from "~/server/model/itemCategory";
 import type { ProductSummaryProjection } from "~/server/projections/productProjections";
 import type { Pagination as ServerPagination } from "~/server/utils/paginationUtil";
-
-const dummyProductTypes = ["Food & Treats", "Supplies", "Toys", "Clothing & Accessories", "Health & Wellness"];
 
 const route = useRoute();
 const { query } = route;
@@ -147,11 +146,24 @@ const pageNumQuery = computed(() => {
 });
 
 const {
+	data: productCategories,
+	pending: fetchingProductCategories,
+	error: fetchingProductCategoriesError,
+} = await useFetch("/api/item-categories", {
+	method: "GET",
+	query: { pageNum: pageNumQuery, search: query.search },
+	transform: (_productCategories) => {
+		const data: ItemCategory[] = _productCategories.data.content;
+
+		return data.map((item) => item.name);
+	},
+});
+const {
 	data: productsData,
-	pending,
-	error,
-	execute,
-} = useFetch("/api/products", {
+	pending: fetchingProductsData,
+	error: fetchingProductsDataError,
+	execute: fetchProducts,
+} = await useFetch("/api/products", {
 	method: "GET",
 	query: { pageNum: pageNumQuery, search: query.search },
 	immediate: false,
@@ -165,9 +177,9 @@ const {
 	},
 });
 
-watch(error, (newError) => {
-	if (newError) {
-		alert(newError);
+watch([fetchingProductsDataError, fetchingProductCategoriesError], (errors) => {
+	if (errors.some((error) => error)) {
+		alert(errors.find((error) => error));
 	}
 });
 
@@ -190,8 +202,8 @@ function getProductPrice(price: ProductSummaryProjection["price"]) {
 	}
 }
 
-onMounted(() => {
-	execute();
+onMounted(async () => {
+	await fetchProducts();
 });
 </script>
 
