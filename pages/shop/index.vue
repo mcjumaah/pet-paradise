@@ -100,6 +100,9 @@ import type { Pagination as ServerPagination } from "~/server/utils/paginationUt
 
 const dummyProductTypes = ["Food & Treats", "Supplies", "Toys", "Clothing & Accessories", "Health & Wellness"];
 
+const route = useRoute();
+const { query } = route;
+
 const products = ref<ProductSummaryProjection[]>([]);
 const pagination = ref(<Pagination>{
 	currentPage: 1,
@@ -116,7 +119,7 @@ const {
 	execute,
 } = useFetch("/api/products", {
 	method: "GET",
-	query: { pageNum: pageNumQuery },
+	query: { pageNum: pageNumQuery, search: query.search },
 	immediate: false,
 	transform: (_productsData) => {
 		const data: { content: ProductSummaryProjection[]; pagination: ServerPagination } = _productsData.data;
