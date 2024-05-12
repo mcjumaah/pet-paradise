@@ -21,7 +21,7 @@ export type ProductPaginated = {
 export const findAll = async (pageNum: number = 0, search: string = "") => {
 	try {
 		search = `%${search}%`;
-		const { result, pagination } = await paginationSql(pageNum, `SELECT * FROM product WHERE (? = '' OR name LIKE ?)`, [
+		const { result, pagination } = await paginationSql(pageNum, `SELECT * FROM product WHERE (? = '%%' OR name LIKE ?)`, [
 			search,
 			search,
 		]);
