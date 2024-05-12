@@ -18,9 +18,13 @@ export type ProductPaginated = {
 	pagination: Pagination;
 };
 
-export const findAll = async (pageNum: number = 0) => {
+export const findAll = async (pageNum: number = 0, search: string = "") => {
 	try {
-		const { result, pagination } = await paginationSql(pageNum, `SELECT * FROM product`);
+		search = `%${search}%`;
+		const { result, pagination } = await paginationSql(pageNum, `SELECT * FROM product WHERE (? = '' OR name LIKE ?)`, [
+			search,
+			search,
+		]);
 
 		return keysToCamelCase({
 			content: result as Product[],
