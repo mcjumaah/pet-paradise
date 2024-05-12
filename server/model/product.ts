@@ -18,13 +18,23 @@ export type ProductPaginated = {
 	pagination: Pagination;
 };
 
-export const findAll = async (pageNum: number = 0, search: string = "") => {
+export const findAll = async (pageNum: number = 0, search: string = "", pet?: number, item?: number) => {
 	try {
 		search = `%${search}%`;
-		const { result, pagination } = await paginationSql(pageNum, `SELECT * FROM product WHERE (? = '%%' OR name LIKE ?)`, [
-			search,
-			search,
-		]);
+		const { result, pagination } = await paginationSql(
+			pageNum,
+			`
+				SELECT * FROM product p 
+					JOIN product_has_pet_category p_pc ON p_pc.product_id = p.id 
+					JOIN product_has_item_category p_ic ON p_ic.product_id = p.id 
+				WHERE (? = '%%' OR p.name LIKE ?) 
+					AND (? IS NULL OR p_pc.pet_category_id = ?) 
+					AND (? IS NULL OR p_ic.item_category_id = ?)
+			`,
+			[search, search, pet ?? null, pet ?? null, item ?? null, item ?? null]
+		);
+
+		console.log(result);
 
 		return keysToCamelCase({
 			content: result as Product[],

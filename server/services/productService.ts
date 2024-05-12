@@ -14,8 +14,8 @@ import { SelectionProjection } from "../projections/selectionProjection";
 import { DescriptionProjection } from "../projections/descriptionProjection";
 import moment from "moment";
 
-export const getProducts = async (pageNum: number = 0, search: string = "") => {
-	const resultProduct = await productModel.findAll(pageNum, search);
+export const getProducts = async (pageNum: number = 0, search: string = "", pet?: number, item?: number) => {
+	const resultProduct = await productModel.findAll(pageNum, search, pet, item);
 	const productsPaginatedProjection: ProductsPaginatedProjection = {
 		content: await mapObjectArrayToClass(resultProduct.content, ProductSummaryProjection),
 		pagination: resultProduct.pagination,

@@ -5,9 +5,9 @@ import * as productService from "../services/productService";
 
 export const getProducts = async (event: H3Event) => {
 	try {
-		const { pageNum, search } = getQuery(event);
+		const { pet, item, pageNum, search } = getQuery(event);
 
-		const result = await productService.getProducts(pageNum as number, search as string);
+		const result = await productService.getProducts(pageNum as number, search as string, pet as number, item as number);
 
 		return {
 			data: result,
