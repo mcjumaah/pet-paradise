@@ -64,13 +64,7 @@ export const paginationSql = async (pageNum = 0, paginationQuery: string, pagina
 };
 
 function formatSQLQueryForCount(query: string) {
-	let queryPieces = query.split("\n");
-
-	for (let i = 0; i < queryPieces.length; i++) {
-		queryPieces[i] = queryPieces[i].replace("*", "COUNT(*) AS total");
-	}
-
-	let formattedQueryString = queryPieces.join("\n");
+	const formattedQueryString = `SELECT COUNT(*) AS total FROM (${query}) AS subquery`;
 
 	return formattedQueryString;
 }
