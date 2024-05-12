@@ -18,11 +18,11 @@
 		<section class="deals-by-pet container py-5">
 			<h2 class="text-center poppins-bold">Deals By Pet</h2>
 			<div class="d-flex gap-5 justify-content-center mt-5">
-				<CardByPet bgImage="/images/by-dog.png">
+				<CardByPet url="/shop?pet=2" bgImage="/images/by-dog.png">
 					<template #title>DOG</template>
 					<template #description> Everything you need for your Dog</template>
 				</CardByPet>
-				<CardByPet bgImage="/images/by-cat.png">
+				<CardByPet url="/shop?pet=1" bgImage="/images/by-cat.png">
 					<template #title>CAT</template>
 					<template #description> Everything you need for your Cat</template>
 				</CardByPet>
@@ -32,7 +32,11 @@
 		<section class="featured-brands d-flex flex-column gap-5 bg-body-3 py-5">
 			<h2 class="text-center poppins-bold">Featured Brands</h2>
 			<div class="d-flex row-gap-2 column-gap-5 flex-wrap justify-content-center">
-				<NuxtLink to="/shop" v-for="(product, index) in dummyFeaturedProducts" class="feat-brands-card">
+				<NuxtLink
+					to="/shop"
+					v-for="(product, index) in dummyFeaturedProducts"
+					class="feat-brands-card text-secondary-emphasis text-decoration-none"
+				>
 					<template v-if="index < 4">
 						<div class="card p-4 shadow transition-all">
 							<img :src="product.imagePreview" class="h-100 object-fit-contain" alt="product" />

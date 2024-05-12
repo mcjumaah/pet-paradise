@@ -4,7 +4,7 @@
 			<PagePathDisplay class="container" :finalPathTitle="product?.name" isOnPoductPage />
 		</nav>
 
-		<main class="d-flex flex-column row-gap-4 bg-body-2 pt-4">
+		<main v-if="!isFetchingProduct" class="d-flex flex-column row-gap-4 bg-body-2 pt-4">
 			<section class="product-preview-action py-5 bg-white">
 				<div class="container d-flex column-gap-5 justify-content-center">
 					<ProductImagePreview :images="!isFetchingProduct ? (product?.images as string[]) :[]" />
@@ -66,7 +66,7 @@
 						<h4 class="text-primary text-decoration-underline">Description</h4>
 						<!-- <h4 class="text-muted">Additional Information</h4> -->
 					</div>
-					<p class="description-text whitespace-pre-line">{{ productDescription }}</p>
+					<p class="description-text whitespace-pre-line">{{ product?.description.text }}</p>
 					<div class="description-images d-flex flex-wrap justify-content-center gap-4">
 						<img v-for="(img, index) in product?.description.images" :key="`${index} - ${img.slice(0, 5)}...`" :src="img" />
 					</div>
@@ -126,7 +126,7 @@ const {
 	data: product,
 	pending: isFetchingProduct,
 	error: fetchProductError,
-} = await useFetch("/api/product", {
+} = useFetch("/api/product", {
 	method: "GET",
 	query: { id: route.params.id },
 	transform: (_product) => _product.data as ProductProjection,
@@ -258,8 +258,7 @@ async function setToBuyNow() {
 	}
 }
 
-onMounted(() => {
-	productDescription.value = product.value?.description.text ?? "";
+onMounted(async () => {
 	addedToCartToast.value = Toast.getOrCreateInstance("#added-to-cart-toast");
 });
 

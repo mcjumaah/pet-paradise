@@ -12,7 +12,7 @@ export default defineNuxtPlugin(async () => {
 		transform: (_customerData: { data: CustomerProjection }) => _customerData.data,
 	});
 
-	const { data: cartData, execute } = await useFetch("/api/cart", {
+	const { data: cartData, execute } = useFetch("/api/cart", {
 		method: "GET",
 		query: {
 			customerId: customerData.value?.id,

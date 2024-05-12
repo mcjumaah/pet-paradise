@@ -172,10 +172,9 @@ const {
 	pending: isFetchingCartItems,
 	error: fetchCartItemsError,
 	execute: fetchCartItems,
-} = await useFetch("/api/cart/items", {
+} = useFetch("/api/cart/items", {
 	method: "GET",
 	query: { cartId: currentUserCart.data?.id },
-	immediate: false,
 	transform: (_cartItems) => _cartItems.data as ProductItemsPaginatedProjection,
 	watch: [deleteCartItemData],
 });
@@ -261,10 +260,6 @@ function setCheckoutItems() {
 	}, 750);
 	tooltips.value.checkout.enable();
 }
-
-onBeforeMount(async () => {
-	await fetchCartItems();
-});
 
 onMounted(() => {
 	tooltips.value.selectAll = Tooltip.getOrCreateInstance("#cart-select-all");

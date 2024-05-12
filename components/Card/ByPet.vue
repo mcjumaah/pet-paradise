@@ -1,5 +1,5 @@
 <template>
-	<NuxtLink to="/shop" class="by-pet-card cursor-pointer">
+	<NuxtLink :to="props.url" class="by-pet-card cursor-pointer text-secondary-emphasis text-decoration-none">
 		<div
 			class="position-relative rounded-4"
 			:style="{
@@ -21,8 +21,11 @@
 <script setup lang="ts">
 export interface Props {
 	bgImage?: string;
+	url?: string;
 }
-const props = withDefaults(defineProps<Props>(), {});
+const props = withDefaults(defineProps<Props>(), {
+	url: "/shop",
+});
 </script>
 
 <style lang="scss" scoped>

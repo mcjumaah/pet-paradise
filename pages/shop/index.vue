@@ -130,8 +130,8 @@
 
 <script setup lang="ts">
 import type { Pagination } from "~/app.vue";
-import type { ItemCategory, ItemCategoryPaginated } from "~/server/model/itemCategory";
-import type { PetCategory, PetCategoryPaginated } from "~/server/model/petCategory";
+import type { ItemCategory } from "~/server/model/itemCategory";
+import type { PetCategory } from "~/server/model/petCategory";
 import type { ProductSummaryProjection } from "~/server/projections/productProjections";
 import type { Pagination as ServerPagination } from "~/server/utils/paginationUtil";
 
@@ -141,7 +141,7 @@ const products = ref<ProductSummaryProjection[]>([]);
 const pagination = ref(<Pagination>{
 	currentPage: 1,
 });
-const petTypeFilter = ref<number>(-1);
+const petTypeFilter = ref<number>(parseInt((route.query.pet as string) ?? "-1"));
 const itemTypeFilter = ref<number>(-1);
 
 const pageNumQuery = computed(() => {
@@ -160,7 +160,7 @@ const {
 	data: itemTypes,
 	pending: fetchingItemTypes,
 	error: fetchingItemTypesError,
-} = await useFetch("/api/category/item-types", {
+} = useFetch("/api/category/item-types", {
 	method: "GET",
 	transform: (_itemTypes) => {
 		return _itemTypes.data.content as ItemCategory[];
@@ -171,7 +171,7 @@ const {
 	data: petTypes,
 	pending: fetchingPetTypes,
 	error: fetchingPetTypesError,
-} = await useFetch("/api/category/pet-types", {
+} = useFetch("/api/category/pet-types", {
 	method: "GET",
 	transform: (_itemTypes) => {
 		return _itemTypes.data.content as PetCategory[];
@@ -183,7 +183,7 @@ const {
 	pending: fetchingProductsData,
 	error: fetchingProductsDataError,
 	execute: fetchProducts,
-} = await useFetch("/api/products", {
+} = useFetch("/api/products", {
 	method: "GET",
 	query: {
 		pageNum: pageNumQuery,
@@ -191,7 +191,6 @@ const {
 		pet: petTypeQuery,
 		item: itemTypeQuery,
 	},
-	immediate: false,
 	transform: (_productsData) => {
 		const data: { content: ProductSummaryProjection[]; pagination: ServerPagination } = _productsData.data;
 
@@ -226,10 +225,6 @@ function getProductPrice(price: ProductSummaryProjection["price"]) {
 		return `₱${price?.min} - ₱${price?.max}`;
 	}
 }
-
-onMounted(async () => {
-	await fetchProducts();
-});
 </script>
 
 <style scoped lang="scss">
