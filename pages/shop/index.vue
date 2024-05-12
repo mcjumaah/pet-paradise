@@ -19,7 +19,7 @@
 				</div>
 
 				<div class="top-pagination d-flex align-items-center column-gap-3">
-					<div class="page-number text-nowrap">
+					<div v-if="pagination.totalPages !== 0" class="page-number text-nowrap">
 						<span class="current-page text-primary-emphasis">{{ pagination.currentPage }}</span> /
 						<span clasa="total-pages">{{ pagination.totalPages }}</span>
 					</div>
@@ -37,7 +37,7 @@
 							class="btn btn-primary d-flex align-items-center"
 							type="button"
 							title="Next"
-							:disabled="pagination.currentPage == pagination.totalPages"
+							:disabled="pagination.currentPage == pagination.totalPages || pagination.totalPages === 0"
 							@click="pagination.currentPage++"
 						>
 							<img src="/svg/chevron-left-white.svg" class="rotate-180" alt="Right Arrow" />
@@ -114,7 +114,10 @@
 						<a class="page-link" href="#" @click="pagination.currentPage = index">{{ index }}</a>
 					</li>
 				</template>
-				<li class="page-item" :class="pagination.currentPage === pagination.totalPages ? 'disabled' : ''">
+				<li
+					class="page-item"
+					:class="pagination.currentPage == pagination.totalPages || pagination.totalPages === 0 ? 'disabled' : ''"
+				>
 					<a class="page-link" href="#" title="Next" @click="pagination.currentPage++">
 						<img src="/svg/chevron-left-primary.svg" class="rotate-180" alt="Right Arrow" />
 					</a>
