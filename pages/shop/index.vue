@@ -134,7 +134,6 @@ import type { ProductSummaryProjection } from "~/server/projections/productProje
 import type { Pagination as ServerPagination } from "~/server/utils/paginationUtil";
 
 const route = useRoute();
-const { query } = route;
 
 const products = ref<ProductSummaryProjection[]>([]);
 const pagination = ref(<Pagination>{
@@ -145,13 +144,14 @@ const pageNumQuery = computed(() => {
 	return pagination.value.currentPage - 1;
 });
 
+const searchQuery = computed(() => route.query.search);
+
 const {
 	data: productCategories,
 	pending: fetchingProductCategories,
 	error: fetchingProductCategoriesError,
 } = await useFetch("/api/item-categories", {
 	method: "GET",
-	query: { pageNum: pageNumQuery, search: query.search },
 	transform: (_productCategories) => {
 		const data: ItemCategory[] = _productCategories.data.content;
 
@@ -165,7 +165,7 @@ const {
 	execute: fetchProducts,
 } = await useFetch("/api/products", {
 	method: "GET",
-	query: { pageNum: pageNumQuery, search: query.search },
+	query: { pageNum: pageNumQuery, search: searchQuery },
 	immediate: false,
 	transform: (_productsData) => {
 		const data: { content: ProductSummaryProjection[]; pagination: ServerPagination } = _productsData.data;
