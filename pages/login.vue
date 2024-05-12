@@ -28,7 +28,9 @@
 		</div>
 
 		<div class="login-btn-wrapper d-flex flex-column">
-			<button type="submit" class="btn btn-primary w-100 text-white">LOG IN</button>
+			<button type="submit" class="btn btn-primary w-100 text-white">
+				<DynamicSpinnerLoader :loading="isLoggingIn">LOG IN</DynamicSpinnerLoader>
+			</button>
 			<!-- <NuxtLink to="/forgot-password" class="link-secondary-sm">Forgot Password?</NuxtLink> -->
 		</div>
 	</form>
@@ -46,6 +48,8 @@ const { signIn } = useAuth();
 const route = useRoute();
 const hasCreatedNewCustomerAccount = useHasCreatedNewCustomerAccount();
 
+const isLoggingIn = ref<boolean>(false);
+
 function getLoginFormInputs() {
 	const loginFormEl = document.getElementById("login-form") as HTMLFormElement;
 
@@ -56,6 +60,7 @@ function getLoginFormInputs() {
 }
 
 function handleSignIn() {
+	isLoggingIn.value = true;
 	const { emailInput, passwordInput } = getLoginFormInputs();
 
 	const emailVal = emailInput.value;
@@ -77,6 +82,7 @@ onMounted(() => {
 
 onBeforeRouteLeave(() => {
 	hasCreatedNewCustomerAccount.value = false;
+	isLoggingIn.value = false;
 });
 </script>
 
