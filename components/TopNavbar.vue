@@ -12,7 +12,13 @@
 						data-bs-dismiss="offcanvas"
 					></button>
 					<form class="search d-lg-none">
-						<input type="search" class="form-control" placeholder="Find a product..." />
+						<input
+							type="search"
+							class="form-control"
+							placeholder="Find a product..."
+							v-model="searchQuery"
+							@keyup.enter="handleSearch()"
+						/>
 					</form>
 					<PageNav :isOnTopbar="true" data-bs-dismiss="offcanvas" />
 				</div>
@@ -43,7 +49,13 @@
 						</button>
 						<div class="dropdown-menu dropdown-menu-end p-2">
 							<form class="search">
-								<input type="search" class="form-control" placeholder="Find a product..." />
+								<input
+									type="search"
+									class="form-control"
+									placeholder="Find a product..."
+									v-model="searchQuery"
+									@keyup.enter="handleSearch()"
+								/>
 							</form>
 						</div>
 					</div>
@@ -127,6 +139,7 @@ const { status: loginStatus, signOut } = useAuth();
 
 const tooltips = ref(<CartTooltips>{});
 const hasAdded = ref(false);
+const searchQuery = ref();
 
 const isCustomerLoggedIn = computed(() => {
 	return loginStatus.value === "authenticated";
@@ -147,6 +160,10 @@ watch(
 		}
 	}
 );
+
+async function handleSearch() {
+	navigateTo(`/shop?search=${searchQuery.value}`, { replace: true, external: true });
+}
 
 onMounted(() => {
 	tooltips.value.search = Tooltip.getOrCreateInstance("#top-navbar-search-btn");
