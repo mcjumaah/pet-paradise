@@ -139,7 +139,7 @@ const { status: loginStatus, signOut } = useAuth();
 
 const tooltips = ref(<CartTooltips>{});
 const hasAdded = ref(false);
-const searchQuery = ref();
+const searchQuery = ref("");
 
 const isCustomerLoggedIn = computed(() => {
 	return loginStatus.value === "authenticated";
