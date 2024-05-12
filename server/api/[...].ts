@@ -3,7 +3,7 @@ import * as productCtrl from "../controller/productController";
 import * as customerCtrl from "../controller/customerController";
 import * as cartCtrl from "../controller/cartController";
 import * as orderCtrl from "../controller/orderController";
-import * as itemCategoryCtrl from "../controller/itemCategoryController";
+import * as categoryCtrl from "../controller/categoryController";
 
 const router = createRouter();
 
@@ -28,6 +28,6 @@ router.delete("/cart/item", defineEventHandler(cartCtrl.deleteCartItem));
 
 router.get("/orders", defineEventHandler(orderCtrl.getOrders));
 
-router.get("/item-categories", defineEventHandler(itemCategoryCtrl.getCategories));
+router.get("/category/item-types", defineEventHandler(categoryCtrl.getCategories));
 
 export default useBase("/api", router.handler);

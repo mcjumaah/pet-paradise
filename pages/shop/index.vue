@@ -150,7 +150,7 @@ const {
 	data: productCategories,
 	pending: fetchingProductCategories,
 	error: fetchingProductCategoriesError,
-} = await useFetch("/api/item-categories", {
+} = await useFetch("/api/category/item-types", {
 	method: "GET",
 	transform: (_productCategories) => {
 		const data: ItemCategory[] = _productCategories.data.content;
