@@ -37,8 +37,6 @@ export const findAll = async (pageNum: number = 0, search: string = "", pet?: nu
 			[search, search, pet ?? null, pet ?? null, item ?? null, item ?? null]
 		);
 
-		console.log(result);
-
 		return keysToCamelCase({
 			content: result as Product[],
 			pagination: pagination,

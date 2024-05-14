@@ -126,9 +126,11 @@ const {
 	data: product,
 	pending: isFetchingProduct,
 	error: fetchProductError,
+	execute: fetchProduct,
 } = useFetch("/api/product", {
 	method: "GET",
 	query: { id: route.params.id },
+	immediate: false,
 	transform: (_product) => _product.data as ProductProjection,
 });
 
@@ -257,6 +259,10 @@ async function setToBuyNow() {
 		});
 	}
 }
+
+onBeforeMount(async () => {
+	await fetchProduct();
+});
 
 onMounted(async () => {
 	addedToCartToast.value = Toast.getOrCreateInstance("#added-to-cart-toast");

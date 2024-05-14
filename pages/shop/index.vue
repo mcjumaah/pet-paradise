@@ -191,6 +191,7 @@ const {
 		pet: petTypeQuery,
 		item: itemTypeQuery,
 	},
+	immediate: false,
 	transform: (_productsData) => {
 		const data: { content: ProductSummaryProjection[]; pagination: ServerPagination } = _productsData.data;
 
@@ -225,6 +226,10 @@ function getProductPrice(price: ProductSummaryProjection["price"]) {
 		return `₱${price?.min} - ₱${price?.max}`;
 	}
 }
+
+onBeforeMount(async () => {
+	await fetchProducts();
+});
 </script>
 
 <style scoped lang="scss">

@@ -26,85 +26,81 @@
 			</div>
 		</div>
 
-		<TransitionGroup
-			v-if="!isFetchingCartItems"
-			key="cart-items-transition-group"
-			name="cart-items"
-			tag="div"
-			class="d-flex flex-column row-gap-2"
-		>
-			<div
-				v-for="(item, index) in cartItems?.content"
-				:key="`${index} - ${item.id}`"
-				class="cart-item card bg-body-2 shadow-sm"
-			>
-				<div class="card-body d-flex justify-content-between px-5 column-gap-4">
-					<div class="d-flex column-gap-3 align-items-center w-100">
-						<div class="form-check">
-							<input
-								:title="`Select This Item #${item.id}`"
-								:id="`cart-item-${item.id}`"
-								class="form-check-input"
-								type="checkbox"
-								:value="item.id"
-								v-model="selectedItemsId"
-							/>
+		<ClientOnly>
+			<TransitionGroup key="cart-items-transition-group" name="cart-items" tag="div" class="d-flex flex-column row-gap-2">
+				<div
+					v-for="(item, index) in cartItems?.content"
+					:key="`${index} - ${item.id}`"
+					class="cart-item card bg-body-2 shadow-sm"
+				>
+					<div class="card-body d-flex justify-content-between px-5 column-gap-4">
+						<div class="d-flex column-gap-3 align-items-center w-100">
+							<div class="form-check">
+								<input
+									:title="`Select This Item #${item.id}`"
+									:id="`cart-item-${item.id}`"
+									class="form-check-input"
+									type="checkbox"
+									:value="item.id"
+									v-model="selectedItemsId"
+								/>
+							</div>
+							<div :title="item.name" class="d-flex align-items-center column-gap-4">
+								<img :src="item.previewImage" class="product-image rounded" :alt="`Product #${item.id} Image`" />
+								<div>
+									<p class="card-text" :class="item.selection.length <= 0 ? 'line-clamp-3' : 'line-clamp-2'">
+										{{ item.name }}
+									</p>
+									<p class="mb-0 text-muted">
+										<template v-if="item.selection.length > 0">
+											Variety:
+											<span v-for="selection in item.selection" class="text-bg-secondary py-1 px-2 rounded text-white">{{
+												selection.variety
+											}}</span>
+										</template>
+									</p>
+								</div>
+							</div>
 						</div>
-						<div :title="item.name" class="d-flex align-items-center column-gap-4">
-							<img :src="item.previewImage" class="product-image rounded" :alt="`Product #${item.id} Image`" />
-							<div>
-								<p class="card-text" :class="item.selection.length <= 0 ? 'line-clamp-3' : 'line-clamp-2'">
-									{{ item.name }}
-								</p>
-								<p class="mb-0 text-muted">
-									<template v-if="item.selection.length > 0">
-										Variety:
-										<span v-for="selection in item.selection" class="text-bg-secondary py-1 px-2 rounded text-white">{{
-											selection.variety
-										}}</span>
-									</template>
-								</p>
+
+						<div class="grid text-center w-75 align-items-center">
+							<div title="Unit Price" class="g-col-3 d-flex justify-content-center">
+								₱{{ parseInt(item.price.toString()) }}
+							</div>
+							<div title="Quantity" class="g-col-3 d-flex justify-content-center">
+								<QuantitySelect
+									v-model="item.quantity"
+									on-click-customized
+									@update-quantity="(quantity) => updatexItemQuantity(item.id, quantity)"
+								/>
+							</div>
+							<div title="Total Price" class="g-col-3 d-flex justify-content-center text-primary">
+								₱{{ usePerItemTotalPrice(item) }}
+							</div>
+							<div class="g-col-3 d-flex justify-content-center">
+								<button
+									type="button"
+									class="btn link-secondary text-decoration-underline"
+									:class="getIsDeletingItem(item.id) ? 'disabled ' : ''"
+									@click="selectedItemIdToDelete = item.id"
+								>
+									{{ getIsDeletingItem(item.id) ? "deleting..." : "Delete" }}
+								</button>
 							</div>
 						</div>
 					</div>
-
-					<div class="grid text-center w-75 align-items-center">
-						<div title="Unit Price" class="g-col-3 d-flex justify-content-center">
-							₱{{ parseInt(item.price.toString()) }}
-						</div>
-						<div title="Quantity" class="g-col-3 d-flex justify-content-center">
-							<QuantitySelect
-								v-model="item.quantity"
-								on-click-customized
-								@update-quantity="(quantity) => updatexItemQuantity(item.id, quantity)"
-							/>
-						</div>
-						<div title="Total Price" class="g-col-3 d-flex justify-content-center text-primary">
-							₱{{ usePerItemTotalPrice(item) }}
-						</div>
-						<div class="g-col-3 d-flex justify-content-center">
-							<button
-								type="button"
-								class="btn link-secondary text-decoration-underline"
-								:class="getIsDeletingItem(item.id) ? 'disabled ' : ''"
-								@click="selectedItemIdToDelete = item.id"
-							>
-								{{ getIsDeletingItem(item.id) ? "deleting..." : "Delete" }}
-							</button>
-						</div>
-					</div>
 				</div>
-			</div>
 
-			<div
-				v-if="cartItems?.content && cartItems?.content.length <= 0 && !isFetchingCartItems"
-				key="cart-items-empty-placeholder"
-				class="empty-cart-placeholder d-flex flex-column w-100 justify-content-center align-items-center row-gap-2"
-			>
-				<img class="empty-cart-image opacity-75" src="/images/icons/empty-cart.png" alt="Empty Cart" />
-				<h4 class="text-muted">Cart is Empty. Add products from the <NuxtLink to="/shop">Shop</NuxtLink>.</h4>
-			</div>
-		</TransitionGroup>
+				<div
+					v-if="cartItems?.content && cartItems?.content.length <= 0 && !isFetchingCartItems"
+					key="cart-items-empty-placeholder"
+					class="empty-cart-placeholder d-flex flex-column w-100 justify-content-center align-items-center row-gap-2"
+				>
+					<img class="empty-cart-image opacity-75" src="/images/icons/empty-cart.png" alt="Empty Cart" />
+					<h4 class="text-muted">Cart is Empty. Add products from the <NuxtLink to="/shop">Shop</NuxtLink>.</h4>
+				</div>
+			</TransitionGroup>
+		</ClientOnly>
 
 		<div class="d-flex align-items-center column-gap-3 justify-content-end pe-5 my-3">
 			<p class="mb-0">
