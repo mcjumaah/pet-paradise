@@ -18,19 +18,7 @@ export type Customer = {
 	birthDate: string;
 };
 
-export type CustomerDTO = Pick<
-	Customer,
-	| "username"
-	| "firstName"
-	| "lastName"
-	| "middleName"
-	| "email"
-	| "password"
-	| "address"
-	| "phoneNumber"
-	| "gender"
-	| "birthDate"
->;
+export type CustomerDTO = Omit<Customer, "id">;
 
 export type CustomerUpdateDTO = Omit<CustomerDTO, "email" | "password" | "address" | "phoneNumber">;
 

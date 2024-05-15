@@ -4,6 +4,7 @@ import * as customerCtrl from "../controller/customerController";
 import * as cartCtrl from "../controller/cartController";
 import * as orderCtrl from "../controller/orderController";
 import * as categoryCtrl from "../controller/categoryController";
+import * as adminCtrl from "../controller/adminController";
 
 const router = createRouter();
 
@@ -30,5 +31,7 @@ router.get("/orders", defineEventHandler(orderCtrl.getOrders));
 
 router.get("/category/item-types", defineEventHandler(categoryCtrl.getItemTypes));
 router.get("/category/pet-types", defineEventHandler(categoryCtrl.getPetTypes));
+
+router.get("/admin", defineEventHandler(adminCtrl.getAdmin));
 
 export default useBase("/api", router.handler);
