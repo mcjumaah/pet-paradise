@@ -29,16 +29,20 @@ useSeoMeta({
 	ogTitle: computedTitle,
 });
 
-const computedLayout = ref<LayoutKey>("default");
-const layoutName = computed<false | LayoutKey>(() => {
+const computedLayout = ref<LayoutKey | false>("default");
+const layoutName = computed<LayoutKey | false>(() => {
 	let withNoHeaders = ["Home", "Signup", "Login"];
 	let isPerProductPage = basePathTitle.value === "Shop" && pathArr.value.length === 2 && pathTitle.value !== "Cart";
-	let isSignupLoginPage = basePathTitle.value === "Signup" || pathTitle.value === "Login";
+	let isSignupLoginPage = basePathTitle.value === "Signup" || basePathTitle.value === "Login";
 
 	if (isSignupLoginPage) {
 		computedLayout.value = "login-signup";
 	} else if (basePathTitle.value === "Account") {
 		computedLayout.value = "account";
+	} else if (basePathTitle.value === "Admin" && pathTitle.value !== "Login") {
+		computedLayout.value = "admin";
+	} else if (basePathTitle.value === "Admin" && pathTitle.value === "Login") {
+		computedLayout.value = false;
 	} else if (!isPerProductPage && !withNoHeaders.includes(pathTitle.value)) {
 		computedLayout.value = "with-header";
 	} else {

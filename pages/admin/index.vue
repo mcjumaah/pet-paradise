@@ -9,6 +9,7 @@ definePageMeta({
 			return navigateTo("/admin/products");
 		},
 	],
+	auth: false,
 });
 </script>
 
