@@ -1,3 +1,4 @@
+import moment from "moment";
 import { sql } from "../db";
 import { keysToCamelCase } from "../utils/entityFieldsUtil";
 import { paginationSql } from "../utils/paginationUtil";
@@ -9,6 +10,7 @@ export type Product = {
 	stock: number;
 	images: string[];
 	soldNum: number;
+	deletedAt: string;
 };
 
 export type ProductDTO = Pick<Product, "sku" | "name" | "stock" | "images" | "soldNum">;
@@ -32,7 +34,8 @@ export const findAll = async (pageNum: number = 0, search: string = "", pet?: nu
 					ON p_ic.product_id = p.id 
 				WHERE (? = '%%' OR p.name LIKE ?) 
 					AND (? IS NULL OR p_pc.pet_category_id = ?) 
-					AND (? IS NULL OR p_ic.item_category_id = ?)
+					AND (? IS NULL OR p_ic.item_category_id = ?) 
+					AND deleted_at IS NULL
 			`,
 			[search, search, pet ?? null, pet ?? null, item ?? null, item ?? null]
 		);
@@ -91,14 +94,15 @@ export const update = async (id: number, data: ProductDTO) => {
 	try {
 		await sql({
 			query: `
-      UPDATE product 
-      SET 
-        sku = ?, 
-        name = ?, 
-				stock = ?, 
-				images = ?, 
-				sold_num = ? 
-      WHERE id = ?`,
+				UPDATE product 
+				SET 
+					sku = ?, 
+					name = ?, 
+					stock = ?, 
+					images = ?, 
+					sold_num = ? 
+				WHERE id = ?
+			`,
 			values: [data.sku, data.name, data.stock, data.images, data.soldNum, id],
 		});
 
@@ -110,12 +114,19 @@ export const update = async (id: number, data: ProductDTO) => {
 
 export const deleteById = async (id: number) => {
 	try {
+		const currentDate = moment().format("YYYY-MM-DD HH:mm:ss");
+
 		await sql({
-			query: `DELETE FROM product WHERE id = ?`,
-			values: [id],
+			query: `
+				UPDATE product 
+				SET 
+					deleted_at = ? 
+				WHERE id = ?
+			`,
+			values: [currentDate, id],
 		});
 
-		return true;
+		return await findById(id);
 	} catch (error) {
 		throw error;
 	}

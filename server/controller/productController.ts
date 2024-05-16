@@ -24,7 +24,7 @@ export const getProduct = async (event: H3Event) => {
 	try {
 		const queryParam = getQuery(event);
 
-		const result = await productService.getProduct(queryParam.id as string);
+		const result = await productService.getProduct(queryParam.id as number);
 
 		return {
 			data: result,
@@ -62,7 +62,7 @@ export const editProduct = async (event: H3Event) => {
 		const queryParam = getQuery(event);
 		const body = await readBody(event);
 
-		const result = await productModel.update(queryParam.id as string, {
+		const result = await productModel.update(queryParam.id as number, {
 			sku: body.sku,
 			name: body.name,
 			stock: body.stock,
@@ -83,26 +83,30 @@ export const editProduct = async (event: H3Event) => {
 
 export const deleteProduct = async (event: H3Event) => {
 	try {
-		const queryParam = getQuery(event);
+		const { id } = getQuery(event);
 
-		const result = await productModel.deleteById(queryParam.id as string);
+		const result = await productModel.deleteById(id as number);
 
 		if (result) {
 			return {
 				data: {
-					code: 204,
+					code: 200,
+					statusMessage: "OK",
 					message: "Successfully deleted Product",
+					body: result,
 				},
 			};
 		} else {
-			return {
-				data: result,
-			};
+			throw createError({
+				statusCode: 500,
+				statusMessage: "Something went wrong",
+			});
 		}
-	} catch {
+	} catch (error) {
 		throw createError({
 			statusCode: 500,
 			statusMessage: "Something went wrong",
+			message: error as string,
 		});
 	}
 };
