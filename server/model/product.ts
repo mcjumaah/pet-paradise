@@ -46,7 +46,7 @@ export const findAll = async (pageNum: number = 0, search: string = "", pet?: nu
 	}
 };
 
-export const findById = async (id: string) => {
+export const findById = async (id: number) => {
 	try {
 		const result = keysToCamelCase(
 			await sql({
@@ -87,7 +87,7 @@ export const save = async (data: ProductDTO) => {
 	}
 };
 
-export const update = async (id: string, data: ProductDTO) => {
+export const update = async (id: number, data: ProductDTO) => {
 	try {
 		await sql({
 			query: `
@@ -108,7 +108,7 @@ export const update = async (id: string, data: ProductDTO) => {
 	}
 };
 
-export const deleteById = async (id: string) => {
+export const deleteById = async (id: number) => {
 	try {
 		await sql({
 			query: `DELETE FROM product WHERE id = ?`,
