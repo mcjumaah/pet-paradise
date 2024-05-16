@@ -76,11 +76,20 @@
 						</p>
 						<p class="price card-text text-primary-emphasis">{{ getProductPrice(product.price) }}</p>
 					</div>
-					<div class="d-flex ;p-1 gap-2">
+					<div class="d-flex p-2 gap-2">
 						<button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#modal-product-form">
 							EDIT
 						</button>
-						<button type="button" class="btn btn-warning">DELETE</button>
+
+						<button
+							type="button"
+							class="btn btn-warning"
+							data-bs-toggle="modal"
+							:data-bs-target="`#confirm-product-delete-${product.id}`"
+						>
+							DELETE
+						</button>
+						<ModalProductDelete :product="product" @product-delete="fetchProducts()" />
 					</div>
 				</div>
 
@@ -205,16 +214,6 @@ watch([fetchingProductsDataError, fetchingItemTypesError, fetchingPetTypesError]
 		alert(errors.find((error) => error));
 	}
 });
-
-function getPageIsToDisplay(index: number) {
-	if (pagination.value.currentPage < 3) {
-		return index < 6;
-	} else if (pagination.value.currentPage > pagination.value.totalPages - 3) {
-		return index > pagination.value.totalPages - 5;
-	} else {
-		return index > pagination.value.currentPage - 3 && index < pagination.value.currentPage + 3;
-	}
-}
 
 function getProductPrice(price: ProductSummaryProjection["price"]) {
 	if (price === null) {
