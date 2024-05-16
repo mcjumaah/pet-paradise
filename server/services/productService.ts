@@ -28,9 +28,9 @@ export const getProducts = async (pageNum: number = 0, search: string = "", pet?
 	return productsPaginatedProjection;
 };
 
-export const getProduct = async (id: string) => {
+export const getProduct = async (id: number) => {
 	let result = (await productModel.findById(id)) as any as ProductProjection;
-	const priceModelArr = await priceModel.findAllByProductId(id.toString());
+	const priceModelArr = await priceModel.findAllByProductId(id);
 	if (priceModelArr.length <= 0) {
 		throw createError({
 			statusCode: 404,

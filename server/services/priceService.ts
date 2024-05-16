@@ -4,7 +4,7 @@ import * as selectionModel from "../model/selection";
 import { SelectionOnPriceProjection } from "../projections/selectionProjection";
 
 export const getProductPriceSummary = async (productId: number) => {
-	const priceArr = (await priceModel.findAllByProductId(productId.toString())) as priceModel.Price[];
+	const priceArr = (await priceModel.findAllByProductId(productId)) as priceModel.Price[];
 	let priceValueArr: number[] = [];
 
 	if (priceArr) {
