@@ -35,7 +35,6 @@ const adminToLogin = ref({
 	password: "",
 });
 const isLoginBtnClicked = ref(false);
-const isLoginInvalid = ref(false);
 
 const {
 	data: loggedInAdmin,
@@ -50,6 +49,10 @@ const {
 	transform: (_admin) => _admin.data as Admin,
 });
 
+const isLoginInvalid = computed(() => {
+	return !loggedInAdmin.value && isLoginBtnClicked.value;
+});
+
 const isAdminLoggingIn = computed(() => {
 	return adminLoginStatus.value === "pending" ?? false;
 });
@@ -62,9 +65,7 @@ watch([loggedInAdmin, isLoginBtnClicked], async ([newAdmin, isClicked]) => {
 	if (newAdmin && isClicked) {
 		currentAdmin.value = newAdmin;
 
-		await navigateTo("/admin");
-	} else {
-		isLoginInvalid.value = true;
+		await navigateTo("/admin", { replace: true, external: true });
 	}
 });
 
