@@ -19,7 +19,7 @@ export const findAll = async () => {
 	}
 };
 
-export const findAllByProductId = async (productId: string) => {
+export const findAllByProductId = async (productId: number) => {
 	try {
 		const result = await sql({
 			query: `SELECT * FROM selection WHERE product_id = ?`,

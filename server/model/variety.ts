@@ -5,7 +5,7 @@ export type Variety = {
 	id: number;
 	name: string;
 	selectionId: number;
-	productItemId: number;
+	productItemId: number | null;
 	priceId: number;
 };
 

@@ -37,14 +37,17 @@ export const getProduct = async (event: H3Event) => {
 export const createProduct = async (event: H3Event) => {
 	try {
 		const body = await readBody(event);
-
-		const result = await productModel.save({
+		const fullProductDto: productModel.FullProductDTO = {
 			sku: body.sku,
 			name: body.name,
 			stock: body.stock || 0,
 			images: body.images || null,
 			soldNum: body.soldNum || 0,
-		});
+			prices: body.prices,
+			description: body.description || null,
+		};
+
+		const result = await productService.createProduct(fullProductDto);
 
 		return {
 			data: result,

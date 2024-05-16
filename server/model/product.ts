@@ -1,19 +1,25 @@
 import moment from "moment";
 import { sql } from "../db";
-import { keysToCamelCase } from "../utils/entityFieldsUtil";
+import { Prettify, keysToCamelCase } from "../utils/entityFieldsUtil";
 import { paginationSql } from "../utils/paginationUtil";
+import { DescriptionDTO } from "./description";
+import { PriceProjection } from "../projections/priceProjections";
 
 export type Product = {
 	id: number;
 	sku: string;
 	name: string;
 	stock: number;
-	images: string[];
+	images: string[] | null;
 	soldNum: number;
 	deletedAt: string;
 };
 
 export type ProductDTO = Pick<Product, "sku" | "name" | "stock" | "images" | "soldNum">;
+
+export type FullProductDTO = Prettify<
+	ProductDTO & { description: Prettify<Omit<DescriptionDTO, "productId">> | null } & { prices: PriceProjection[] }
+>;
 
 export type ProductPaginated = {
 	content: Product[];

@@ -14,6 +14,97 @@ import { SelectionProjection } from "../projections/selectionProjection";
 import { DescriptionProjection } from "../projections/descriptionProjection";
 import moment from "moment";
 
+export const createProduct = async (fullProductDto: productModel.FullProductDTO) => {
+	const { description, prices, ...productDto } = fullProductDto;
+
+	const createdProduct = await productModel.save(productDto);
+	if (!createdProduct) {
+		throw createError({
+			statusCode: 500,
+			statusMessage: "Something went wrong",
+			message: "Failed saving product to database.",
+		});
+	}
+
+	let createdProductDescription: descriptionModel.Description | null;
+	if (description) {
+		createdProductDescription = await descriptionModel.save({ ...description, productId: createdProduct.id });
+	}
+
+	if (prices) {
+		const selectionNames: string[] = [];
+		for (const price of prices) {
+			if (price.selections && price.selections.length > 0) {
+				for (const selection of price.selections) {
+					if (!selectionNames.includes(selection.name)) {
+						const savedSelection = await selectionModel.save({ name: selection.name, productId: createdProduct.id });
+						if (!savedSelection) {
+							throw createError({
+								statusCode: 500,
+								statusMessage: "Something went wrong",
+								message: "Failed saving product's selection to database.",
+							});
+						}
+
+						selectionNames.push(selection.name);
+					}
+				}
+			}
+		}
+
+		for (const price of prices) {
+			let savedPrice: priceModel.Price | null = null;
+			if (price.value) {
+				savedPrice = await priceModel.save({ value: price.value, productId: createdProduct.id });
+			}
+			if (!savedPrice) {
+				throw createError({
+					statusCode: 500,
+					statusMessage: "Something went wrong",
+					message: "Failed saving product's price to database.",
+				});
+			}
+
+			if (selectionNames.length > 0) {
+				const selectionModelArr = await selectionModel.findAllByProductId(createdProduct.id);
+				if (!selectionModelArr || selectionModelArr.length <= 0) {
+					throw createError({
+						statusCode: 500,
+						statusMessage: "Something went wrong",
+						message: "Failed processing saved product's selections.",
+					});
+				}
+
+				const varietyNames: string[] = [];
+				for (const selection of price.selections) {
+					const selectionModel = selectionModelArr.find((_selection) => _selection.name === selection.name);
+
+					if (selectionModel && !varietyNames.includes(selection.variety)) {
+						const savedVariety = await varietyModel.save({
+							name: selection.variety,
+							selectionId: selectionModel.id,
+							productItemId: null,
+							priceId: savedPrice.id,
+						});
+						if (!savedVariety) {
+							throw createError({
+								statusCode: 500,
+								statusMessage: "Something went wrong",
+								message: "Failed saving product's variety.",
+							});
+						}
+
+						varietyNames.push(selection.variety);
+					}
+				}
+			}
+		}
+	}
+
+	const createdProductProjection = await getProduct(createdProduct.id);
+	return createdProductProjection;
+};
+
 export const getProducts = async (pageNum: number = 0, search: string = "", pet?: number, item?: number) => {
 	const resultProduct = await productModel.findAll(pageNum, search, pet, item);
 	const productsPaginatedProjection: ProductsPaginatedProjection = {
@@ -39,7 +130,7 @@ export const getProduct = async (id: number) => {
 		});
 	}
 
-	const selectionModelArr = await selectionModel.findAllByProductId(id.toString());
+	const selectionModelArr = await selectionModel.findAllByProductId(id);
 
 	if (result) {
 		// For `prices` field
