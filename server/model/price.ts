@@ -19,7 +19,7 @@ export const findAll = async () => {
 	}
 };
 
-export const findAllByProductId = async (productId: string) => {
+export const findAllByProductId = async (productId: number) => {
 	try {
 		const result = keysToCamelCase(
 			await sql({
@@ -93,11 +93,24 @@ export const update = async (id: number, data: PriceDTO) => {
 	}
 };
 
-export const deleteById = async (id: string) => {
+export const deleteById = async (id: number) => {
 	try {
 		await sql({
 			query: `DELETE FROM price WHERE id = ?`,
 			values: [id],
+		});
+
+		return true;
+	} catch (error) {
+		throw error;
+	}
+};
+
+export const deleteByProductId = async (prdocutId: number) => {
+	try {
+		await sql({
+			query: `DELETE FROM price WHERE product_id = ?`,
+			values: [prdocutId],
 		});
 
 		return true;

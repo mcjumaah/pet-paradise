@@ -98,3 +98,16 @@ export const deleteById = async (id: number) => {
 		throw error;
 	}
 };
+
+export const deleteByProductId = async (productId: number) => {
+	try {
+		await sql({
+			query: `DELETE FROM product_has_item_category WHERE product_id = ?`,
+			values: [productId],
+		});
+
+		return true;
+	} catch (error) {
+		throw error;
+	}
+};
