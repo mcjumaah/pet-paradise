@@ -3,9 +3,8 @@
 		<section class="admin-products-overview">
 			<div class="d-flex justify-content-between pb-4">
 				<h2 class="">PRODUCTS OVERVIEW</h2>
-				<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-product-form">
-					CREATE PRODUCT
-				</button>
+
+				<ModalProductUpdate @product-update="fetchProducts()" />
 			</div>
 
 			<div class="sort-bar bg-body-3">
@@ -77,18 +76,8 @@
 						<p class="price card-text text-primary-emphasis">{{ getProductPrice(product.price) }}</p>
 					</div>
 					<div class="d-flex p-2 gap-2">
-						<button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#modal-product-form">
-							EDIT
-						</button>
+						<ModalProductUpdate :product-id="product.id" @product-update="fetchProducts()" />
 
-						<button
-							type="button"
-							class="btn btn-warning"
-							data-bs-toggle="modal"
-							:data-bs-target="`#confirm-product-delete-${product.id}`"
-						>
-							DELETE
-						</button>
 						<ModalProductDelete :product="product" @product-delete="fetchProducts()" />
 					</div>
 				</div>
