@@ -20,7 +20,7 @@ export const findAll = async () => {
 	}
 };
 
-export const findById = async (id: string) => {
+export const findById = async (id: number) => {
 	try {
 		const result = keysToCamelCase(
 			await sql({
@@ -35,7 +35,7 @@ export const findById = async (id: string) => {
 	}
 };
 
-export const findOneByProductId = async (productId: string) => {
+export const findOneByProductId = async (productId: number) => {
 	try {
 		const result = keysToCamelCase(
 			await sql({
@@ -76,7 +76,7 @@ export const save = async (data: DescriptionDTO) => {
 	}
 };
 
-export const update = async (id: string, data: DescriptionDTO) => {
+export const update = async (id: number, data: DescriptionDTO) => {
 	try {
 		await sql({
 			query: `
@@ -96,11 +96,24 @@ export const update = async (id: string, data: DescriptionDTO) => {
 	}
 };
 
-export const deleteById = async (id: string) => {
+export const deleteById = async (id: number) => {
 	try {
 		await sql({
 			query: `DELETE FROM description WHERE id = ?`,
 			values: [id],
+		});
+
+		return true;
+	} catch (error) {
+		throw error;
+	}
+};
+
+export const deleteByProductId = async (productId: number) => {
+	try {
+		await sql({
+			query: `DELETE FROM description WHERE product_id = ?`,
+			values: [productId],
 		});
 
 		return true;
