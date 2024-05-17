@@ -34,7 +34,7 @@ export const findAllByPriceId = async (priceId: string) => {
 	}
 };
 
-export const findAllBySelectionId = async (selectionId: string) => {
+export const findAllBySelectionId = async (selectionId: number) => {
 	try {
 		const result = await sql({
 			query: `SELECT * FROM variety WHERE selection_id = ?`,

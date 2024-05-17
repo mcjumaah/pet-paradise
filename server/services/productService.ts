@@ -121,6 +121,14 @@ export const getProducts = async (pageNum: number = 0, search: string = "", pet?
 
 export const getProduct = async (id: number) => {
 	let result = (await productModel.findById(id)) as any as ProductProjection;
+	if (!result) {
+		throw createError({
+			statusCode: 404,
+			statusMessage: "Product Not Found",
+			message: "Product does not exist.",
+		});
+	}
+
 	const priceModelArr = await priceModel.findAllByProductId(id);
 	if (priceModelArr.length <= 0) {
 		throw createError({
@@ -146,7 +154,7 @@ export const getProduct = async (id: number) => {
 		result.selections = selectionModelArr as any[] as SelectionProjection[];
 
 		for (let [index, selection] of result.selections.entries()) {
-			selection.varieties = (await varietyModel.findAllBySelectionId(selectionModelArr[index].id.toString())).map(
+			selection.varieties = (await varietyModel.findAllBySelectionId(selectionModelArr[index].id)).map(
 				(variety) => variety.name
 			);
 
@@ -165,6 +173,10 @@ export const getProduct = async (id: number) => {
 
 		// Finishing Touches
 		result = await mapObjectToClass(result, ProductProjection);
+	}
+
+	for (const [index, product] of result.selections.entries()) {
+		result.selections[index].varieties = [...new Set(product.varieties)];
 	}
 
 	return result;
