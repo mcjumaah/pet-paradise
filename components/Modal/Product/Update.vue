@@ -65,7 +65,7 @@
 									/>
 								</div>
 								<div class="product-images d-flex flex-column">
-									<label for="admin-create-product-images" class="form-label">Images</label>
+									<label for="admin-create-product-images" class="form-label">Images (URL)</label>
 									<div class="d-flex flex-column gap-2">
 										<input
 											v-for="(image, index) in productUpdateImages"
@@ -90,11 +90,9 @@
 									/>
 								</div>
 
-								<div class="product-description">
+								<div class="product-description d-flex flex-column gap-3">
 									<div class="product-description-text">
-										<label for="admin-create-product-description-text" class="form-label required-asterisk">
-											Description Text
-										</label>
+										<label for="admin-create-product-description-text" class="form-label"> Description Text </label>
 										<textarea
 											v-if="productToUpdate.description"
 											id="admin-create-product-description-text"
@@ -105,7 +103,7 @@
 									</div>
 
 									<div class="product-images d-flex flex-column">
-										<label for="admin-create-product-images" class="form-label">Description Images</label>
+										<label for="admin-create-product-images" class="form-label">Description Images (URL)</label>
 										<div class="d-flex flex-column gap-2">
 											<input
 												v-for="(image, index) in productUpdateDescriptionImages"
