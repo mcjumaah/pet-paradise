@@ -19,7 +19,7 @@ export type ProductDTO = Pick<Product, "sku" | "name" | "stock" | "images" | "so
 
 export type FullProductDTO = Prettify<
 	ProductDTO & { description: Prettify<Omit<DescriptionDTO, "productId">> | null } & {
-		prices: PriceProjection[];
+		prices: Prettify<Omit<PriceProjection, "id">>[];
 		petCategoryIds: number[] | null;
 		itemCategoryIds: number[] | null;
 	}

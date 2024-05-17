@@ -68,13 +68,13 @@
 									<label for="admin-create-product-images" class="form-label">Images</label>
 									<div class="d-flex flex-column gap-2">
 										<input
-											v-for="(image, index) in productImages"
+											v-for="(image, index) in productUpdateImages"
 											:key="`${index}-product-image-url-slot`"
 											type="string"
 											id="admin-create-product-images"
 											class="form-control"
 											placeholder="URL of images for product"
-											v-model="productImages[index]"
+											v-model="productUpdateImages[index]"
 										/>
 										<button type="button" class="btn btn-outline-secondary" @click="addProductImage()">Add Image</button>
 									</div>
@@ -88,6 +88,77 @@
 										placeholder="Initial number of products sold"
 										v-model="productToUpdate.soldNum"
 									/>
+								</div>
+
+								<div class="product-description">
+									<div class="product-description-text">
+										<label for="admin-create-product-description-text" class="form-label required-asterisk">
+											Description Text
+										</label>
+										<textarea
+											v-if="productToUpdate.description"
+											id="admin-create-product-description-text"
+											class="form-control"
+											placeholder="Enter product description text."
+											v-model="productToUpdate.description.text"
+										></textarea>
+									</div>
+
+									<div class="product-images d-flex flex-column">
+										<label for="admin-create-product-images" class="form-label">Description Images</label>
+										<div class="d-flex flex-column gap-2">
+											<input
+												v-for="(image, index) in productUpdateDescriptionImages"
+												:key="`${index}-product-description-image-url-slot`"
+												type="string"
+												id="admin-create-product-images"
+												class="form-control"
+												placeholder="URL of images for product description"
+												v-model="productUpdateDescriptionImages[index]"
+											/>
+											<button type="button" class="btn btn-outline-secondary" @click="addProductDescriptionImage()">
+												Add Image
+											</button>
+										</div>
+									</div>
+								</div>
+
+								<div class="product-categories d-flex gap-3 justify-content-evenly">
+									<div class="product-pet-categories">
+										<p class="mb-2">Pet Categories</p>
+										<div
+											v-for="(pet, index) in petTypes"
+											:key="`${index}-${pet.id}-${pet.name}`"
+											class="form-check pet-category"
+										>
+											<input
+												type="checkbox"
+												:id="`${index}-${pet.id}-${pet.name}`"
+												class="form-check-input"
+												:value="pet.id"
+												v-model="productUpdatePetCategories"
+											/>
+											<label :for="`${index}-${pet.id}-${pet.name}`" class="form-check-label"> {{ pet.name }} </label>
+										</div>
+									</div>
+
+									<div class="product-item-categories">
+										<p class="mb-2">Item Categories</p>
+										<div
+											v-for="(item, index) in itemTypes"
+											:key="`${index}-${item.id}-${item.name}`"
+											class="form-check item-category"
+										>
+											<input
+												type="checkbox"
+												:id="`${index}-${item.id}-${item.name}`"
+												class="form-check-input"
+												:value="item.id"
+												v-model="productUpdateItemCategories"
+											/>
+											<label :for="`${index}-${item.id}-${item.name}`" class="form-check-label"> {{ item.name }} </label>
+										</div>
+									</div>
 								</div>
 							</form>
 						</div>
@@ -109,9 +180,9 @@
 </template>
 
 <script setup lang="ts">
-import type { Product, ProductDTO } from "~/server/model/product";
-
-type ProductUpdateDTO = Omit<ProductDTO, "images"> & { images: string[] | null };
+import type { ItemCategory } from "~/server/model/itemCategory";
+import type { PetCategory } from "~/server/model/petCategory";
+import type { FullProductDTO, Product, ProductDTO } from "~/server/model/product";
 
 export interface Props {
 	productId?: number | null;
@@ -126,14 +197,46 @@ const emits = defineEmits({
 	},
 });
 
-const productToUpdate = ref<ProductUpdateDTO>({
+const productToUpdate = ref<FullProductDTO>({
 	sku: "",
 	name: "",
 	stock: 0,
 	images: null,
 	soldNum: 0,
+	description: {
+		text: "",
+		images: null,
+	},
+	prices: [{ value: 0, selections: [{ name: "", variety: "" }] }],
+	petCategoryIds: null,
+	itemCategoryIds: null,
 });
-const productImages = ref<string[]>([""]);
+const productUpdateImages = ref<string[]>([""]);
+const productUpdateDescriptionImages = ref<string[]>([""]);
+const productUpdatePetCategories = ref<number[]>([]);
+const productUpdateItemCategories = ref<number[]>([]);
+
+const {
+	data: itemTypes,
+	pending: fetchingItemTypes,
+	error: fetchingItemTypesError,
+} = useFetch("/api/category/item-types", {
+	method: "GET",
+	transform: (_itemTypes) => {
+		return _itemTypes.data.content as ItemCategory[];
+	},
+});
+
+const {
+	data: petTypes,
+	pending: fetchingPetTypes,
+	error: fetchingPetTypesError,
+} = useFetch("/api/category/pet-types", {
+	method: "GET",
+	transform: (_itemTypes) => {
+		return _itemTypes.data.content as PetCategory[];
+	},
+});
 
 const {
 	data: createdProduct,
@@ -151,22 +254,44 @@ const {
 	},
 });
 
-watch([createProductError], (errors) => {
+watch([createProductError, fetchingItemTypesError, fetchingPetTypesError], (errors) => {
 	if (errors.some((error) => error)) {
 		alert(errors.find((error) => error));
 	}
 });
 
-watch(productImages.value, (newImages) => {
-	console.log(newImages);
+watch(productUpdateImages.value, (newImages) => {
 	if (newImages) {
 		const filteredImages = newImages.filter((image) => image !== "");
 		productToUpdate.value.images = filteredImages.length > 0 ? filteredImages : null;
 	}
 });
 
+watch(productUpdateDescriptionImages.value, (newImages) => {
+	if (newImages && productToUpdate.value.description) {
+		const filteredImages = newImages.filter((image) => image !== "");
+		productToUpdate.value.description.images = filteredImages.length > 0 ? filteredImages : null;
+	}
+});
+
+watch(productUpdatePetCategories, (newPetCategories) => {
+	if (newPetCategories) {
+		productToUpdate.value.petCategoryIds = newPetCategories.length > 0 ? newPetCategories : null;
+	}
+});
+
+watch(productUpdateItemCategories, (newItemCategories) => {
+	if (newItemCategories) {
+		productToUpdate.value.itemCategoryIds = newItemCategories.length > 0 ? newItemCategories : null;
+	}
+});
+
 function addProductImage() {
-	productImages.value.push("");
+	productUpdateImages.value.push("");
+}
+
+function addProductDescriptionImage() {
+	productUpdateDescriptionImages.value.push("");
 }
 
 async function handleUpdate() {

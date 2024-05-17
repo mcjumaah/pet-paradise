@@ -4,7 +4,7 @@ import { keysToCamelCase } from "../utils/entityFieldsUtil";
 export type Description = {
 	id: number;
 	text: string;
-	images: string[];
+	images: string[] | null;
 	productId: number;
 };
 
