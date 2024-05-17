@@ -158,6 +158,87 @@
 										</div>
 									</div>
 								</div>
+
+								<div class="product-prices d-flex flex-column gap-1">
+									<p class="mt-1 mb-2 fs-5">Prices</p>
+									<div
+										v-for="(price, pIndex) in productUpdatePrices"
+										:key="`${pIndex}-product-price`"
+										class="product-price bg-primary-subtle p-2 rounded"
+									>
+										<label for="admin-create-product-price-value" class="form-label fs-6">
+											<span class="px-2 bg-secondary rounded text-white">P-{{ pIndex + 1 }}</span> Price Value
+										</label>
+										<input
+											type="number"
+											id="admin-create-product-price-value"
+											class="form-control"
+											placeholder="Price"
+											v-model="productUpdatePrices[pIndex].value"
+										/>
+
+										<p class="mb-2 fs-6">Price Selections</p>
+										<div
+											v-for="(selection, sIndex) in productUpdatePrices[pIndex].selections"
+											:key="`${pIndex}-product-price-${sIndex}-selection`"
+											class="product-selection mt-3 bg-secondary-subtle p-2 rounded d-flex flex-column gap-2"
+										>
+											<div class="px-2 bg-primary text-white w-fit rounded">
+												<span class="text-secondary-emphasis">P-{{ pIndex + 1 }}</span> - {{ sIndex + 1 }}
+											</div>
+
+											<div class="product-selection-name">
+												<label
+													:for="`admin-create-product-price-${pIndex}-selection-${sIndex}-name`"
+													class="form-label required-asterisk fs-6 text-muted"
+												>
+													Name
+												</label>
+												<input
+													type="text"
+													:id="`admin-create-product-price-${pIndex}-selection-${sIndex}-name`"
+													class="form-control"
+													placeholder="Name of selection (e.g. 'Flavor')"
+													required
+													v-model="productUpdatePrices[pIndex].selections[sIndex].name"
+												/>
+											</div>
+
+											<div class="product-selection-variety">
+												<label
+													:for="`admin-create-product-price-${pIndex}-selection-${sIndex}-variety`"
+													class="form-label required-asterisk fs-6 text-muted"
+												>
+													Variety
+												</label>
+												<input
+													type="text"
+													:id="`admin-create-product-price-${pIndex}-selection-${sIndex}-variety`"
+													class="form-control"
+													placeholder="Name of variety (e.g. 'Tuna')"
+													required
+													v-model="productUpdatePrices[pIndex].selections[sIndex].variety"
+												/>
+											</div>
+										</div>
+
+										<button type="button" class="btn btn-outline-secondary mt-3" @click="addProductPriceSelection(pIndex)">
+											Add Selection
+										</button>
+									</div>
+
+									<button
+										type="button"
+										class="btn btn-outline-secondary mt-3"
+										:disabled="
+											productUpdatePrices[0].selections[0].name.length <= 0 ||
+											productUpdatePrices[0].selections[0].variety.length <= 0
+										"
+										@click="addProductPrice()"
+									>
+										Add Price
+									</button>
+								</div>
 							</form>
 						</div>
 
@@ -180,7 +261,8 @@
 <script setup lang="ts">
 import type { ItemCategory } from "~/server/model/itemCategory";
 import type { PetCategory } from "~/server/model/petCategory";
-import type { FullProductDTO, Product, ProductDTO } from "~/server/model/product";
+import type { FullProductDTO, Product } from "~/server/model/product";
+import type { PriceProjection } from "~/server/projections/priceProjections";
 
 export interface Props {
 	productId?: number | null;
@@ -213,6 +295,9 @@ const productUpdateImages = ref<string[]>([""]);
 const productUpdateDescriptionImages = ref<string[]>([""]);
 const productUpdatePetCategories = ref<number[]>([]);
 const productUpdateItemCategories = ref<number[]>([]);
+const productUpdatePrices = ref<Prettify<Omit<PriceProjection, "id">>[]>([
+	{ value: 0, selections: [{ name: "", variety: "" }] },
+]);
 
 const {
 	data: itemTypes,
@@ -258,6 +343,12 @@ watch([createProductError, fetchingItemTypesError, fetchingPetTypesError], (erro
 	}
 });
 
+watch(productUpdatePrices.value, (updatePrices) => {
+	if (updatePrices && updatePrices.length > 0) {
+		productToUpdate.value.prices = updatePrices;
+	}
+});
+
 watch(productUpdateImages.value, (newImages) => {
 	if (newImages) {
 		const filteredImages = newImages.filter((image) => image !== "");
@@ -284,6 +375,14 @@ watch(productUpdateItemCategories, (newItemCategories) => {
 	}
 });
 
+function addProductPrice() {
+	productUpdatePrices.value.push({ value: 0, selections: [{ name: "", variety: "" }] });
+}
+
+function addProductPriceSelection(pIndex: number) {
+	productUpdatePrices.value[pIndex].selections.push({ name: "", variety: "" });
+}
+
 function addProductImage() {
 	productUpdateImages.value.push("");
 }
@@ -293,6 +392,12 @@ function addProductDescriptionImage() {
 }
 
 async function handleUpdate() {
+	productToUpdate.value.prices.forEach((price) => {
+		price.selections = price.selections.filter((selection) => {
+			return Object.values(selection).every((value) => value !== "");
+		});
+	});
+
 	await createProduct();
 }
 </script>
