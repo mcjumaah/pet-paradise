@@ -8,7 +8,7 @@ export interface ProductItemInterface {
 	quantity: number;
 	totalPrice: number;
 	selection: SelectionOnPriceProjection[];
-	previewImage: string;
+	previewImage: string | null;
 }
 
 export interface ProductItemsPaginatedInterface {
@@ -25,7 +25,7 @@ export class ProductItemProjection implements ProductItemInterface {
 		public quantity: number,
 		public totalPrice: number,
 		public selection: SelectionOnPriceProjection[],
-		public previewImage: string
+		public previewImage: string | null
 	) {
 		this.id = id;
 		this.status = status;

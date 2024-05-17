@@ -255,7 +255,7 @@ async function setToBuyNow() {
 			quantity: itemToAdd.value.quantity,
 			totalPrice: selectedVarietiesPrice.value?.value * itemToAdd.value.quantity,
 			selection: selectedVarieties.value,
-			previewImage: product.value.images[0],
+			previewImage: product.value.images ? product.value.images[0] : null,
 		});
 	}
 }

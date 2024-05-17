@@ -14,13 +14,19 @@ export type ItemCategoryPaginated = {
 	pagination: Pagination;
 };
 
-export const findAll = async (pageNum: number = 0, search: string = "") => {
+export const findAll = async (pageNum: number = 0, search: string = "", productId?: number) => {
 	try {
 		search = `%${search}%`;
 		const { result, pagination } = await paginationSql(
 			pageNum,
-			`SELECT * FROM item_category WHERE (? = '%%' OR name LIKE ?)`,
-			[search, search]
+			`
+				SELECT DISTINCT ic.* FROM item_category ic 
+				LEFT JOIN product_has_item_category p_ic 
+					ON p_ic.item_category_id = ic.id 
+				WHERE (? = '%%' OR name LIKE ?) 
+					AND (? IS NULL OR p_ic.product_id = ?)
+			`,
+			[search, search, productId ?? null, productId ?? null]
 		);
 
 		return keysToCamelCase({

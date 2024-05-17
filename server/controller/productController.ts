@@ -45,6 +45,8 @@ export const createProduct = async (event: H3Event) => {
 			soldNum: body.soldNum || 0,
 			prices: body.prices,
 			description: body.description || null,
+			petCategoryIds: body.petCategoryIds || null,
+			itemCategoryIds: body.itemCategoryIds || null,
 		};
 
 		const result = await productService.createProduct(fullProductDto);
@@ -52,10 +54,11 @@ export const createProduct = async (event: H3Event) => {
 		return {
 			data: result,
 		};
-	} catch {
+	} catch (error) {
 		throw createError({
 			statusCode: 500,
 			statusMessage: "Something went wrong",
+			message: error as string,
 		});
 	}
 };

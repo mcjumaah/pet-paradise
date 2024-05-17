@@ -11,8 +11,10 @@ export interface ProductInterface {
 	soldNum: number;
 	prices: PriceProjection[];
 	selections: SelectionProjection[];
-	images: string[];
+	images: string[] | null;
 	description: DescriptionProjection;
+	petCategories: string[] | null;
+	itemCategories: string[] | null;
 }
 export interface ProductSummaryInterface extends Omit<ProductInterface, "prices" | "selections" | "description"> {
 	price: {
@@ -34,8 +36,10 @@ export class ProductProjection implements ProductInterface {
 		public soldNum: number,
 		public prices: PriceProjection[],
 		public selections: SelectionProjection[],
-		public images: string[],
-		public description: DescriptionProjection
+		public images: string[] | null,
+		public description: DescriptionProjection,
+		public petCategories: string[] | null,
+		public itemCategories: string[] | null
 	) {
 		this.id = id;
 		this.sku = sku;
@@ -46,6 +50,8 @@ export class ProductProjection implements ProductInterface {
 		this.selections = selections;
 		this.images = images;
 		this.description = description;
+		this.petCategories = petCategories;
+		this.itemCategories = itemCategories;
 	}
 }
 export class ProductSummaryProjection implements ProductSummaryInterface {
@@ -59,7 +65,9 @@ export class ProductSummaryProjection implements ProductSummaryInterface {
 			min: number;
 			max: number;
 		} | null,
-		public images: string[]
+		public images: string[] | null,
+		public petCategories: string[] | null,
+		public itemCategories: string[] | null
 	) {
 		this.id = id;
 		this.sku = sku;
@@ -68,6 +76,8 @@ export class ProductSummaryProjection implements ProductSummaryInterface {
 		this.soldNum = soldNum;
 		this.price = price;
 		this.images = images;
+		this.petCategories = petCategories;
+		this.itemCategories = itemCategories;
 	}
 }
 export class ProductsPaginatedProjection implements ProductsPaginatedInterface {

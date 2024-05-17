@@ -18,12 +18,26 @@ export type Product = {
 export type ProductDTO = Pick<Product, "sku" | "name" | "stock" | "images" | "soldNum">;
 
 export type FullProductDTO = Prettify<
-	ProductDTO & { description: Prettify<Omit<DescriptionDTO, "productId">> | null } & { prices: PriceProjection[] }
+	ProductDTO & { description: Prettify<Omit<DescriptionDTO, "productId">> | null } & {
+		prices: PriceProjection[];
+		petCategoryIds: number[] | null;
+		itemCategoryIds: number[] | null;
+	}
 >;
 
 export type ProductPaginated = {
 	content: Product[];
 	pagination: Pagination;
+};
+
+export type ProductHasPetCategory = {
+	productId: number;
+	petCategoryId: number;
+};
+
+export type ProductHasItemCategory = {
+	productId: number;
+	itemCategoryId: number;
 };
 
 export const findAll = async (pageNum: number = 0, search: string = "", pet?: number, item?: number) => {
@@ -89,6 +103,54 @@ export const save = async (data: ProductDTO) => {
 				query: `SELECT * FROM product WHERE id = LAST_INSERT_ID()`,
 			})
 		) as Product[];
+
+		return result.length === 1 ? result[0] : null;
+	} catch (error) {
+		throw error;
+	}
+};
+
+export const savePetCategory = async (productId: number, petCategoryId: number) => {
+	try {
+		await sql({
+			query: `
+        INSERT INTO product_has_pet_category (
+          product_id, 
+          pet_category_id
+        ) VALUES (?, ?)`,
+			values: [productId, petCategoryId],
+		});
+
+		const result = keysToCamelCase(
+			await sql({
+				query: `SELECT * FROM product_has_pet_category WHERE product_id = ? AND pet_category_id = ?`,
+				values: [productId, petCategoryId],
+			})
+		) as ProductHasPetCategory[];
+
+		return result.length === 1 ? result[0] : null;
+	} catch (error) {
+		throw error;
+	}
+};
+
+export const saveItemCategory = async (productId: number, itemCategoryId: number) => {
+	try {
+		await sql({
+			query: `
+        INSERT INTO product_has_item_category (
+          product_id, 
+          item_category_id
+        ) VALUES (?, ?)`,
+			values: [productId, itemCategoryId],
+		});
+
+		const result = keysToCamelCase(
+			await sql({
+				query: `SELECT * FROM product_has_item_category WHERE product_id = ? AND item_category_id = ?`,
+				values: [productId, itemCategoryId],
+			})
+		) as ProductHasPetCategory[];
 
 		return result.length === 1 ? result[0] : null;
 	} catch (error) {

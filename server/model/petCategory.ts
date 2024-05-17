@@ -14,13 +14,19 @@ export type PetCategoryPaginated = {
 	pagination: Pagination;
 };
 
-export const findAll = async (pageNum: number = 0, search: string = "") => {
+export const findAll = async (pageNum: number = 0, search: string = "", productId?: number) => {
 	try {
 		search = `%${search}%`;
 		const { result, pagination } = await paginationSql(
 			pageNum,
-			`SELECT * FROM pet_category WHERE (? = '%%' OR name LIKE ?)`,
-			[search, search]
+			`
+				SELECT DISTINCT pc.* FROM pet_category pc 
+				LEFT JOIN product_has_pet_category p_pc 
+					ON p_pc.pet_category_id = pc.id 
+				WHERE (? = '%%' OR name LIKE ?) 
+					AND (? IS NULL OR p_pc.product_id = ?)
+			`,
+			[search, search, productId ?? null, productId ?? null]
 		);
 
 		return keysToCamelCase({
@@ -31,6 +37,21 @@ export const findAll = async (pageNum: number = 0, search: string = "") => {
 		throw error;
 	}
 };
+
+// export const findByProductId = async (productId: number) => {
+// 	try {
+// 		const result = keysToCamelCase(
+// 			await sql({
+// 				query: `SELECT * FROM pet_category WHERE product_id = ?`,
+// 				values: [productId],
+// 			})
+// 		);
+
+// 		return result as PetCategory[];
+// 	} catch (error) {
+// 		throw error;
+// 	}
+// };
 
 export const findById = async (id: number) => {
 	try {

@@ -6,6 +6,8 @@ import * as descriptionModel from "../model/description";
 import * as productItemModel from "../model/productItem";
 import * as orderModel from "../model/order";
 import * as shipmentModel from "../model/shipment";
+import * as petCategoryModel from "../model/petCategory";
+import * as itemCategoryModel from "../model/itemCategory";
 import * as priceService from "./priceService";
 import * as cartService from "./cartService";
 import { ProductProjection, ProductSummaryProjection, ProductsPaginatedProjection } from "../projections/productProjections";
@@ -15,7 +17,7 @@ import { DescriptionProjection } from "../projections/descriptionProjection";
 import moment from "moment";
 
 export const createProduct = async (fullProductDto: productModel.FullProductDTO) => {
-	const { description, prices, ...productDto } = fullProductDto;
+	const { description, prices, petCategoryIds, itemCategoryIds, ...productDto } = fullProductDto;
 
 	const createdProduct = await productModel.save(productDto);
 	if (!createdProduct) {
@@ -101,6 +103,32 @@ export const createProduct = async (fullProductDto: productModel.FullProductDTO)
 		}
 	}
 
+	if (petCategoryIds && petCategoryIds.length > 0) {
+		for (const categoryId of petCategoryIds) {
+			const savedProductPetCategory = await productModel.savePetCategory(createdProduct.id, categoryId);
+			if (!savedProductPetCategory) {
+				throw createError({
+					statusCode: 500,
+					statusMessage: "Something went wrong",
+					message: "Failed saving product's pet-category.",
+				});
+			}
+		}
+	}
+
+	if (itemCategoryIds && itemCategoryIds.length > 0) {
+		for (const categoryId of itemCategoryIds) {
+			const savedProductItemCategory = await productModel.saveItemCategory(createdProduct.id, categoryId);
+			if (!savedProductItemCategory) {
+				throw createError({
+					statusCode: 500,
+					statusMessage: "Something went wrong",
+					message: "Failed saving product's item-category.",
+				});
+			}
+		}
+	}
+
 	const createdProductProjection = await getProduct(createdProduct.id);
 	return createdProductProjection;
 };
@@ -159,6 +187,7 @@ export const getProduct = async (id: number) => {
 			);
 
 			result.selections[index] = await mapObjectToClass(selection, SelectionProjection);
+			result.selections[index].varieties = [...new Set(selection.varieties)];
 		}
 
 		const description = await descriptionModel.findOneByProductId(id);
@@ -171,12 +200,23 @@ export const getProduct = async (id: number) => {
 		}
 		result.description = await mapObjectToClass(description, DescriptionProjection);
 
+		result.petCategories = null;
+		result.itemCategories = null;
+
+		const productPetCategories = await petCategoryModel.findAll(undefined, undefined, id);
+		console.log(productPetCategories);
+		if (productPetCategories.content.length > 0) {
+			result.petCategories = productPetCategories.content.map((category) => category.name);
+		}
+
+		const productItemCategories = await itemCategoryModel.findAll(undefined, undefined, id);
+		console.log(productItemCategories);
+		if (productItemCategories.content.length > 0) {
+			result.itemCategories = productItemCategories.content.map((category) => category.name);
+		}
+
 		// Finishing Touches
 		result = await mapObjectToClass(result, ProductProjection);
-	}
-
-	for (const [index, product] of result.selections.entries()) {
-		result.selections[index].varieties = [...new Set(product.varieties)];
 	}
 
 	return result;
