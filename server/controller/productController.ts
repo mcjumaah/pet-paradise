@@ -49,7 +49,7 @@ export const createProduct = async (event: H3Event) => {
 			itemCategoryIds: body.itemCategoryIds || null,
 		};
 
-		const result = await productService.createProduct(fullProductDto);
+		const result = await productService.createOrUpdateProduct(fullProductDto);
 
 		return {
 			data: result,
@@ -65,24 +65,30 @@ export const createProduct = async (event: H3Event) => {
 
 export const editProduct = async (event: H3Event) => {
 	try {
-		const queryParam = getQuery(event);
+		const { id } = getQuery(event);
 		const body = await readBody(event);
-
-		const result = await productModel.update(queryParam.id as number, {
+		const fullProductDto: productModel.FullProductDTO = {
 			sku: body.sku,
 			name: body.name,
-			stock: body.stock,
-			images: body.images,
-			soldNum: body.soldNum,
-		});
+			stock: body.stock || 0,
+			images: body.images || null,
+			soldNum: body.soldNum || 0,
+			prices: body.prices,
+			description: body.description || null,
+			petCategoryIds: body.petCategoryIds || null,
+			itemCategoryIds: body.itemCategoryIds || null,
+		};
+
+		const result = await productService.createOrUpdateProduct(fullProductDto, id as number);
 
 		return {
 			data: result,
 		};
-	} catch {
+	} catch (error) {
 		throw createError({
 			statusCode: 500,
 			statusMessage: "Something went wrong",
+			message: error as string,
 		});
 	}
 };

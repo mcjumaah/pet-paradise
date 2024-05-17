@@ -121,3 +121,16 @@ export const deleteById = async (id: string) => {
 		throw error;
 	}
 };
+
+export const deleteByPriceId = async (priceId: number) => {
+	try {
+		await sql({
+			query: `DELETE FROM variety WHERE price_id = ?`,
+			values: [priceId],
+		});
+
+		return true;
+	} catch (error) {
+		throw error;
+	}
+};

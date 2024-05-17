@@ -16,35 +16,88 @@ import { SelectionProjection } from "../projections/selectionProjection";
 import { DescriptionProjection } from "../projections/descriptionProjection";
 import moment from "moment";
 
-export const createProduct = async (fullProductDto: productModel.FullProductDTO) => {
+export const createOrUpdateProduct = async (fullProductDto: productModel.FullProductDTO, id?: number) => {
 	const { description, prices, petCategoryIds, itemCategoryIds, ...productDto } = fullProductDto;
 
-	const createdProduct = await productModel.save(productDto);
-	if (!createdProduct) {
+	let updatedProduct: productModel.Product | null = null;
+	if (id) {
+		updatedProduct = await productModel.update(id, productDto);
+		if (!updatedProduct) {
+			throw createError({
+				statusCode: 500,
+				statusMessage: "Something went wrong",
+				message: "Failed updating product to database.",
+			});
+		}
+	} else {
+		updatedProduct = await productModel.save(productDto);
+		if (!updatedProduct) {
+			throw createError({
+				statusCode: 500,
+				statusMessage: "Something went wrong",
+				message: "Failed saving product to database.",
+			});
+		}
+	}
+
+	let updatedProductDescription: descriptionModel.Description | null = null;
+	if (description) {
+		updatedProductDescription = id
+			? await descriptionModel.updateByProductId(id, { ...description, productId: updatedProduct.id })
+			: await descriptionModel.save({ ...description, productId: updatedProduct.id });
+	}
+	if (!updatedProductDescription) {
 		throw createError({
 			statusCode: 500,
 			statusMessage: "Something went wrong",
-			message: "Failed saving product to database.",
+			message: `Failed ${id ? "updating" : "saving"} product's description to database.`,
 		});
 	}
 
-	let createdProductDescription: descriptionModel.Description | null;
-	if (description) {
-		createdProductDescription = await descriptionModel.save({ ...description, productId: createdProduct.id });
-	}
-
 	if (prices) {
+		if (id) {
+			const pricesToDelete = await priceModel.findAllByProductId(id);
+			for (const price of pricesToDelete) {
+				const varietiesDeleted = await varietyModel.deleteByPriceId(price.id);
+				if (!varietiesDeleted) {
+					throw createError({
+						statusCode: 500,
+						statusMessage: "Something went wrong",
+						message: `Failed resetting product's varieties to database.`,
+					});
+				}
+			}
+
+			const selectionsDeleted = await selectionModel.deleteByProductId(id);
+			if (!selectionsDeleted) {
+				throw createError({
+					statusCode: 500,
+					statusMessage: "Something went wrong",
+					message: `Failed resetting product's selections to database.`,
+				});
+			}
+
+			const pricesDeleted = await priceModel.deleteByProductId(id);
+			if (!pricesDeleted) {
+				throw createError({
+					statusCode: 500,
+					statusMessage: "Something went wrong",
+					message: `Failed resetting product's prices to database.`,
+				});
+			}
+		}
+
 		const selectionNames: string[] = [];
 		for (const price of prices) {
 			if (price.selections && price.selections.length > 0) {
 				for (const selection of price.selections) {
 					if (!selectionNames.includes(selection.name)) {
-						const savedSelection = await selectionModel.save({ name: selection.name, productId: createdProduct.id });
+						const savedSelection = await selectionModel.save({ name: selection.name, productId: updatedProduct.id });
 						if (!savedSelection) {
 							throw createError({
 								statusCode: 500,
 								statusMessage: "Something went wrong",
-								message: "Failed saving product's selection to database.",
+								message: `Failed ${id ? "updating" : "saving"} product's selection to database.`,
 							});
 						}
 
@@ -57,7 +110,7 @@ export const createProduct = async (fullProductDto: productModel.FullProductDTO)
 		for (const price of prices) {
 			let savedPrice: priceModel.Price | null = null;
 			if (price.value) {
-				savedPrice = await priceModel.save({ value: price.value, productId: createdProduct.id });
+				savedPrice = await priceModel.save({ value: price.value, productId: updatedProduct.id });
 			}
 			if (!savedPrice) {
 				throw createError({
@@ -68,7 +121,7 @@ export const createProduct = async (fullProductDto: productModel.FullProductDTO)
 			}
 
 			if (selectionNames.length > 0) {
-				const selectionModelArr = await selectionModel.findAllByProductId(createdProduct.id);
+				const selectionModelArr = await selectionModel.findAllByProductId(updatedProduct.id);
 				if (!selectionModelArr || selectionModelArr.length <= 0) {
 					throw createError({
 						statusCode: 500,
@@ -104,8 +157,19 @@ export const createProduct = async (fullProductDto: productModel.FullProductDTO)
 	}
 
 	if (petCategoryIds && petCategoryIds.length > 0) {
+		if (id) {
+			const petCategoriesDeleted = await productModel.deletePetCategoriesByProductId(id);
+			if (!petCategoriesDeleted) {
+				throw createError({
+					statusCode: 500,
+					statusMessage: "Something went wrong",
+					message: "Failed resetting product's pet-category.",
+				});
+			}
+		}
+
 		for (const categoryId of petCategoryIds) {
-			const savedProductPetCategory = await productModel.savePetCategory(createdProduct.id, categoryId);
+			const savedProductPetCategory = await productModel.savePetCategory(updatedProduct.id, categoryId);
 			if (!savedProductPetCategory) {
 				throw createError({
 					statusCode: 500,
@@ -117,8 +181,19 @@ export const createProduct = async (fullProductDto: productModel.FullProductDTO)
 	}
 
 	if (itemCategoryIds && itemCategoryIds.length > 0) {
+		if (id) {
+			const itemCategoriesDeleted = await productModel.deleteItemCategoriesByProductId(id);
+			if (!itemCategoriesDeleted) {
+				throw createError({
+					statusCode: 500,
+					statusMessage: "Something went wrong",
+					message: "Failed resetting product's item-category.",
+				});
+			}
+		}
+
 		for (const categoryId of itemCategoryIds) {
-			const savedProductItemCategory = await productModel.saveItemCategory(createdProduct.id, categoryId);
+			const savedProductItemCategory = await productModel.saveItemCategory(updatedProduct.id, categoryId);
 			if (!savedProductItemCategory) {
 				throw createError({
 					statusCode: 500,
@@ -129,7 +204,7 @@ export const createProduct = async (fullProductDto: productModel.FullProductDTO)
 		}
 	}
 
-	const createdProductProjection = await getProduct(createdProduct.id);
+	const createdProductProjection = await getProduct(updatedProduct.id);
 	return createdProductProjection;
 };
 
@@ -204,13 +279,11 @@ export const getProduct = async (id: number) => {
 		result.itemCategories = null;
 
 		const productPetCategories = await petCategoryModel.findAll(undefined, undefined, id);
-		console.log(productPetCategories);
 		if (productPetCategories.content.length > 0) {
 			result.petCategories = productPetCategories.content.map((category) => category.name);
 		}
 
 		const productItemCategories = await itemCategoryModel.findAll(undefined, undefined, id);
-		console.log(productItemCategories);
 		if (productItemCategories.content.length > 0) {
 			result.itemCategories = productItemCategories.content.map((category) => category.name);
 		}

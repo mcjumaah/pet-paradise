@@ -82,7 +82,7 @@ export const update = async (id: number, data: DescriptionDTO) => {
 			query: `
 				UPDATE description 
 				SET 
-					name = ?, 
+					text = ?, 
 					images = ?, 
 					product_id = ? 
 				WHERE id = ?
@@ -91,6 +91,35 @@ export const update = async (id: number, data: DescriptionDTO) => {
 		});
 
 		return await findById(id);
+	} catch (error) {
+		throw error;
+	}
+};
+
+export const updateByProductId = async (productId: number, data: DescriptionDTO) => {
+	try {
+		const description = await findOneByProductId(productId);
+		if (!description) {
+			throw createError({
+				statusCode: 404,
+				statusMessage: "Product Description not Found",
+				message: "Failed finding product's description to edit.",
+			});
+		}
+
+		await sql({
+			query: `
+				UPDATE description 
+				SET 
+					text = ?, 
+					images = ?, 
+					product_id = ? 
+				WHERE id = ?
+			`,
+			values: [data.text, data.images, data.productId, description?.id],
+		});
+
+		return await findById(description?.id);
 	} catch (error) {
 		throw error;
 	}

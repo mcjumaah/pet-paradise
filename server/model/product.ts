@@ -199,3 +199,29 @@ export const deleteById = async (id: number) => {
 		throw error;
 	}
 };
+
+export const deletePetCategoriesByProductId = async (id: number) => {
+	try {
+		await sql({
+			query: `DELETE FROM product_has_pet_category WHERE product_id = ?`,
+			values: [id],
+		});
+
+		return true;
+	} catch (error) {
+		throw error;
+	}
+};
+
+export const deleteItemCategoriesByProductId = async (id: number) => {
+	try {
+		await sql({
+			query: `DELETE FROM product_has_item_category WHERE product_id = ?`,
+			values: [id],
+		});
+
+		return true;
+	} catch (error) {
+		throw error;
+	}
+};
