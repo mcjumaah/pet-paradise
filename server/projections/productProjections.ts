@@ -1,3 +1,5 @@
+import { ItemCategory } from "../model/itemCategory";
+import { PetCategory } from "../model/petCategory";
 import { Pagination } from "../utils/paginationUtil";
 import { DescriptionProjection } from "./descriptionProjection";
 import { PriceProjection } from "./priceProjections";
@@ -13,8 +15,8 @@ export interface ProductInterface {
 	selections: SelectionProjection[];
 	images: string[] | null;
 	description: DescriptionProjection;
-	petCategories: string[] | null;
-	itemCategories: string[] | null;
+	petCategories: PetCategory[] | null;
+	itemCategories: ItemCategory[] | null;
 }
 export interface ProductSummaryInterface extends Omit<ProductInterface, "prices" | "selections" | "description"> {
 	price: {
@@ -38,8 +40,8 @@ export class ProductProjection implements ProductInterface {
 		public selections: SelectionProjection[],
 		public images: string[] | null,
 		public description: DescriptionProjection,
-		public petCategories: string[] | null,
-		public itemCategories: string[] | null
+		public petCategories: PetCategory[] | null,
+		public itemCategories: ItemCategory[] | null
 	) {
 		this.id = id;
 		this.sku = sku;
@@ -66,8 +68,8 @@ export class ProductSummaryProjection implements ProductSummaryInterface {
 			max: number;
 		} | null,
 		public images: string[] | null,
-		public petCategories: string[] | null,
-		public itemCategories: string[] | null
+		public petCategories: PetCategory[] | null,
+		public itemCategories: ItemCategory[] | null
 	) {
 		this.id = id;
 		this.sku = sku;

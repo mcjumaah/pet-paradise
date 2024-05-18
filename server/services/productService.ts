@@ -280,12 +280,12 @@ export const getProduct = async (id: number) => {
 
 		const productPetCategories = await petCategoryModel.findAll(undefined, undefined, id);
 		if (productPetCategories.content.length > 0) {
-			result.petCategories = productPetCategories.content.map((category) => category.name);
+			result.petCategories = productPetCategories.content;
 		}
 
 		const productItemCategories = await itemCategoryModel.findAll(undefined, undefined, id);
 		if (productItemCategories.content.length > 0) {
-			result.itemCategories = productItemCategories.content.map((category) => category.name);
+			result.itemCategories = productItemCategories.content;
 		}
 
 		// Finishing Touches

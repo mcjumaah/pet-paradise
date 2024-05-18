@@ -136,7 +136,6 @@ const {
 
 const selectedVarieties = ref<SelectionOnPriceProjection[]>([]);
 const quantity = ref<number>(1);
-const productDescription = ref("");
 const lastCartAddedItem = ref<AddedItem>();
 const isLoading = ref(false);
 const isInvalid = ref(false);
@@ -244,6 +243,7 @@ async function addToCart() {
 		isInvalid.value = true;
 	}
 }
+
 async function setToBuyNow() {
 	if (product.value && selectedVarietiesPrice.value) {
 		checkoutItems.value.push({

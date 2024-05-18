@@ -179,6 +179,7 @@
 
 										<p class="mb-2 fs-6">Price Selections</p>
 										<div
+											v-if="productUpdatePrices[pIndex].selections.length > 0"
 											v-for="(selection, sIndex) in productUpdatePrices[pIndex].selections"
 											:key="`${pIndex}-product-price-${sIndex}-selection`"
 											class="product-selection mt-3 bg-secondary-subtle p-2 rounded d-flex flex-column gap-2"
@@ -231,6 +232,7 @@
 										type="button"
 										class="btn btn-outline-secondary mt-3"
 										:disabled="
+											productUpdatePrices[0].selections.length <= 0 ||
 											productUpdatePrices[0].selections[0].name.length <= 0 ||
 											productUpdatePrices[0].selections[0].variety.length <= 0
 										"
@@ -246,7 +248,7 @@
 							<div v-if="createProductStatus === 'success'" class="alert alert-success" role="alert">Product Created!</div>
 							<div class="d-flex flex-nowrap gap-2">
 								<button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Cancel</button>
-								<button type="button" class="btn btn-primary" @click="handleUpdate()">
+								<button type="button" class="btn btn-primary" data-bs-dismiss="modal" @click="handleUpdate()">
 									{{ props.productId ? "EDIT" : "CREATE" }}
 								</button>
 							</div>
@@ -263,6 +265,7 @@ import type { ItemCategory } from "~/server/model/itemCategory";
 import type { PetCategory } from "~/server/model/petCategory";
 import type { FullProductDTO, Product } from "~/server/model/product";
 import type { PriceProjection } from "~/server/projections/priceProjections";
+import type { ProductProjection } from "~/server/projections/productProjections";
 
 export interface Props {
 	productId?: number | null;
@@ -272,7 +275,7 @@ const props = withDefaults(defineProps<Props>(), {
 });
 
 const emits = defineEmits({
-	productUpdate(payload: Product) {
+	productUpdate(payload: ProductProjection) {
 		return !!payload;
 	},
 });
@@ -287,7 +290,7 @@ const productToUpdate = ref<FullProductDTO>({
 		text: "",
 		images: null,
 	},
-	prices: [{ value: 0, selections: [{ name: "", variety: "" }] }],
+	prices: [{ value: 0, selections: [] }],
 	petCategoryIds: null,
 	itemCategoryIds: null,
 });
@@ -295,9 +298,19 @@ const productUpdateImages = ref<string[]>([""]);
 const productUpdateDescriptionImages = ref<string[]>([""]);
 const productUpdatePetCategories = ref<number[]>([]);
 const productUpdateItemCategories = ref<number[]>([]);
-const productUpdatePrices = ref<Prettify<Omit<PriceProjection, "id">>[]>([
-	{ value: 0, selections: [{ name: "", variety: "" }] },
-]);
+const productUpdatePrices = ref<Prettify<Omit<PriceProjection, "id">>[]>([{ value: 0, selections: [] }]);
+
+const {
+	data: productToEdit,
+	pending: isFetchingProduct,
+	error: fetchProductError,
+	execute: fetchProduct,
+} = useFetch("/api/product", {
+	method: "GET",
+	query: { id: props.productId },
+	immediate: false,
+	transform: (_product) => _product.data as ProductProjection,
+});
 
 const {
 	data: itemTypes,
@@ -328,37 +341,46 @@ const {
 	status: createProductStatus,
 	execute: createProduct,
 } = useFetch("/api/product", {
-	method: "POST",
+	method: props.productId ? "PUT" : "POST",
 	body: productToUpdate,
+	query: {
+		id: props.productId ?? undefined,
+	},
 	immediate: false,
 	watch: false,
 	transform: (_product) => {
 		return _product.data as Product;
 	},
+	onResponse({ request, response, options }) {
+		const product: ProductProjection = response._data.data;
+		if (product) {
+			emits("productUpdate", product);
+		}
+	},
 });
 
-watch([createProductError, fetchingItemTypesError, fetchingPetTypesError], (errors) => {
+watch([createProductError, fetchingItemTypesError, fetchingPetTypesError, fetchProductError], (errors) => {
 	if (errors.some((error) => error)) {
 		alert(errors.find((error) => error));
 	}
 });
 
-watch(productUpdatePrices.value, (updatePrices) => {
-	if (updatePrices && updatePrices.length > 0) {
-		productToUpdate.value.prices = updatePrices;
+watch([productUpdatePrices.value, () => productUpdatePrices.value], () => {
+	if (productUpdatePrices.value && productUpdatePrices.value.length > 0) {
+		productToUpdate.value.prices = productUpdatePrices.value;
 	}
 });
 
-watch(productUpdateImages.value, (newImages) => {
-	if (newImages) {
-		const filteredImages = newImages.filter((image) => image !== "");
+watch([productUpdateImages.value, () => productUpdateImages.value], () => {
+	if (productUpdateImages.value) {
+		const filteredImages = productUpdateImages.value.filter((image) => image !== "");
 		productToUpdate.value.images = filteredImages.length > 0 ? filteredImages : null;
 	}
 });
 
-watch(productUpdateDescriptionImages.value, (newImages) => {
-	if (newImages && productToUpdate.value.description) {
-		const filteredImages = newImages.filter((image) => image !== "");
+watch([productUpdateDescriptionImages.value, () => productUpdateDescriptionImages.value], () => {
+	if (productUpdateDescriptionImages.value && productToUpdate.value.description) {
+		const filteredImages = productUpdateDescriptionImages.value.filter((image) => image !== "");
 		productToUpdate.value.description.images = filteredImages.length > 0 ? filteredImages : null;
 	}
 });
@@ -398,8 +420,53 @@ async function handleUpdate() {
 		});
 	});
 
+	if (productUpdateImages.value) {
+		const filteredImages = productUpdateImages.value.filter((image) => image !== "");
+		productToUpdate.value.images = filteredImages.length > 0 ? filteredImages : null;
+	}
+	if (productUpdateDescriptionImages.value && productToUpdate.value.description) {
+		const filteredImages = productUpdateDescriptionImages.value.filter((image) => image !== "");
+		productToUpdate.value.description.images = filteredImages.length > 0 ? filteredImages : null;
+	}
+
 	await createProduct();
 }
+
+onMounted(async () => {
+	if (props.productId) {
+		await fetchProduct();
+
+		if (productToEdit.value) {
+			productToUpdate.value.sku = productToEdit.value.sku;
+			productToUpdate.value.name = productToEdit.value.name;
+			productToUpdate.value.stock = productToEdit.value.stock;
+			productToUpdate.value.soldNum = productToEdit.value.soldNum;
+			if (productToUpdate.value.description) {
+				productToUpdate.value.description.text = productToEdit.value.description.text;
+			}
+
+			if (productToEdit.value.images) {
+				productUpdateImages.value = productToEdit.value.images;
+			}
+
+			productUpdateDescriptionImages.value = productToEdit.value.description.images;
+			productUpdatePrices.value = productToEdit.value.prices.map((price) => {
+				return {
+					value: price.value,
+					selections: price.selections.length > 0 ? price.selections : [{ name: "", variety: "" }],
+				};
+			});
+
+			if (productToEdit.value.petCategories) {
+				productUpdatePetCategories.value = productToEdit.value.petCategories.map((category) => category.id);
+			}
+
+			if (productToEdit.value.itemCategories) {
+				productUpdateItemCategories.value = productToEdit.value.itemCategories.map((category) => category.id);
+			}
+		}
+	}
+});
 </script>
 
 <style scoped lang="scss"></style>
